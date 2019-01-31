@@ -1,0 +1,15 @@
+.commonFont {
+	font-family: serif;
+}
+
+.commonFontColor {
+	color: #62879A;
+}
+
+.cardHeaderTextStyles {
+	color:#62879A;
+	font-family: serif;
+	font-size: medium;
+	text-transform: capitalize;
+	font-weight:100;
+}

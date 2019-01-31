@@ -1,0 +1,6 @@
+{
+  "name": "ProviderMapping",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ProviderMapping.js"
+}

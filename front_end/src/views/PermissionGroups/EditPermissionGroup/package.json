@@ -1,0 +1,6 @@
+{
+  "name": "EditPermissionGroup",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./EditPermissionGroup.js"
+}

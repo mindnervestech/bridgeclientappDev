@@ -1,0 +1,102 @@
+.CardHeaderPadding {
+	padding: 0.40rem 1.25rem;
+}
+
+ input[type="radio"] {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          background-image:url(/img/circumference.png);
+		  height: 16px;
+		  width: 16px;
+		  display:inline-block;
+		  padding: 0 0 0 0px;
+		  cursor:pointer;
+		  outline:none;
+        }
+
+
+
+ input[type="radio"]:checked
+{
+    background-image:url(/img/radio-on-button2.png);
+    height: 16px;
+    width: 16px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+    cursor:pointer;
+    outline:none;
+}
+
+input[type="checkbox"] {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          background-image:url(/img/unchecked-checkbox.png);
+		  height: 16px;
+		  width: 16px;
+		  display:inline-block;
+		  padding: 0 0 0 0px;
+		  cursor:pointer;
+		  outline:none;
+        }
+
+
+
+ input[type="checkbox"]:checked
+{
+    background-image:url(/img/check-box.png);
+    height: 16px;
+    width: 16px;
+    display:inline-block;
+    padding: 0 0 0 0px;
+    cursor:pointer;
+    outline:none;
+}
+
+.yearSelectStyle {
+  width:100px;
+  font-family: serif;
+  z-index: 1000;
+}
+
+.pcpNameSelectStyle {
+  width:250px;
+  font-size:16;
+  font-family: serif;
+  z-index: 1000;
+}
+
+.optionSelectStyle {
+  width:200px;
+  font-family: serif;
+}
+
+.topMarginStyle {
+  margin-bottom: 10px;
+}
+
+.commonFontFamily {
+  font-family: serif;
+}
+
+.duplicateClaimsHeader {
+  color: #62879A;
+  font-family: serif;
+  font-size: larger;
+  text-transform: capitalize;
+  font-weight:100;
+}
+
+.reportsStyling {
+  align-items: end;
+}
+
+.reportIconColor {
+  color: #20a8d8;
+}
+
+.commonFontFamilyColor {
+  font-family: serif;
+  color: #62879A;
+}

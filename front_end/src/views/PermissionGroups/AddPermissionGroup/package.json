@@ -1,0 +1,6 @@
+{
+  "name": "AddPermissionGroup",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./AddPermissionGroup.js"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "ClaimDetails",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ClaimDetails.js"
+}
