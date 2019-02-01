@@ -128,6 +128,7 @@ class Dashboard extends React.Component {
       specSum: 0.0,
       prescSum: 0.0,
       currentMonthCount:0,
+      tabButton:1,
       ofMemberYTD:0,
       monthlyTotals: [],
       monthlyTotalsLabel: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
@@ -268,6 +269,28 @@ class Dashboard extends React.Component {
       showDrgCode_beneficiariesManagementByDoctorExpand: true,
       showBetosCat_beneficiariesManagementByDoctorExpand: true,
       showCost_beneficiariesManagementByDoctorExpand: true,
+
+      showClaimId_beneficiariesManagementByClinicExpand: true,
+      showClaimDate_beneficiariesManagementByClinicExpand: true,
+      showClaimType_beneficiariesManagementByClinicExpand: true,
+      showClinicName_beneficiariesManagementByClinicExpand: true,
+      showPcpName_beneficiariesManagementByClinicExpand: true,
+      showIcdCodes_beneficiariesManagementByClinicExpand: true,
+      showHccCodes_beneficiariesManagementByClinicExpand: true,
+      showDrgCode_beneficiariesManagementByClinicExpand: true,
+      showBetosCat_beneficiariesManagementByClinicExpand: true,
+      showCost_beneficiariesManagementByClinicExpand: true,
+      
+      showClaimId_beneficiariesManagementByLocationExpand: true,
+      showClaimDate_beneficiariesManagementByLocationExpand: true,
+      showClaimType_beneficiariesManagementByLocationExpand: true,
+      showClinicName_beneficiariesManagementByLocationExpand: true,
+      showPcpLocation_beneficiariesManagementByLocationExpand: true,
+      showIcdCodes_beneficiariesManagementByLocationExpand: true,
+      showHccCodes_beneficiariesManagementByLocationExpand: true,
+      showDrgCode_beneficiariesManagementByLocationExpand: true,
+      showBetosCat_beneficiariesManagementByLocationExpand: true,
+      showCost_beneficiariesManagementByLocationExpand: true,
 
       showSpecialityCode_specialistComparison: true,
       showNoOfClaims_specialistComparison: true,
@@ -445,6 +468,8 @@ class Dashboard extends React.Component {
       jsonDataForBeneficiariesManagementExpand:"",
       jsonDataForBeneficiariesManagementByDoctorExpand:"",
       jsonDataForBeneficiariesManagementByClinic:"",
+       jsonDataForBeneficiariesManagementByLocationExpand:"",
+      jsonDataForBeneficiariesManagementByClinicExpand:"",
 
 
       monthlyReportYearsSelectValue:"",
@@ -520,6 +545,21 @@ class Dashboard extends React.Component {
       beneficiariesManagementExpandTotalCount: 0,
       beneficiariesManagementExpandFileQuery: "",
 
+      
+      beneficiariesManagementByClinicExpandModal: false,
+      beneficiariesManagementByClinicExpandLoading: false,
+      beneficiariesManagementByClinicExpandPages: 0,
+      beneficiariesManagementByClinicExpandData: [],
+      beneficiariesManagementByClinicExpandTotalCount: 0,
+      beneficiariesManagementByClinicExpandFileQuery: "",
+
+      beneficiariesManagementByLocationExpandModal: false,
+      beneficiariesManagementByLocationExpandLoading: false,
+      beneficiariesManagementByLocationExpandPages: 0,
+      beneficiariesManagementByLocationExpandData: [],
+      beneficiariesManagementByLocationExpandTotalCount: 0,
+      beneficiariesManagementByLocationExpandFileQuery: "",
+
       beneficiariesManagementByDoctorExpandModal: false,
       beneficiariesManagementByDoctorExpandLoading: false,
       beneficiariesManagementByDoctorExpandPages: 0,
@@ -529,6 +569,9 @@ class Dashboard extends React.Component {
 
       pmpmByPracticeSelectedPcpId:"",
       beneficiariesManagementSelectedMedicareId:"",
+      beneficiariesManagementSelectedPcpLocation:"",
+      beneficiariesManagementSelectedClinicName:"",
+      beneficiariesManagementSelectedPcpName:"",
       beneficiariesManagementSelectedPcpId:"",
 
       showPatientName_pmpmByPracticeExpand: true,
@@ -611,6 +654,7 @@ class Dashboard extends React.Component {
       this.toggleMembershipManagementModal = this.toggleMembershipManagementModal.bind(this);
       this.toggleBeneficiariesManagementModal = this.toggleBeneficiariesManagementModal.bind(this);
       this.toggleBeneficiariesManagementExpandModal = this.toggleBeneficiariesManagementExpandModal.bind(this);
+      this.toggleBeneficiariesManagementByLocationExpandModal = this.toggleBeneficiariesManagementByLocationExpandModal.bind(this);
       this.toggleBeneficiariesManagementByDoctorExpandModal = this.toggleBeneficiariesManagementByDoctorExpandModal.bind(this);
       this.fetchData = this.fetchData.bind(this);
       this.fetchAdmissionsReportData = this.fetchAdmissionsReportData.bind(this);
@@ -630,9 +674,11 @@ class Dashboard extends React.Component {
       this.fetchBeneficiariesManagementDataByClinic = this.fetchBeneficiariesManagementDataByClinic.bind(this);
       this.fetchBeneficiariesManagementExpandData = this.fetchBeneficiariesManagementExpandData.bind(this);
       this.fetchBeneficiariesManagementByDoctorExpandData = this.fetchBeneficiariesManagementByDoctorExpandData.bind(this);
+      this.fetchBeneficiariesManagementByLocationExpandData=this.fetchBeneficiariesManagementByLocationExpandData.bind(this);
+      this.fetchBeneficiariesManagementByClinicExpandData=this.fetchBeneficiariesManagementByClinicExpandData.bind(this);
       this.fetchSpecialistComparisonReportData = this.fetchSpecialistComparisonReportData.bind(this);
       this.fetchSpecialistComparisonExpandReportData = this.fetchSpecialistComparisonExpandReportData.bind(this);
-
+      this.toggleBeneficiariesManagementByClinicExpandModal = this.toggleBeneficiariesManagementByClinicExpandModal.bind(this);
       this.toggle = this.toggle.bind(this);
       this.generateDuplicateClaimsXLSX = this.generateDuplicateClaimsXLSX.bind(this);
       this.duplicateClaimsReportFileQuery = "";
@@ -657,7 +703,8 @@ class Dashboard extends React.Component {
       this.fetchMembershipManagementData = debounce(this.fetchMembershipManagementData,500);
       this.fetchBeneficiariesManagementDataByDoctor = debounce(this.fetchBeneficiariesManagementDataByDoctor,500);
       this.fetchBeneficiariesManagementByDoctorExpandData = debounce(this.fetchBeneficiariesManagementByDoctorExpandData,500);
-
+      this.fetchBeneficiariesManagementByLocationExpandData=debounce(this.fetchBeneficiariesManagementByLocationExpandData,500);
+      this.fetchBeneficiariesManagementByClinicExpandData=debounce(this.fetchBeneficiariesManagementByClinicExpandData,500);
   }
 
   createRows (data) {
@@ -1592,7 +1639,78 @@ class Dashboard extends React.Component {
                 document.getElementById("ddItemCost_beneficiariesManagementByDoctorExpand").style.backgroundColor = "#20a8d8";
               }
             }
-
+            if(i==19)
+            {
+              if(self.state.showPcpLocation_beneficiariesManagementByLocation) {
+                document.getElementById("ddItemPcpLocation_beneficiariesManagementByLocation").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemPcpLocation_beneficiariesManagementByLocation").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showMra_beneficiariesManagementByLocation) {
+                document.getElementById("ddItemMra_beneficiariesManagementByLocation").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemMra_beneficiariesManagementByLocation").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showTotalCost_beneficiariesManagementByLocation) {
+                document.getElementById("ddItemTotalCost_beneficiariesManagementByLocation").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemTotalCost_beneficiariesManagementByLocation").style.backgroundColor = "#20a8d8";
+              }
+            }
+            if(i == 20) {
+              if(self.state.showClaimId_beneficiariesManagementByLocationExpand) {
+                document.getElementById("ddItemClaimId_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemClaimId_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showClaimDate_beneficiariesManagementByLocationExpand) {
+                document.getElementById("ddItemClaimDate_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemClaimDate_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showClaimType_beneficiariesManagementByLocationExpand) {
+                document.getElementById("ddItemClaimType_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemClaimType_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showClinicName_beneficiariesManagementByLocationExpand) {
+                document.getElementById("ddItemClinicName_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemClinicName_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showPcpLocation_beneficiariesManagementByLocationExpand) {
+                document.getElementById("ddItemPcpLocation_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemPcpLocation_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showIcdCodes_beneficiariesManagementByLocationExpand) {
+                document.getElementById("ddItemIcdCodes_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemIcdCodes_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showHccCodes_beneficiariesManagementByLocationExpand) {
+                document.getElementById("ddItemHccCodes_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemHccCodes_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showDrgCode_beneficiariesManagementByLocationExpand) {
+                document.getElementById("ddItemDrgCode_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemDrgCode_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showBetosCat_beneficiariesManagementByLocationExpand) {
+                document.getElementById("ddItemBetosCat_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemBetosCat_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showCost_beneficiariesManagementByLocationExpand) {
+                document.getElementById("ddItemCost_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemCost_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+              }
+              
+            }
+            
             if(i == 21) {
               if(self.state.showClinicName_beneficiariesManagementByClinic) {
                 document.getElementById("ddItemClinicName_beneficiariesManagementByClinic").style.backgroundColor = "";
@@ -1606,6 +1724,59 @@ class Dashboard extends React.Component {
               }
             }
 
+
+            if(i == 22) {
+              if(self.state.showClaimId_beneficiariesManagementByClinicExpand) {
+                document.getElementById("ddItemClaimId_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemClaimId_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showClaimDate_beneficiariesManagementByClinicExpand) {
+                document.getElementById("ddItemClaimDate_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemClaimDate_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showClaimType_beneficiariesManagementByClinicExpand) {
+                document.getElementById("ddItemClaimType_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemClaimType_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showClinicName_beneficiariesManagementByClinicExpand) {
+                document.getElementById("ddItemClinicName_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemClinicName_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showPcpName_beneficiariesManagementByClinicExpand) {
+                document.getElementById("ddItemPcpName_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemPcpName_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showIcdCodes_beneficiariesManagementByClinicExpand) {
+                document.getElementById("ddItemIcdCodes_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemIcdCodes_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showHccCodes_beneficiariesManagementByClinicExpand) {
+                document.getElementById("ddItemHccCodes_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemHccCodes_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showDrgCode_beneficiariesManagementByClinicExpand) {
+                document.getElementById("ddItemDrgCode_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemDrgCode_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showBetosCat_beneficiariesManagementByClinicExpand) {
+                document.getElementById("ddItemBetosCat_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemBetosCat_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showCost_beneficiariesManagementByClinicExpand) {
+                document.getElementById("ddItemCost_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemCost_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+              }
+            }
     }, 300);
   }
 
@@ -1747,6 +1918,27 @@ class Dashboard extends React.Component {
       beneficiariesManagementModal: !this.state.beneficiariesManagementModal
     });
     this.state.beneficiariesManagementLoading = false;
+
+  }
+  
+ 
+  toggleBeneficiariesManagementByClinicExpandModal()
+  {
+    this.setState({
+      beneficiariesManagementByClinicExpandModal: !this.state.beneficiariesManagementByClinicExpandModal
+    });
+    this.state.beneficiariesManagementByClinicExpandLoading=false;
+  }
+
+
+
+  toggleBeneficiariesManagementByLocationExpandModal()
+  {
+    this.setState({
+      beneficiariesManagementByLocationExpandModal: !this.state.beneficiariesManagementByLocationExpandModal
+    });
+    this.state.beneficiariesManagementByLocationExpandLoading=false;
+
   }
 
   toggleBeneficiariesManagementExpandModal() {
@@ -2381,7 +2573,11 @@ class Dashboard extends React.Component {
     self.getBeneficiariesManagementByLocationData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
   }
 
-  fetchBeneficiariesManagementDataByClinic(state, instance) {
+  fetchBeneficiariesManagementByDoctorExpandData(state, instance) {
+    var page = state.page + 1;
+    self.getBeneficiariesManagementByDoctorExpandData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
+  }
+    fetchBeneficiariesManagementDataByClinic(state, instance) {
     var page = state.page + 1;
     self.state.beneficiariesManagementByClinicGridPage = page;
     self.state.beneficiariesManagementByClinicGridPageSize = state.pageSize;
@@ -2391,9 +2587,18 @@ class Dashboard extends React.Component {
     self.getBeneficiariesManagementByClinicData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
   }
 
-  fetchBeneficiariesManagementByDoctorExpandData(state, instance) {
-    var page = state.page + 1;
-    self.getBeneficiariesManagementByDoctorExpandData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
+  
+  fetchBeneficiariesManagementByClinicExpandData(state,instance)
+  {
+    var page =state.page+1;
+    self.getBeneficiariesManagementByClinicExpandData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
+  }
+
+
+  fetchBeneficiariesManagementByLocationExpandData(state,instance)
+  {
+    var page =state.page+1;
+    self.getBeneficiariesManagementByLocationExpandData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
   }
 
   getMembershipManagementPatientsData(pageSize,page,sortedArr,filteredArr) {
@@ -3023,6 +3228,71 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
       });
         
   }
+  
+  getBeneficiariesManagementByClinicExpandData(pageSize,page,sortedArr,filteredArr) {
+    self.setState({ beneficiariesManagementByClinicExpandLoading: true });
+    const formData = new FormData();
+
+    formData.append('year', self.state.beneficiariesManagementYearSelectValue.value);
+    formData.append('provider', self.state.beneficiariesManagementProviderSelectValue.value);
+    formData.append('clinicName', self.state.beneficiariesManagementSelectedClinicName);
+    formData.append('pcpName', self.state.beneficiariesManagementPcpNameValue.value);
+    formData.append('pageSize', pageSize);
+    formData.append('page', page);
+    formData.append('sortedColumns', sortedArr);
+    formData.append('filteredColumns', filteredArr);
+
+    fetch(config.serverUrl+'/getBeneficiariesManagementByClinicExpandData', {
+        method: 'POST',
+        body: formData 
+      }).then(function(res1) {
+        if (!res1.ok) {
+          if (error.message) {
+            self.setState({errorMessage :error.message});
+          } 
+        }
+        return res1.json();
+      }).then(function(response) {
+        self.setState({beneficiariesManagementByClinicExpandData: response.beneficiariesManagementByClinicExpandData,beneficiariesManagementByClinicExpandPages:response.pages,beneficiariesManagementByClinicExpandTotalCount:response.totalCount,beneficiariesManagementByClinicExpandFileQuery:response.fileQuery});
+        //console.log(response);
+        self.setState({ beneficiariesManagementByClinicExpandLoading: false });
+        self.generateBeneficiariesManagementByClinicExpandXLSX();
+    });
+      
+}
+
+
+  getBeneficiariesManagementByLocationExpandData(pageSize,page,sortedArr,filteredArr) {
+    self.setState({ beneficiariesManagementByLocationExpandLoading: true });
+    const formData = new FormData();
+
+    formData.append('year', self.state.beneficiariesManagementYearSelectValue.value);
+    formData.append('provider', self.state.beneficiariesManagementProviderSelectValue.value);
+    formData.append('pcpLocation', self.state.beneficiariesManagementSelectedPcpLocation);
+    formData.append('pcpName', self.state.beneficiariesManagementPcpNameValue.value);
+    formData.append('pageSize', pageSize);
+    formData.append('page', page);
+    formData.append('sortedColumns', sortedArr);
+    formData.append('filteredColumns', filteredArr);
+
+    fetch(config.serverUrl+'/getBeneficiariesManagementByLocationExpandData', {
+        method: 'POST',
+        body: formData 
+      }).then(function(res1) {
+        if (!res1.ok) {
+          if (error.message) {
+            self.setState({errorMessage :error.message});
+          } 
+        }
+        return res1.json();
+      }).then(function(response) {
+        self.setState({beneficiariesManagementByLocationExpandData: response.beneficiariesManagementByLocationExpandData,beneficiariesManagementByLocationExpandPages:response.pages,beneficiariesManagementByLocationExpandTotalCount:response.totalCount,beneficiariesManagementByLocationExpandFileQuery:response.fileQuery});
+        //console.log(response);
+        self.setState({ beneficiariesManagementByLocationExpandLoading: false });
+        self.generateBeneficiariesManagementByLocationExpandXLSX();
+    });
+      
+}
 
   setDuplicateClaimsYearValue(e) {
     self.state.duplicateClaimsYearSelectValue = e;
@@ -4603,6 +4873,200 @@ showHideColumn_beneficiariesManagementByLocation(columnName){
 
    }
 
+
+   showHideColumn_beneficiariesManagementByClinicExpand(columnName) {
+    
+    if(columnName == "claimId") {
+      this.state.showClaimId_beneficiariesManagementByClinicExpand = !this.state.showClaimId_beneficiariesManagementByClinicExpand;
+    }
+    if(columnName == "claimDate") {
+      this.state.showClaimDate_beneficiariesManagementByClinicExpand = !this.state.showClaimDate_beneficiariesManagementByClinicExpand;
+    }
+    if(columnName == "claimType") {
+      this.state.showClaimType_beneficiariesManagementByClinicExpand = !this.state.showClaimType_beneficiariesManagementByClinicExpand;
+    }
+    if(columnName == "clinicName") {
+      this.state.showClinicName_beneficiariesManagementByClinicExpand = !this.state.showClinicName_beneficiariesManagementByClinicExpand;
+    }
+    if(columnName == "pcpName") {
+      this.state.showPcpName_beneficiariesManagementByClinicExpand = !this.state.showPcpName_beneficiariesManagementByClinicExpand;
+    }
+    if(columnName == "icdCodes") {
+      this.state.showIcdCodes_beneficiariesManagementByClinicExpand = !this.state.showIcdCodes_beneficiariesManagementByClinicExpand;
+    }
+    if(columnName == "hccCodes") {
+      this.state.showHccCodes_beneficiariesManagementByClinicExpand = !this.state.showHccCodes_beneficiariesManagementByClinicExpand;
+    }
+    if(columnName == "drgCode") {
+      this.state.showDrgCode_beneficiariesManagementByClinicExpand = !this.state.showDrgCode_beneficiariesManagementByClinicExpand;
+    }
+    if(columnName == "betosCat") {
+      this.state.showBetosCat_beneficiariesManagementByClinicExpand = !this.state.showBetosCat_beneficiariesManagementByClinicExpand;
+    }
+    if(columnName == "cost") {
+      this.state.showCost_beneficiariesManagementByClinicExpand = !this.state.showCost_beneficiariesManagementByClinicExpand;
+    }
+    
+    const newArray = this.state.dropdownOpen.map((element, index) => {
+      return (index === 22 ? true : false);
+    });
+    this.setState({
+      dropdownOpen: newArray
+    });
+
+            if(self.state.showClaimId_beneficiariesManagementByClinicExpand) {
+              document.getElementById("ddItemClaimId_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemClaimId_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showClaimDate_beneficiariesManagementByClinicExpand) {
+              document.getElementById("ddItemClaimDate_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemClaimDate_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showClaimType_beneficiariesManagementByClinicExpand) {
+              document.getElementById("ddItemClaimType_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemClaimType_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showClinicName_beneficiariesManagementByClinicExpand) {
+              document.getElementById("ddItemClinicName_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemClinicName_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showPcpName_beneficiariesManagementByClinicExpand) {
+              document.getElementById("ddItemPcpName_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemPcpName_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showIcdCodes_beneficiariesManagementByClinicExpand) {
+              document.getElementById("ddItemIcdCodes_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemIcdCodes_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showHccCodes_beneficiariesManagementByClinicExpand) {
+              document.getElementById("ddItemHccCodes_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemHccCodes_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showDrgCode_beneficiariesManagementByClinicExpand) {
+              document.getElementById("ddItemDrgCode_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemDrgCode_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showBetosCat_beneficiariesManagementByClinicExpand) {
+              document.getElementById("ddItemBetosCat_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemBetosCat_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showCost_beneficiariesManagementByClinicExpand) {
+              document.getElementById("ddItemCost_beneficiariesManagementByClinicExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemCost_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
+            }
+            
+            self.generateBeneficiariesManagementByClinicExpandXLSX();
+
+ }
+
+
+   
+   showHideColumn_beneficiariesManagementByLocationExpand(columnName) {
+    
+    if(columnName == "claimId") {
+      this.state.showClaimId_beneficiariesManagementByLocationExpand = !this.state.showClaimId_beneficiariesManagementByLocationExpand;
+    }
+    if(columnName == "claimDate") {
+      this.state.showClaimDate_beneficiariesManagementByLocationExpand = !this.state.showClaimDate_beneficiariesManagementByLocationExpand;
+    }
+    if(columnName == "claimType") {
+      this.state.showClaimType_beneficiariesManagementByLocationExpand = !this.state.showClaimType_beneficiariesManagementByLocationExpand;
+    }
+    if(columnName == "clinicName") {
+      this.state.showClinicName_beneficiariesManagementByLocationExpand = !this.state.showClinicName_beneficiariesManagementByLocationExpand;
+    }
+    if(columnName == "pcpLocation") {
+      this.state.showPcpLocation_beneficiariesManagementByLocationExpand = !this.state.showPcpLocation_beneficiariesManagementByLocationExpand;
+    }
+    if(columnName == "icdCodes") {
+      this.state.showIcdCodes_beneficiariesManagementByLocationExpand = !this.state.showIcdCodes_beneficiariesManagementByLocationExpand;
+    }
+    if(columnName == "hccCodes") {
+      this.state.showHccCodes_beneficiariesManagementByLocationExpand = !this.state.showHccCodes_beneficiariesManagementByLocationExpand;
+    }
+    if(columnName == "drgCode") {
+      this.state.showDrgCode_beneficiariesManagementByLocationExpand = !this.state.showDrgCode_beneficiariesManagementByLocationExpand;
+    }
+    if(columnName == "betosCat") {
+      this.state.showBetosCat_beneficiariesManagementByLocationExpand = !this.state.showBetosCat_beneficiariesManagementByLocationExpand;
+    }
+    if(columnName == "cost") {
+      this.state.showCost_beneficiariesManagementByLocationExpand = !this.state.showCost_beneficiariesManagementByLocationExpand;
+    }
+    
+    const newArray = this.state.dropdownOpen.map((element, index) => {
+      return (index === 20 ? true : false);
+    });
+    this.setState({
+      dropdownOpen: newArray
+    });
+
+            if(self.state.showClaimId_beneficiariesManagementByLocationExpand) {
+              document.getElementById("ddItemClaimId_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemClaimId_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showClaimDate_beneficiariesManagementByLocationExpand) {
+              document.getElementById("ddItemClaimDate_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemClaimDate_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showClaimType_beneficiariesManagementByLocationExpand) {
+              document.getElementById("ddItemClaimType_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemClaimType_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showClinicName_beneficiariesManagementByLocationExpand) {
+              document.getElementById("ddItemClinicName_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemClinicName_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showPcpLocation_beneficiariesManagementByLocationExpand) {
+              document.getElementById("ddItemPcpLocation_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemPcpLocation_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showIcdCodes_beneficiariesManagementByLocationExpand) {
+              document.getElementById("ddItemIcdCodes_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemIcdCodes_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showHccCodes_beneficiariesManagementByLocationExpand) {
+              document.getElementById("ddItemHccCodes_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemHccCodes_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showDrgCode_beneficiariesManagementByLocationExpand) {
+              document.getElementById("ddItemDrgCode_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemDrgCode_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showBetosCat_beneficiariesManagementByLocationExpand) {
+              document.getElementById("ddItemBetosCat_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemBetosCat_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showCost_beneficiariesManagementByLocationExpand) {
+              document.getElementById("ddItemCost_beneficiariesManagementByLocationExpand").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemCost_beneficiariesManagementByLocationExpand").style.backgroundColor = "#20a8d8";
+            }
+            
+            self.generateBeneficiariesManagementByLocationExpandXLSX();
+
+ }
+
+
    showHideColumn_beneficiariesManagementByDoctor(columnName) {
     
       if(columnName == "pcpName") {
@@ -5421,7 +5885,8 @@ printTableData_settledMonthsReport() {
       if(self.state.showClaimId_beneficiariesManagementByDoctorExpand)
         propertiesArr.push("Claim Id");
       if(self.state.showClaimDate_beneficiariesManagementByDoctorExpand)
-        propertiesArr.push("Claim Date");
+        propertiesArr.push("Clinic Name");
+       propertiesArr.push("Claim Date");
       if(self.state.showClaimType_beneficiariesManagementByDoctorExpand)
         propertiesArr.push("Claim Type");
       if(self.state.showClinicName_beneficiariesManagementByDoctorExpand)
@@ -5461,6 +5926,104 @@ printTableData_settledMonthsReport() {
         console.log(error);
       });
    }
+
+   
+   printTableData_beneficiariesManagementByClinicExpand() {
+
+    var propertiesArr = [];
+
+    if(self.state.showClaimId_beneficiariesManagementByClinicExpand)
+      propertiesArr.push("Claim Id");
+    if(self.state.showClaimDate_beneficiariesManagementByClinicExpand)
+     propertiesArr.push("Claim Date");
+    if(self.state.showClaimType_beneficiariesManagementByClinicExpand)
+      propertiesArr.push("Claim Type");
+    if(self.state.showClinicName_beneficiariesManagementByClinicExpand)
+      propertiesArr.push("Clinic Name");
+    if(self.state.showPcpLocation_beneficiariesManagementByClinicExpand)
+      propertiesArr.push("PCP Name");
+    if(self.state.showIcdCodes_beneficiariesManagementByClinicExpand)
+      propertiesArr.push("ICD Codes");
+    if(self.state.showHccCodes_beneficiariesManagementByClinicExpand)
+      propertiesArr.push("HCC Codes");
+    if(self.state.showDrgCode_beneficiariesManagementByClinicExpand)
+      propertiesArr.push("DRG Code");
+    if(self.state.showBetosCat_beneficiariesManagementByClinicExpand)
+      propertiesArr.push("Betos Cat");
+    if(self.state.showCost_beneficiariesManagementByClinicExpand)
+      propertiesArr.push("Cost");
+    
+    const formData = new FormData();
+    formData.append('fileQuery', self.state.beneficiariesManagementByClinicExpandFileQuery);
+
+    fetch(config.serverUrl+'/getBeneficiariesManagementByClinicExpandDataForPrint', {
+        method: 'POST',
+        body: formData
+    }).then(function(res1) {
+        if (!res1.ok) {
+          if (error.message) {
+            self.setState({errorMessage :error.message});
+          } 
+        }
+        return res1.json();
+      }).then(function(response)   {
+
+      //console.log(response);
+      printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print- Beneficiaries Management By Clinic Details", documentTitle:"Print- Beneficiaries Management By Clinic Details", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
+    
+    }).catch((error) => {
+      console.log(error);
+    });
+ }  
+   
+   printTableData_beneficiariesManagementByLocationExpand() {
+
+    var propertiesArr = [];
+
+    if(self.state.showClaimId_beneficiariesManagementByLocationExpand)
+      propertiesArr.push("Claim Id");
+    if(self.state.showClaimDate_beneficiariesManagementByLocationExpand)
+     propertiesArr.push("Claim Date");
+    if(self.state.showClaimType_beneficiariesManagementByLocationExpand)
+      propertiesArr.push("Claim Type");
+    if(self.state.showClinicName_beneficiariesManagementByLocationExpand)
+      propertiesArr.push("Clinic Name");
+    if(self.state.showPcpLocation_beneficiariesManagementByLocationExpand)
+      propertiesArr.push("PCP Location");
+    if(self.state.showIcdCodes_beneficiariesManagementByLocationExpand)
+      propertiesArr.push("ICD Codes");
+    if(self.state.showHccCodes_beneficiariesManagementByLocationExpand)
+      propertiesArr.push("HCC Codes");
+    if(self.state.showDrgCode_beneficiariesManagementByLocationExpand)
+      propertiesArr.push("DRG Code");
+    if(self.state.showBetosCat_beneficiariesManagementByLocationExpand)
+      propertiesArr.push("Betos Cat");
+    if(self.state.showCost_beneficiariesManagementByLocationExpand)
+      propertiesArr.push("Cost");
+    
+    const formData = new FormData();
+    formData.append('fileQuery', self.state.beneficiariesManagementByLocationExpandFileQuery);
+
+    fetch(config.serverUrl+'/getBeneficiariesManagementByLocationExpandDataForPrint', {
+        method: 'POST',
+        body: formData
+    }).then(function(res1) {
+        if (!res1.ok) {
+          if (error.message) {
+            self.setState({errorMessage :error.message});
+          } 
+        }
+        return res1.json();
+      }).then(function(response)   {
+
+      //console.log(response);
+      printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print- Beneficiaries Management By Location Details", documentTitle:"Print- Beneficiaries Management By Location Details", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
+    
+    }).catch((error) => {
+      console.log(error);
+    });
+ }
+
 
    printTableData_beneficiariesManagementByDoctor() {
 
@@ -5852,6 +6415,55 @@ printTableData_specialistComparisonReportExpand() {
       self.setState({jsonDataForBeneficiariesManagementExpand: btoa(JSON.stringify(object))});
    }
 
+
+   generateBeneficiariesManagementByClinicExpandXLSX() {
+    const formData = new FormData();
+    
+    formData.append('fileQuery', self.state.beneficiariesManagementByClinicExpandFileQuery);
+    formData.append('showClaimId_beneficiariesManagementByClinicExpand', self.state.showClaimId_beneficiariesManagementByClinicExpand);
+    formData.append('showClaimDate_beneficiariesManagementByClinicExpand', self.state.showClaimDate_beneficiariesManagementByClinicExpand);
+    formData.append('showClaimType_beneficiariesManagementByClinicExpand', self.state.showClaimType_beneficiariesManagementByClinicExpand);
+    formData.append('showPcpName_beneficiariesManagementByClinicExpand', self.state.showPcpName_beneficiariesManagementByClinicExpand);
+    formData.append('showClinicName_beneficiariesManagementByClinicExpand', self.state.showClinicName_beneficiariesManagementByClinicExpand);
+    formData.append('showIcdCodes_beneficiariesManagementByClinicExpand', self.state.showIcdCodes_beneficiariesManagementByClinicExpand);
+    formData.append('showHccCodes_beneficiariesManagementByClinicExpand', self.state.showHccCodes_beneficiariesManagementByClinicExpand);
+    formData.append('showDrgCode_beneficiariesManagementByClinicExpand', self.state.showDrgCode_beneficiariesManagementByClinicExpand);
+    formData.append('showBetosCat_beneficiariesManagementByClinicExpand', self.state.showBetosCat_beneficiariesManagementByClinicExpand);
+    formData.append('showCost_beneficiariesManagementByClinicExpand', self.state.showCost_beneficiariesManagementByClinicExpand);
+    
+      var object = {};
+      formData.forEach(function(value, key){
+          object[key] = value;
+      });
+      
+      self.setState({jsonDataForBeneficiariesManagementByClinicExpand: btoa(JSON.stringify(object))});
+   }
+
+   generateBeneficiariesManagementByLocationExpandXLSX() {
+    const formData = new FormData();
+    
+    formData.append('fileQuery', self.state.beneficiariesManagementByLocationExpandFileQuery);
+    formData.append('showClaimId_beneficiariesManagementByLocationExpand', self.state.showClaimId_beneficiariesManagementByLocationExpand);
+    formData.append('showClaimDate_beneficiariesManagementByLocationExpand', self.state.showClaimDate_beneficiariesManagementByLocationExpand);
+    formData.append('showClaimType_beneficiariesManagementByLocationExpand', self.state.showClaimType_beneficiariesManagementByLocationExpand);
+    formData.append('showClinicName_beneficiariesManagementByLocationExpand', self.state.showClinicName_beneficiariesManagementByLocationExpand);
+    formData.append('showPcpLocation_beneficiariesManagementByLocationExpand', self.state.showPcpLocation_beneficiariesManagementByLocationExpand);
+    formData.append('showIcdCodes_beneficiariesManagementByLocationExpand', self.state.showIcdCodes_beneficiariesManagementByLocationExpand);
+    formData.append('showHccCodes_beneficiariesManagementByLocationExpand', self.state.showHccCodes_beneficiariesManagementByLocationExpand);
+    formData.append('showDrgCode_beneficiariesManagementByLocationExpand', self.state.showDrgCode_beneficiariesManagementByLocationExpand);
+    formData.append('showBetosCat_beneficiariesManagementByLocationExpand', self.state.showBetosCat_beneficiariesManagementByLocationExpand);
+    formData.append('showCost_beneficiariesManagementByLocationExpand', self.state.showCost_beneficiariesManagementByLocationExpand);
+    
+      var object = {};
+      formData.forEach(function(value, key){
+          object[key] = value;
+      });
+      
+      self.setState({jsonDataForBeneficiariesManagementByLocationExpand: btoa(JSON.stringify(object))});
+   }
+
+   
+
    generateBeneficiariesManagementByDoctorExpandXLSX() {
     const formData = new FormData();
     
@@ -6217,10 +6829,22 @@ printTableData_specialistComparisonReportExpand() {
       this.togglePmpmByPracticeExpandModal();
    }
 
+   getBeneficiariesManagementByLocationDataRow(rowInfo)
+   {
+     self.state.beneficiariesManagementSelectedPcpLocation = rowInfo.row.pcpLocation;
+     this.toggleBeneficiariesManagementByLocationExpandModal();
+   }
+
    getBeneficiariesManagementDataRow(rowInfo) {
       self.state.beneficiariesManagementSelectedMedicareId = rowInfo.row.medicareId;
       this.toggleBeneficiariesManagementExpandModal();
 
+   }
+
+   getBeneficiariesManagementByClinicDataRow(rowInfo)
+   {
+      self.state.beneficiariesManagementSelectedClinicName=rowInfo.row.clinicName;
+      this.toggleBeneficiariesManagementByClinicExpandModal();
    }
 
    getBeneficiariesManagementByDoctorDataRow(rowInfo) {
@@ -10307,14 +10931,14 @@ const horizontalBarOptions = {
                                 getTdProps={(state, rowInfo, column) => {
                                   return {
                                     onClick: (e) => {
-                                      if(column.Header == "Patient Name") {
-                                        // self.getBeneficiariesManagementDataRow(rowInfo);
+                                      if(column.Header == "PCP Location") {
+                                         self.getBeneficiariesManagementByLocationDataRow(rowInfo);
 
                                       }
                                     },
                                     style: {
-                                      color: column.Header === "Patient Name" ? "#337ab7" : "",
-                                      cursor: column.Header === "Patient Name" ? "pointer" : ""
+                                      color: column.Header === "PCP Location" ? "#337ab7" : "",
+                                      cursor: column.Header === "PCP Location" ? "pointer" : ""
                                     }
                                   }
                                 }}
@@ -10416,7 +11040,7 @@ const horizontalBarOptions = {
                                   return {
                                     onClick: (e) => {
                                       if(column.Header == "Clinic Name") {
-                                        // self.getBeneficiariesManagementDataRow(rowInfo);
+                                     self.getBeneficiariesManagementByClinicDataRow(rowInfo);
 
                                       }
                                     },
@@ -10770,6 +11394,343 @@ const horizontalBarOptions = {
                   </ModalBody>
                   
                 </Modal>
+     *************Beneficiaries Management By Location Expand Modal****************
+     <Modal isOpen={this.state.beneficiariesManagementByLocationExpandModal} toggle={this.toggleBeneficiariesManagementByLocationExpandModal}
+                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                  <ModalHeader toggle={this.toggleBeneficiariesManagementByLocationExpandModal}>
+                  <Row>  
+                      <Col className="duplicateClaimsHeader">
+                        <b>Beneficiaries Management By Location - Details</b>
+                      </Col>
+                  </Row>
+                  </ModalHeader>
+                  <ModalBody>
+                  <Row>
+                  <Col md="10">
+                  </Col>
+                  <Col md="2">
+                  
+                        <FormGroup check inline>
+                            <i class="icon-printer icons font-2xl d-block" title="Print" onClick={e => self.printTableData_beneficiariesManagementByLocationExpand()} style={{cursor:"pointer",color:"#20a8d8"}}></i>
+                            
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <a href={config.serverUrl+'/renderBeneficiariesManagementByLocationExpandXLSX/'+self.state.jsonDataForBeneficiariesManagementByLocationExpand} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="icon-doc icons font-2xl d-block" title="Export" style={{color:"#20a8d8"}}></i>
+                                
+                            </a>
+                            &nbsp;
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <a href={config.serverUrl+'/renderBeneficiariesManagementByLocationExpandPDF/'+self.state.jsonDataForBeneficiariesManagementByLocationExpand} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="fa fa-file-pdf-o font-2xl" title="PDF" style={{color:"#20a8d8"}}></i>
+                              
+                            </a>
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <Dropdown isOpen={this.state.dropdownOpen[20]} toggle={() => {
+                                this.toggle(20);
+                              }}>
+                                <DropdownToggle style={{backgroundColor:"white",borderColor:"white",padding:"0rem 0rem",marginTop:-9}}>
+                                  <i class="icon-grid icons font-2xl d-block" title="More" style={{cursor:"pointer",color:"#20a8d8"}}></i>
+                                  
+                                </DropdownToggle>
+                                <DropdownMenu style={{maxHeight:300,overflowY:"auto"}}>
+                                  <DropdownItem toggle={false} id="ddItemClaimId_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("claimId")}>Claim Id</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemClaimDate_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("claimDate")}>Claim Date</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemClaimType_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("claimType")}>Claim Type</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemClinicName_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("clinicName")}>Clinic Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPcpLocation_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("pcpLocation")}>PCP Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemIcdCodes_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("icdCodes")}>ICD Codes</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemHccCodes_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("hccCodes")}>HCC Codes</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemDrgCode_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("drgCode")}>DRG Code</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemBetosCat_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("betosCat")}>BetosCat</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemCost_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("cost")}>Cost</DropdownItem>
+                                  
+                                </DropdownMenu>
+                              </Dropdown>
+                          </FormGroup>
+                    
+                    </Col>
+                    </Row>
+                    <ReactTable
+                              manual
+                              data={this.state.beneficiariesManagementByLocationExpandData}
+                              loading={this.state.beneficiariesManagementByLocationExpandLoading}
+                              pages={this.state.beneficiariesManagementByLocationExpandPages} // Display the total number of pages
+                              filterable
+                              defaultFilterMethod={(filter, row) =>
+                                String(row[filter.id]) === filter.value}
+                              columns={[
+                                {
+                                  Header: "",
+                                  columns: [
+                                    {
+                                      Header: "Claim Id",
+                                      accessor: "claimId",
+                                      show: this.state.showClaimId_beneficiariesManagementByLocationExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Claim Date",
+                                      accessor: "claimDate",
+                                      show: this.state.showClaimDate_beneficiariesManagementByLocationExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Claim Type",
+                                      accessor: "claimType",
+                                      show: this.state.showClaimType_beneficiariesManagementByLocationExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Clinic Name",
+                                      accessor: "clinicName",
+                                      show: this.state.showClinicName_beneficiariesManagementByLocationExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "PCP Location",
+                                      accessor: "pcpLocation",
+                                      show: this.state.showPcpLocation_beneficiariesManagementByLocationExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "ICD Codes",
+                                      accessor: "icdCodes",
+                                      show: this.state.showIcdCodes_beneficiariesManagementByLocationExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "HCC Codes",
+                                      accessor: "hccCodes",
+                                      show: this.state.showHccCodes_beneficiariesManagementByLocationExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "DRG Code",
+                                      accessor: "drgCode",
+                                      show: this.state.showDrgCode_beneficiariesManagementByLoactionExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "BetosCat",
+                                      accessor: "betosCat",
+                                      show: this.state.showBetosCat_beneficiariesManagementByLocationExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Cost",
+                                      accessor: "cost",
+                                      show: this.state.showCost_beneficiariesManagementByLocationExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                  ]
+                                }
+                              ]}
+                              defaultPageSize={100}
+                              onFetchData={this.fetchBeneficiariesManagementByLocationExpandData}
+                              className="-striped -highlight commonFontFamily"
+                              pageText={'Total Entries '+this.state.beneficiariesManagementByLocationExpandTotalCount+', Page'}
+                              getTrProps={(state, rowInfo, column) => {
+                                  return {
+                                    style: {
+                                      textAlign:"center"
+                                    }
+                                  }
+                                }}
+                                
+                            />
+                  </ModalBody>
+                  
+                </Modal>
+                *************Beneficiaries Management By Clinic Expand Modal****************
+     <Modal isOpen={this.state.beneficiariesManagementByClinicExpandModal} toggle={this.toggleBeneficiariesManagementByClinicExpandModal}
+                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                  <ModalHeader toggle={this.toggleBeneficiariesManagementByClinicExpandModal}>
+                  <Row>  
+                      <Col className="duplicateClaimsHeader">
+                        <b>Beneficiaries Management By Clinic - Details</b>
+                      </Col>
+                  </Row>
+                  </ModalHeader>
+                  <ModalBody>
+                  <Row>
+                  <Col md="10">
+                  </Col>
+                  <Col md="2">
+                  
+                        <FormGroup check inline>
+                            <i class="icon-printer icons font-2xl d-block" title="Print" onClick={e => self.printTableData_beneficiariesManagementByClinicExpand()} style={{cursor:"pointer",color:"#20a8d8"}}></i>
+                            
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <a href={config.serverUrl+'/renderBeneficiariesManagementByClinicExpandXLSX/'+self.state.jsonDataForBeneficiariesManagementByClinicExpand} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="icon-doc icons font-2xl d-block" title="Export" style={{color:"#20a8d8"}}></i>
+                                
+                            </a>
+                            &nbsp;
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <a href={config.serverUrl+'/renderBeneficiariesManagementByClinicExpandPDF/'+self.state.jsonDataForBeneficiariesManagementByClinicExpand} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="fa fa-file-pdf-o font-2xl" title="PDF" style={{color:"#20a8d8"}}></i>
+                              
+                            </a>
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <Dropdown isOpen={this.state.dropdownOpen[22]} toggle={() => {
+                                this.toggle(22);
+                              }}>
+                                <DropdownToggle style={{backgroundColor:"white",borderColor:"white",padding:"0rem 0rem",marginTop:-9}}>
+                                  <i class="icon-grid icons font-2xl d-block" title="More" style={{cursor:"pointer",color:"#20a8d8"}}></i>
+                                  
+                                </DropdownToggle>
+                                <DropdownMenu style={{maxHeight:300,overflowY:"auto"}}>
+                                  <DropdownItem toggle={false} id="ddItemClaimId_beneficiariesManagementByClinicExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByClinicExpand("claimId")}>Claim Id</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemClaimDate_beneficiariesManagementByClinicExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByClinicExpand("claimDate")}>Claim Date</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemClaimType_beneficiariesManagementByClinicExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByClinicExpand("claimType")}>Claim Type</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemClinicName_beneficiariesManagementByClinicExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByClinicExpand("clinicName")}>Clinic Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPcpName_beneficiariesManagementByClinicExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByClinicExpand("pcpName")}>PCP Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemIcdCodes_beneficiariesManagementByClinicExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByClinicExpand("icdCodes")}>ICD Codes</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemHccCodes_beneficiariesManagementByClinicExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByClinicExpand("hccCodes")}>HCC Codes</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemDrgCode_beneficiariesManagementByClinicExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByClinicExpand("drgCode")}>DRG Code</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemBetosCat_beneficiariesManagementByClinicExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByClinicExpand("betosCat")}>BetosCat</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemCost_beneficiariesManagementByClinicExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByClinicExpand("cost")}>Cost</DropdownItem>
+                                  
+                                </DropdownMenu>
+                              </Dropdown>
+                          </FormGroup>
+                    
+                    </Col>
+                    </Row>
+                    <ReactTable
+                              manual
+                              data={this.state.beneficiariesManagementByClinicExpandData}
+                              loading={this.state.beneficiariesManagementByClinicExpandLoading}
+                              pages={this.state.beneficiariesManagementByClinicExpandPages} // Display the total number of pages
+                              filterable
+                              defaultFilterMethod={(filter, row) =>
+                                String(row[filter.id]) === filter.value}
+                              columns={[
+                                {
+                                  Header: "",
+                                  columns: [
+                                    {
+                                      Header: "Claim Id",
+                                      accessor: "claimId",
+                                      show: this.state.showClaimId_beneficiariesManagementByClinicExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Claim Date",
+                                      accessor: "claimDate",
+                                      show: this.state.showClaimDate_beneficiariesManagementByClinicExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Claim Type",
+                                      accessor: "claimType",
+                                      show: this.state.showClaimType_beneficiariesManagementByClinicExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Clinic Name",
+                                      accessor: "clinicName",
+                                      show: this.state.showClinicName_beneficiariesManagementByClinicExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "PCP Name",
+                                      accessor: "pcpName",
+                                      show: this.state.showPcpName_beneficiariesManagementByClinicExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "ICD Codes",
+                                      accessor: "icdCodes",
+                                      show: this.state.showIcdCodes_beneficiariesManagementByClinicExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "HCC Codes",
+                                      accessor: "hccCodes",
+                                      show: this.state.showHccCodes_beneficiariesManagementByClinicExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "DRG Code",
+                                      accessor: "drgCode",
+                                      show: this.state.showDrgCode_beneficiariesManagementByClinicExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "BetosCat",
+                                      accessor: "betosCat",
+                                      show: this.state.showBetosCat_beneficiariesManagementByClinicExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Cost",
+                                      accessor: "cost",
+                                      show: this.state.showCost_beneficiariesManagementByClinicExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                  ]
+                                }
+                              ]}
+                              defaultPageSize={100}
+                              onFetchData={this.fetchBeneficiariesManagementByClinicExpandData}
+                              className="-striped -highlight commonFontFamily"
+                              pageText={'Total Entries '+this.state.beneficiariesManagementByClinicExpandTotalCount+', Page'}
+                              getTrProps={(state, rowInfo, column) => {
+                                  return {
+                                    style: {
+                                      textAlign:"center"
+                                    }
+                                  }
+                                }}
+                                
+                            />
+                  </ModalBody>
+                  
+                </Modal>
+
       </div>
     );
   }
