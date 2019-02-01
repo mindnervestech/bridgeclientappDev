@@ -722,6 +722,14 @@ class Dashboard extends React.Component {
       this.setState({
         activeTab: tab
       });
+    if(tab==1)
+      self.getBeneficiariesManagementData(self.state.beneficiariesManagementGridPageSize, 1, JSON.stringify(self.state.beneficiariesManagementGridSorted),JSON.stringify(self.state.beneficiariesManagementGridFiltered));
+    if(tab==2)
+    self.getBeneficiariesManagementByDoctorData(self.state.beneficiariesManagementByDoctorGridPageSize, 1, JSON.stringify(self.state.beneficiariesManagementByDoctorGridSorted),JSON.stringify(self.state.beneficiariesManagementByDoctorGridFiltered));
+    if(tab==3)
+    self.getBeneficiariesManagementByLocationData(self.state.beneficiariesManagementByLocationGridPageSize, 1, JSON.stringify(self.state.beneficiariesManagementByLocationGridSorted),JSON.stringify(self.state.beneficiariesManagementByLocationGridFiltered));
+    if(tab==4)
+    self.getBeneficiariesManagementByClinicData(self.state.beneficiariesManagementByClinicGridPageSize, 1, JSON.stringify(self.state.beneficiariesManagementByClinicGridSorted),JSON.stringify(self.state.beneficiariesManagementByClinicGridFiltered)); 
     }
   }
 
@@ -2344,6 +2352,7 @@ class Dashboard extends React.Component {
     self.state.beneficiariesManagementGridPageSize = state.pageSize;
     self.state.beneficiariesManagementGridSorted = state.sorted;
     self.state.beneficiariesManagementGridFiltered = state.filtered;
+    if(self.state.activeTab==1) 
     self.getBeneficiariesManagementData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
   }
 
@@ -2353,6 +2362,7 @@ class Dashboard extends React.Component {
     self.state.beneficiariesManagementByDoctorGridPageSize = state.pageSize;
     self.state.beneficiariesManagementByDoctorGridSorted = state.sorted;
     self.state.beneficiariesManagementByDoctorGridFiltered = state.filtered;
+    if(self.state.activeTab==2)
     self.getBeneficiariesManagementByDoctorData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
   }
 
@@ -2367,6 +2377,7 @@ class Dashboard extends React.Component {
     self.state.beneficiariesManagementByLocationGridPageSize = state.pageSize;
     self.state.beneficiariesManagementByLocationGridSorted = state.sorted;
     self.state.beneficiariesManagementByLocationGridFiltered = state.filtered;
+    if(self.state.activeTab==3)
     self.getBeneficiariesManagementByLocationData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
   }
 
@@ -2376,6 +2387,7 @@ class Dashboard extends React.Component {
     self.state.beneficiariesManagementByClinicGridPageSize = state.pageSize;
     self.state.beneficiariesManagementByClinicGridSorted = state.sorted;
     self.state.beneficiariesManagementByClinicGridFiltered = state.filtered;
+    if(self.state.activeTab==4)
     self.getBeneficiariesManagementByClinicData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
   }
 
@@ -2770,7 +2782,7 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
 
       formData.append('year', self.state.pmpmByPracticeYearSelectValue.value);
       formData.append('provider', self.state.pmpmByPracticeProviderSelectValue.value);
-      formData.append('pcpId', self.state.pmpmByPracticeSelectedPcpId);
+      formData.append('pcpName', self.state.pmpmByPracticeSelectedPcpId);
       formData.append('pageSize', pageSize);
       formData.append('page', page);
       formData.append('sortedColumns', sortedArr);
@@ -6201,7 +6213,7 @@ printTableData_specialistComparisonReportExpand() {
    }
 
    getPmpmByPracticeExpandDataRow(rowInfo) {
-      self.state.pmpmByPracticeSelectedPcpId = rowInfo.row.pcpId;
+      self.state.pmpmByPracticeSelectedPcpId = rowInfo.row.providerName;
       this.togglePmpmByPracticeExpandModal();
    }
 
@@ -7786,7 +7798,7 @@ const horizontalBarOptions = {
                    <Row>
                    <Col>
                       <div className="duplicateClaimsHeader">
-                        <b>Specialist Comparison Report - Details</b>
+                        <b>Specialist Comparison Report - {self.state.specialistComparisonSpecialityCode} Details</b>
                       </div>
                   </Col>    
                       <FormGroup check inline>
@@ -9062,14 +9074,6 @@ const horizontalBarOptions = {
                                       Header: "PMPY",
                                       accessor: "pmpy",
                                       show: this.state.showPMPY_pmpmByPractice,
-                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                                      filterMethod: (filter, row) =>
-                                        row[filter.id].startsWith(filter.value)
-                                    },
-                                    {
-                                      Header: "PCP ID",
-                                      accessor: "pcpId",
-                                      show: false,
                                       headerStyle: {"fontWeight":"bold",color:"#62879A"},
                                       filterMethod: (filter, row) =>
                                         row[filter.id].startsWith(filter.value)
