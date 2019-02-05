@@ -12112,8 +12112,8 @@ const horizontalBarOptions = {
                                   <DropdownItem toggle={false} id="ddItemPatientName_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("PatientName")}>Patient Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPcpName_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("PcpName")}>PCP Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemTermedMonth_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("termedMonth")}>Termed Month</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemInstClaims_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("instClaims")}>Termed Month</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemProfClaims_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("profClaims")}>Termed Month</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemInstClaims_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("instClaims")}>INST Cost</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemProfClaims_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("profClaims")}>PROF Cost</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemTotalCost_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("totalCost")}>Total Cost</DropdownItem>
                                 </DropdownMenu>
                               </Dropdown>
