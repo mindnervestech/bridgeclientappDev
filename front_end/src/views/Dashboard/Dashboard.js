@@ -200,6 +200,15 @@ class Dashboard extends React.Component {
       reinsuranceManagementTotalCount:0,
       reinsuranceManagementFileQuery:"",
 
+      reinsuranceCostReportModal:false,
+      reinsuranceCostReportLoading: false,
+      reinsuranceCostReportPages:0,
+      reinsuranceCostReportData:[],
+      reinsuranceCostReportTotalCount:0,
+      reinsuranceCostReportFileQuery:"",
+
+      
+
       pmpmByPracticeModal: false,
       pmpmByPracticeLoading: false,
       pmpmByPracticePages: 0,
@@ -391,6 +400,18 @@ class Dashboard extends React.Component {
       
 
 
+      showPlanName_reinsuranceCostReport:true,
+      showPolicyPeriod_reinsuranceCostReport:true,
+      showPatientLastName_reinsuranceCostReport:true,
+      showPatientFirstName_reinsuranceCostReport:true,
+      showSubscriberID_reinsuranceCostReport:true,
+      showEffectiveDate_reinsuranceCostReport:true,
+      showTermedMonth_reinsuranceCostReport:true,
+      showDateOfBirth_reinsuranceCostReport:true,
+      showStatus_reinsuranceCostReport:true,
+      showGender_reinsuranceCostReport:true,
+      showPcpName_reinsuranceCostReport:true,
+      showTotalClaimsCost_reinsuranceCostReport:true,
 
       showPlanName_membershipManagement: true,
       showMedicareId_membershipManagement: true,
@@ -442,6 +463,12 @@ class Dashboard extends React.Component {
       reinsuranceManagementGridSorted:{},
       reinsuranceManagementGridFiltered:{},
 
+      reinsuranceCostReportGridPageSize:0,
+      reinsuranceCostReportGridPage:0,
+      reinsuranceCostReportGridSorted:{},
+      reinsuranceCostReportGridFiltered:{},
+      
+
       summaryGridPage: 0,
       summaryGridPageSize: 0,
       summaryGridSorted: {},
@@ -485,6 +512,7 @@ class Dashboard extends React.Component {
       jsonDataForSettledMonthsExpand:"",
       jsonDataForPmpmByPractice:"",
       jsonDataForReinsuranceManagement:"",
+      jsonDataForReinsuranceCostReport:"",
       jsonDataForMembershipManagement:"",
       jsonDataForPmpmByPracticeExpand:"",
       jsonDataForBeneficiariesManagement:"",
@@ -512,6 +540,10 @@ class Dashboard extends React.Component {
 
       reinsuranceManagementYearSelectValue:"",
       reinsuranceManagementProviderSelectValue:{value:'all',label:'All'},
+
+      reinsuranceCostReportYearSelectValue:"",
+      reinsuranceCostReportProviderSelectValue:{value:'all',label:'All'},
+      
 
       membershipManagementProviderSelectValue:{value:'all', label:'All'},
 
@@ -674,11 +706,13 @@ class Dashboard extends React.Component {
       this.togglePatientVisitReportModal = this.togglePatientVisitReportModal.bind(this);
       this.togglePatientVisitExpandReportModal = this.togglePatientVisitExpandReportModal.bind(this);
       this.toggleSpecialistComparisonExpandReportModal = this.toggleSpecialistComparisonExpandReportModal.bind(this);
+      this.toggleSpecialistComparisonExpandPracticeReportModal = this.toggleSpecialistComparisonExpandPracticeReportModal.bind(this);
       this.toggleSummaryReportModal = this.toggleSummaryReportModal.bind(this);
       this.toggleSettledMonthsModal = this.toggleSettledMonthsModal.bind(this);
       this.toggleSettledMonthsExpandModal = this.toggleSettledMonthsExpandModal.bind(this);
       this.togglePmpmByPracticeModal = this.togglePmpmByPracticeModal.bind(this);
       this.toggleReinsuranceManagementModal=this.toggleReinsuranceManagementModal.bind(this);
+      this.toggleReinsuranceCostReportModal=this.toggleReinsuranceCostReportModal.bind(this);
       this.togglePmpmByPracticeExpandModal = this.togglePmpmByPracticeExpandModal.bind(this);
       this.toggleMembershipManagementModal = this.toggleMembershipManagementModal.bind(this);
       this.toggleBeneficiariesManagementModal = this.toggleBeneficiariesManagementModal.bind(this);
@@ -736,6 +770,7 @@ class Dashboard extends React.Component {
       this.fetchBeneficiariesManagementByDoctorExpandData = debounce(this.fetchBeneficiariesManagementByDoctorExpandData,500);
       this.fetchBeneficiariesManagementByLocationExpandData=debounce(this.fetchBeneficiariesManagementByLocationExpandData,500);
       this.fetchBeneficiariesManagementByClinicExpandData=debounce(this.fetchBeneficiariesManagementByClinicExpandData,500);
+      this.fetchReinsuranceCostReportData=debounce(this.fetchReinsuranceCostReportData,500);
   }
 
   createRows (data) {
@@ -1853,6 +1888,69 @@ class Dashboard extends React.Component {
                 document.getElementById("ddItemCost_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
               }
             }
+          if(i==24)
+          {
+            
+          if(self.state.showSubscriberID_reinsuranceCostReport) {
+            document.getElementById("ddItemSubscriberID_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemSubscriberID_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showPlanName_reinsuranceCostReport) {
+            document.getElementById("ddItemPlanName_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemPlanName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showPatientFirstName_reinsuranceCostReport) {
+            document.getElementById("ddItemPatientFirstName_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemPatientFirstName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          
+          if(self.state.showPatientLastName_reinsuranceCostReport) {
+            document.getElementById("ddItemPatientLastName_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemPatientLastName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showPcpName_reinsuranceCostReport) {
+            document.getElementById("ddItemPcpName_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemPcpName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showTermedMonth_reinsuranceCostReport) {
+            document.getElementById("ddItemTermedMonth_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemTermedMonth_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showDateOfBirth_reinsuranceCostReport) {
+            document.getElementById("ddItemDateOfBirth_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemDateOfBirth_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showGender_reinsuranceCostReport) {
+            document.getElementById("ddItemGender_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemGender_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showTotalClaimsCost_reinsuranceCostReport) {
+            document.getElementById("ddItemTotalClaimsCost_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemTotalClaimsCost_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showStatus_reinsuranceCostReport) {
+            document.getElementById("ddItemStatus_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemStatus_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }if(self.state.showEffectiveDate_reinsuranceCostReport) {
+            document.getElementById("ddItemEffectiveDate_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemEffectiveDate_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }if(self.state.showPolicyPeriod_reinsuranceCostReport) {
+            document.getElementById("ddItemPolicyPeriod_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemPolicyPeriod_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          }
     }, 300);
   }
 
@@ -1970,6 +2068,22 @@ class Dashboard extends React.Component {
     });
     this.state.reinsuranceManagementLoading = false;
   }
+
+  
+  toggleReinsuranceCostReportModal()
+  {
+    this.state.reinsuranceCostReportProviderSelectValue = this.state.claimTotalsProviderSelect;
+    this.state.reinsuranceCostReportPcpNameValue = this.state.optionSelectValue;
+    this.setState({
+      pcpReportList: this.state.pcpList
+    })
+    this.setState({
+      reinsuranceCostReportModal: !this.state.reinsuranceCostReportModal
+    });
+    this.state.reinsuranceCostReportLoading = false;
+
+  }
+
 
   togglePmpmByPracticeModal() {
     this.state.pmpmByPracticeProviderSelectValue = this.state.claimTotalsProviderSelect;
@@ -2127,6 +2241,7 @@ class Dashboard extends React.Component {
               self.state.settledMonthsYearSelectValue = {value:currentYear, label:currentYear};
               self.state.pmpmByPracticeYearSelectValue = {value:currentYear, label:currentYear};
               self.state.reinsuranceManagementYearSelectValue={value:currentYear,label:currentYear};
+              self.state.reinsuranceCostReportYearSelectValue={value:currentYear,label:currentYear};
               self.state.beneficiariesManagementYearSelectValue = {value:currentYear, label:currentYear};
               self.state.yearsSelectValue = {value:currentYear, label:currentYear};
 
@@ -2317,6 +2432,7 @@ class Dashboard extends React.Component {
           self.state.settledMonthsPcpNameValue = {value:'all', label:'All'};
           self.state.pmpmByPracticePcpNameValue = {value:'all', label:'All'};
           self.state.reinsuranceManagementPcpNameValue={value:'all',label:'All'};
+          self.state.reinsuranceCostReportPcpNameValue={value:'all',label:'All'};
           self.state.beneficiariesManagementPcpNameValue = {value:'all', label:'All'};
 
         //}
@@ -2501,6 +2617,11 @@ class Dashboard extends React.Component {
     self.state.reinsuranceManagementPcpNameValue = e;
     self.getReinsuranceManagementData(self.state.reinsuranceManagementGridPageSize, 1, JSON.stringify(self.state.reinsuranceManagementGridSorted),JSON.stringify(self.state.reinsuranceManagementGridFiltered));
   }
+  setReinsuranceCostReportPcpName(e) {
+    self.state.reinsuranceCostReportPcpNameValue = e;
+    self.getReinsuranceCostReportData(self.state.reinsuranceCostReportGridPageSize, 1, JSON.stringify(self.state.reinsuranceCostReportGridSorted),JSON.stringify(self.state.reinsuranceCostReportGridFiltered));
+  }
+  
 
   setPmpmByPracticePcpName(e) {
     self.state.pmpmByPracticePcpNameValue = e;
@@ -2627,6 +2748,15 @@ class Dashboard extends React.Component {
     self.state.reinsuranceManagementGridSorted = state.sorted;
     self.state.reinsuranceManagementGridFiltered = state.filtered;
     self.getReinsuranceManagementData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
+  }
+
+  fetchReinsuranceCostReportData(state,instance){
+    var page = state.page + 1;
+    self.state.reinsuranceCostReportGridPage = page;
+    self.state.reinsuranceCostReportGridPageSize = state.pageSize;
+    self.state.reinsuranceCostReportGridSorted = state.sorted;
+    self.state.reinsuranceCostReportGridFiltered = state.filtered;
+    self.getReinsuranceCostReportData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
   }
 
   fetchPmpmByPracticeExpandData(state, instance) {
@@ -3084,6 +3214,35 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
       });
     }
 
+    
+  getReinsuranceCostReportData(pageSize,page,sortedArr,filteredArr) {
+    self.setState({ reinsuranceCostReportLoading: true });
+    const formData = new FormData();
+
+      formData.append('year', self.state.reinsuranceCostReportYearSelectValue.value);
+      formData.append('provider', self.state.reinsuranceCostReportProviderSelectValue.value);
+      formData.append('pcpName', self.state.reinsuranceCostReportPcpNameValue.value);
+      formData.append('pageSize', pageSize);
+      formData.append('page', page);
+      formData.append('sortedColumns', sortedArr);
+      formData.append('filteredColumns', filteredArr);
+      fetch(config.serverUrl+'/getReinsuranceCostReportData', {
+          method: 'POST',
+          body: formData 
+        }).then(function(res1) {
+          if (!res1.ok) {
+            if (error.message) {
+              self.setState({errorMessage :error.message});
+            } 
+          }
+          return res1.json();
+        }).then(function(response) {
+          self.setState({reinsuranceCostReportData: response.reinsuranceCostReportData,reinsuranceCostReportPages:response.pages,reinsuranceCostReportTotalCount:response.totalCount,reinsuranceCostReportFileQuery:response.fileQuery});
+          self.setState({ reinsuranceCostReportLoading: false });
+          self.generateReinsuranceCostReportXLSX();
+      });
+    }
+
   getPmpmByPracticeData(pageSize,page,sortedArr,filteredArr) {
     self.setState({ pmpmByPracticeLoading: true });
     const formData = new FormData();
@@ -3509,6 +3668,11 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
     self.getReinsuranceManagementData(self.state.reinsuranceManagementGridPageSize, 1, JSON.stringify(self.state.reinsuranceManagementGridSorted),JSON.stringify(self.state.reinsuranceManagementGridFiltered));
   }
 
+  setReinsuranceCostReportYearValue(e) {
+    self.state.reinsuranceCostReportYearSelectValue = e;
+    console.log(e);
+    self.getReinsuranceCostReportData(self.state.reinsuranceCostReportGridPageSize, 1, JSON.stringify(self.state.reinsuranceCostReportGridSorted),JSON.stringify(self.state.reinsuranceCostReportGridFiltered));
+  }
   setPmpmByPracticeYearValue(e) {
     self.state.pmpmByPracticeYearSelectValue = e;
     self.getPmpmByPracticeData(self.state.pmpmByPracticeGridPageSize, 1, JSON.stringify(self.state.pmpmByPracticeGridSorted),JSON.stringify(self.state.pmpmByPracticeGridFiltered));
@@ -3520,6 +3684,14 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
     self.getPCPForReportProviders(self.state.reinsuranceManagementProviderSelectValue.value);
     setTimeout(function(){
       self.getReinsuranceManagementData(self.state.reinsuranceManagementGridPageSize, 1, JSON.stringify(self.state.reinsuranceManagementGridSorted),JSON.stringify(self.state.reinsuranceManagementGridFiltered));
+    }, 1000);
+  }
+
+  setReinsuranceCostReportProviderValue(e) {
+    self.state.reinsuranceCostReportProviderSelectValue = e;
+    self.getPCPForReportProviders(self.state.reinsuranceCostReportProviderSelectValue.value);
+    setTimeout(function(){
+      self.getReinsuranceCostReportData(self.state.reinsuranceCostReportGridPageSize, 1, JSON.stringify(self.state.reinsuranceCostReportGridSorted),JSON.stringify(self.state.reinsuranceCostReportGridFiltered));
     }, 1000);
   }
 
@@ -5535,6 +5707,117 @@ showHideColumn_beneficiariesManagementByLocation(columnName){
           self.generateSummaryReportXLSX();
 
    }
+ showHideColumn_ReinsuranceCostReportData(columnName) {
+  if(columnName == "subscriberID") {
+    this.state.showSubscriberID_reinsuranceCostReport = !this.state.showSubscriberID_reinsuranceCostReport;
+  }
+  if(columnName == "planName") {
+    this.state.showPlanName_reinsuranceCostReport = !this.state.showPlanName_reinsuranceCostReport;
+  }
+  if(columnName == "patientFirstName") {
+    this.state.showPatientFirstName_reinsuranceCostReport = !this.state.showPatientFirstName_reinsuranceCostReport;
+  }
+  
+  if(columnName == "patientLastName") {
+    this.state.showPatientLastName_reinsuranceCostReport = !this.state.showPatientLastName_reinsuranceCostReport;
+  }
+  
+  if(columnName == "policyPeriod") {
+    this.state.showPolicyPeriod_reinsuranceCostReport = !this.state.showPolicyPeriod_reinsuranceCostReport;
+  }
+  if(columnName == "pcpName") {
+    this.state.showPcpName_reinsuranceCostReport = !this.state.showPcpName_reinsuranceCostReport;
+  }
+  if(columnName == "termedMonth") {
+    this.state.showTermedMonth_reinsuranceCostReport = !this.state.showTermedMonth_reinsuranceCostReport;
+  }
+  if(columnName == "effectiveDate") {
+    this.state.showEffectiveDate_reinsuranceCostReport = !this.state.showEffectiveDate_reinsuranceCostReport;
+  }
+  if(columnName == "dob") {
+    this.state.showDateOfBirth_reinsuranceCostReport = !this.state.showDateOfBirth_reinsuranceCostReport;
+  }
+  
+  if(columnName == "status") {
+    this.state.showStatus_reinsuranceCostReport = !this.state.showStatus_reinsuranceCostReport;
+  }
+  if(columnName == "gender") {
+    this.state.showGender_reinsuranceCostReport = !this.state.showGender_reinsuranceCostReport;
+  }
+  if(columnName == "totalClaimsCost") {
+    this.state.showTotalClaimsCost_reinsuranceCostReport = !this.state.showTotalClaimsCost_reinsuranceCostReport;
+  }
+
+  const newArray = this.state.dropdownOpen.map((element, index) => {
+    return (index === 24 ? true : false);
+  });
+  this.setState({
+    dropdownOpen: newArray
+  });
+
+          if(self.state.showSubscriberID_reinsuranceCostReport) {
+            document.getElementById("ddItemSubscriberID_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemSubscriberID_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showPlanName_reinsuranceCostReport) {
+            document.getElementById("ddItemPlanName_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemPlanName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showPatientFirstName_reinsuranceCostReport) {
+            document.getElementById("ddItemPatientFirstName_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemPatientFirstName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          
+          if(self.state.showPatientLastName_reinsuranceCostReport) {
+            document.getElementById("ddItemPatientLastName_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemPatientLastName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showPcpName_reinsuranceCostReport) {
+            document.getElementById("ddItemPcpName_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemPcpName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showTermedMonth_reinsuranceCostReport) {
+            document.getElementById("ddItemTermedMonth_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemTermedMonth_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showDateOfBirth_reinsuranceCostReport) {
+            document.getElementById("ddItemDateOfBirth_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemDateOfBirth_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showGender_reinsuranceCostReport) {
+            document.getElementById("ddItemGender_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemGender_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showTotalClaimsCost_reinsuranceCostReport) {
+            document.getElementById("ddItemTotalClaimsCost_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemTotalClaimsCost_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+          if(self.state.showStatus_reinsuranceCostReport) {
+            document.getElementById("ddItemStatus_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemStatus_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }if(self.state.showEffectiveDate_reinsuranceCostReport) {
+            document.getElementById("ddItemEffectiveDate_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemEffectiveDate_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }if(self.state.showPolicyPeriod_reinsuranceCostReport) {
+            document.getElementById("ddItemPolicyPeriod_reinsuranceCostReport").style.backgroundColor = "";
+          } else {
+            document.getElementById("ddItemPolicyPeriod_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+          }
+
+          self.generateReinsuranceCostReportXLSX();
+ 
+}
 
    printTableData_duplicateClaims() {
 
@@ -5880,6 +6163,54 @@ printTableData_settledMonthsReport() {
     });
  }
 
+ printTableData_reinsuranceCostReport () {
+
+  var propertiesArr = [];
+
+  if(self.state.showPlanName_reinsuranceCostReport)
+    propertiesArr.push("Plan Name");
+  if(self.state.showPolicyPeriod_reinsuranceCostReport)
+    propertiesArr.push("Policy Period");
+  if(self.state.showPatientLastName_reinsuranceCostReport)
+    propertiesArr.push("Patient Last Name");
+  if(self.state.showPatientFirstName_reinsuranceCostReport)
+    propertiesArr.push("Patient First Name");
+  if(self.state.showSubscriberID_reinsuranceCostReport)
+    propertiesArr.push("HICN/SubscriberID");
+  if(self.state.showEffectiveDate_reinsuranceCostReport)
+    propertiesArr.push("Effective Date");
+  if(self.state.showTermedMonth_reinsuranceCostReport)
+    propertiesArr.push("Termed Month");
+  if(self.state.showDateOfBirth_reinsuranceCostReport)
+    propertiesArr.push("DOB");
+    if(self.state.showStatus_reinsuranceCostReport)
+    propertiesArr.push("Status");
+  if(self.state.showGender_reinsuranceCostReport)
+    propertiesArr.push("Gender");
+  if(self.state.showPcpName_reinsuranceCostReport)
+    propertiesArr.push("PCP Name");
+  if(self.state.showTotalClaimsCost_reinsuranceCostReport)
+    propertiesArr.push("Total Claims Cost");
+
+  const formData = new FormData();
+  formData.append('fileQuery', self.state.reinsuranceCostReportFileQuery);
+
+  fetch(config.serverUrl+'/getReinsuranceCostReportDataForPrint', {
+      method: 'POST',
+      body: formData
+  }).then(function(res1) {
+      if (!res1.ok) {
+        if (error.message) {
+          self.setState({errorMessage :error.message});
+        } 
+      }
+      return res1.json();
+    }).then(function(response)   {
+    printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-Reinsurance Cost Report Search", documentTitle:"Print-Reinsurance Cost Report Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
+  }).catch((error) => {
+    console.log(error);
+  });
+}
 
    printTableData_pmpmByPracticeExpandReport() {
 
@@ -7067,6 +7398,31 @@ printTableData_specialistComparisonReportExpand() {
     
     self.setState({jsonDataForReinsuranceManagement: btoa(JSON.stringify(object))});
  }
+
+ generateReinsuranceCostReportXLSX() {
+  const formData = new FormData();
+
+formData.append('fileQuery', self.state.reinsuranceCostReportFileQuery);
+formData.append('showPlanName_reinsuranceCostReport', self.state.showPlanName_reinsuranceCostReport);
+formData.append('showPolicyPeriod_reinsuranceCostReport', self.state.showPolicyPeriod_reinsuranceCostReport);
+formData.append('showPatientLastName_reinsuranceCostReport', self.state.showPatientLastName_reinsuranceCostReport);
+formData.append('showPatientFirstName_reinsuranceCostReport', self.state.showPatientFirstName_reinsuranceCostReport);
+formData.append('showSubscriberID_reinsuranceCostReport', self.state.showSubscriberID_reinsuranceCostReport);
+formData.append('showEffectiveDate_reinsuranceCostReport', self.state.showEffectiveDate_reinsuranceCostReport);
+formData.append('showTermedMonth_reinsuranceCostReport', self.state.showTermedMonth_reinsuranceCostReport);
+formData.append('showDateOfBirth_reinsuranceCostReport', self.state.showDateOfBirth_reinsuranceCostReport);
+formData.append('showStatus_reinsuranceCostReport', self.state.showStatus_reinsuranceCostReport);
+formData.append('showGender_reinsuranceCostReport', self.state.showGender_reinsuranceCostReport);
+formData.append('showPcpName_reinsuranceCostReport', self.state.showPcpName_reinsuranceCostReport);
+formData.append('showTotalClaimsCost_reinsuranceCostReport', self.state.showTotalClaimsCost_reinsuranceCostReport);
+
+  var object = {};
+  formData.forEach(function(value, key){
+      object[key] = value;
+  });
+  
+  self.setState({jsonDataForReinsuranceCostReport: btoa(JSON.stringify(object))});
+}
 
 
    generateSettledMonthsExpandXLSX() {
@@ -12228,6 +12584,226 @@ const horizontalBarOptions = {
                                     }
                                   }
                                 }}
+                            />
+                  </ModalBody>
+                  
+                </Modal>
+                
+                                {/**************Reinsurance Cost Report modal*****************/}
+                  <Modal isOpen={this.state.reinsuranceCostReportModal} toggle={this.toggleReinsuranceCostReportModal}
+                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                  <ModalHeader toggle={this.toggleReinsuranceCostReportModal}>
+                  <Row>  
+                      <Col className="duplicateClaimsHeader">
+                        <b>Reinsurance Cost Report</b>
+                      </Col>
+                      
+                      <FormGroup check inline style={{marginLeft:80}}>
+                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Provider&nbsp;</Label>
+                     
+                          <Select
+                          id="reinsuranceCostReportProviderSelect"
+                          className="yearSelectStyle"
+                          value={this.state.reinsuranceCostReportProviderSelectValue}
+                          options={this.state.monthlyTotalsProviderList}
+                          onChange={this.setReinsuranceCostReportProviderValue}
+                        />
+                    </FormGroup>
+
+                    <FormGroup check inline>
+                      <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Doctor&nbsp;</Label>
+                        <Select
+                          placeholder="Select Doctor"
+                          className="pcpNameSelectStyle"
+                          value={this.state.reinsuranceCostReportPcpNameValue}
+                          options={this.state.pcpReportList}
+                          onChange={this.setReinsuranceCostReportPcpName}
+                        />
+                    </FormGroup>
+
+                        <FormGroup check inline>
+                          <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Year&nbsp;</Label>
+                            <Select
+                              
+                              className="yearSelectStyle"
+                              value={this.state.reinsuranceCostReportYearSelectValue}
+                              options={this.state.summaryReportYearsList}
+                              onChange={this.setReinsuranceCostReportYearValue}
+                            />
+                        </FormGroup>
+                      
+                  </Row>
+                  </ModalHeader>
+                  <ModalBody>
+                  <Row>
+                  <Col md="10">
+                  </Col>
+                  <Col md="2">
+                  
+                        <FormGroup check inline>
+                            <i class="icon-printer icons font-2xl d-block" title="Print" onClick={e => self.printTableData_reinsuranceCostReport()} style={{cursor:"pointer",color:"#20a8d8"}}></i>
+                            
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <a href={config.serverUrl+'/renderReinsuranceCostReportXLSX/'+self.state.jsonDataForReinsuranceCostReport} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="icon-doc icons font-2xl d-block" title="Export" style={{color:"#20a8d8"}}></i>
+                                
+                            </a>
+                            &nbsp;
+                          </FormGroup>
+                          <FormGroup check inline>
+                          <a href={config.serverUrl+'/renderReinsuranceCostPDF/'+self.state.jsonDataForReinsuranceCostReport} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="fa fa-file-pdf-o font-2xl" title="PDF" style={{color:"#20a8d8"}}></i>   
+                            </a>
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <Dropdown isOpen={this.state.dropdownOpen[24]} toggle={() => {
+                                this.toggle(24);
+                              }}>
+                                <DropdownToggle style={{backgroundColor:"white",borderColor:"white",padding:"0rem 0rem",marginTop:-9}}>
+                                  <i class="icon-grid icons font-2xl d-block" title="More" style={{cursor:"pointer",color:"#20a8d8"}}></i>
+                                  
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                  <DropdownItem toggle={false} id="ddItemPlanName_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("planName")}>Plan Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPolicyPeriod_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("policyPeriod")}>Policy Period</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPatientLastName_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("patientLastName")}>Patient Last Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPatientFirstName_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("patientFirstName")}>Patient First Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemSubscriberID_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("subscriberID")}>SubscriberID</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemEffectiveDate_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("effectiveDate")}>Effective Date</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemTermedMonth_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("termedMonth")}>Termed Month</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemDateOfBirth_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("dob")}>DOB</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemStatus_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("status")}>Status</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemGender_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("gender")}>Gender</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPcpName_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("pcpName")}>PCP Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemTotalClaimsCost_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("totalClaimsCost")}>Total Claims Cost</DropdownItem>
+                                </DropdownMenu>
+                              </Dropdown>
+                          </FormGroup>
+                    
+                    </Col>
+                    </Row>
+                    <ReactTable
+                              manual
+                              data={this.state.reinsuranceCostReportData}
+                              loading={this.state.reinsuranceCostReportLoading}
+                              pages={this.state.reinsuranceCostReportPages} // Display the total number of pages
+                              filterable
+                              defaultFilterMethod={(filter, row) =>
+                                String(row[filter.id]) === filter.value}
+                              columns={[
+                                {
+                                  Header: "",
+                                  columns: [
+                                    {
+                                      Header: "Plan Name",
+                                      accessor: "planName",
+                                      show: this.state.showPlanName_reinsuranceCostReport,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Policy Period",
+                                      accessor: "policyPeriod",
+                                      show: this.state.showPolicyPeriod_reinsuranceCostReport,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Patient Last Name",
+                                      accessor: "patientLastName",
+                                      show: this.state.showPatientLastName_reinsuranceCostReport,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    { 
+                                      Header: "Patient First Name",
+                                      accessor: "patientFirstName",
+                                      show: this.state.showPatientFirstName_reinsuranceCostReport,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "HICN/SuscriberID",
+                                      accessor: "subscriberID",
+                                      show: this.state.showSubscriberID_reinsuranceCostReport,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Effective Date",
+                                      accessor: "effectiveDate",
+                                      show: this.state.showEffectiveDate_reinsuranceCostReport,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Termed Month",
+                                      accessor: "termedMonth",
+                                      show: this.state.showTermedMonth_reinsuranceCostReport,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },     
+                                    {
+                                      Header: "DOB",
+                                      accessor: "dob",
+                                      show: this.state.showDateOfBirth_reinsuranceCostReport,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    }, 
+                                    {
+                                      Header: "Status",
+                                      accessor: "status",
+                                      show: this.state.showStatus_reinsuranceCostReport,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Gender",
+                                      accessor: "gender",
+                                      show: this.state.showGender_reinsuranceCostReport,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "PCP Name",
+                                      accessor: "pcpName",
+                                      show: this.state.showPcpName_reinsuranceCostReport,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },            
+                                    {
+                                      Header: "Total Claims Cost",
+                                      accessor: "totalClaimsCost",
+                                      show: this.state.showTotalClaimsCost_reinsuranceCostReport,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                  ]
+                                }
+                              ]}
+                              defaultPageSize={100}
+                              onFetchData={this.fetchReinsuranceCostReportData}
+                              className="-striped -highlight commonFontFamily"
+                              pageText={'Total Entries '+this.state.reinsuranceCostReportTotalCount+', Page'}
+                              getTrProps={(state, rowInfo, column) => {
+                                  return {
+                                    style: {
+                                      textAlign:"center"
+                                    }
+                                  }
+                                }}
+                               
                             />
                   </ModalBody>
                   
