@@ -165,6 +165,13 @@ class Dashboard extends React.Component {
       specialistComparisonExpandReportTotalCount: 0,
       specialistComparisonExpandReportFileQuery: "",
 
+      specialistComparisonExpandPracticeReportModal: false,
+      specialistComparisonExpandPracticeReportLoading: false,
+      specialistComparisonExpandPracticeReportPages: 0,
+      specialistComparisonExpandPracticeReportData: [],
+      specialistComparisonExpandPracticeReportTotalCount: 0,
+      specialistComparisonExpandPracticeReportFileQuery: "",
+
       summaryReportModal: false,
       summaryReportLoading: false,
       summaryReportPages: 0,
@@ -321,7 +328,19 @@ class Dashboard extends React.Component {
       showAverageCostPerClaim_specialistComparisonExpand: true,
       showCost_specialistComparisonExpand: true,
 
+      showPracticeName_specialistComparisonExpandPractice: true,
+      showSpecialityType_specialistComparisonExpandPractice: true,
+      showPatientName_specialistComparisonExpandPractice: true,
+      showPcpName_specialistComparisonExpandPractice: true,
+      showNoOfClaims_specialistComparisonExpandPractice: true,
+      showAverageCostPerClaim_specialistComparisonExpandPractice: true,
+      showCost_specialistComparisonExpandPractice: true,
+
+      specialistComparisonSpecialityCode: "",
+      specialistComparisonPracticeName: "",
+
       jsonDataForSpecialistComparisonExpandReport:"",
+      jsonDataForSpecialistComparisonExpandPracticeReport:"",
 
       showPatientName_patientVisit: true,
       showHicn_patientVisit: true,
@@ -388,6 +407,10 @@ class Dashboard extends React.Component {
       showTotalNumberOfMemberMonth_pmpmByPractice: true,
       showPMPM_pmpmByPractice: true,
       showPMPY_pmpmByPractice: true,
+      showTotalPremium_pmpmByPractice: true,
+      showIpaPremium_pmpmByPractice: true,
+      showDifference_pmpmByPractice: true,
+
 
       showSubscriberID_reinsuranceManagement: true,
       showPlanName_reinsuranceManagement: true,
@@ -493,6 +516,11 @@ class Dashboard extends React.Component {
       specialistComparisonExpandGridPageSize:0,
       specialistComparisonExpandGridSorted:{},
       specialistComparisonExpandGridFiltered:{},
+
+      specialistComparisonExpandPracticeGridPage:0,
+      specialistComparisonExpandPracticeGridPageSize:0,
+      specialistComparisonExpandPracticeGridSorted:{},
+      specialistComparisonExpandPracticeGridFiltered:{},
 
       duplicateClaimsExpandMedicareId:"",
       duplicateClaimsExpandFirstServiceDate:"",
@@ -630,7 +658,6 @@ class Dashboard extends React.Component {
       beneficiariesManagementSelectedMedicareId:"",
       beneficiariesManagementSelectedPcpLocation:"",
       beneficiariesManagementSelectedClinicName:"",
-      beneficiariesManagementSelectedPcpName:"",
       beneficiariesManagementSelectedPcpId:"",
 
       showPatientName_pmpmByPracticeExpand: true,
@@ -671,7 +698,6 @@ class Dashboard extends React.Component {
       erPatientVisitPcpNameValue: "",
       settledMonthsPcpNameValue: "",
       pmpmByPracticePcpNameValue: "",
-      reinsuranceManagementPcpNameValue:"",
       beneficiariesManagementPcpNameValue: "",
 
       showPcpName_beneficiariesManagementByDoctor: true,
@@ -729,9 +755,9 @@ class Dashboard extends React.Component {
       this.fetchSettledMonthsData = this.fetchSettledMonthsData.bind(this);
       this.fetchSettledMonthsExpandData = this.fetchSettledMonthsExpandData.bind(this);
       this.fetchPmpmByPracticeData = this.fetchPmpmByPracticeData.bind(this);
-      this.fetchReinsuranceManagementData=this.fetchReinsuranceManagementData.bind(this);
       this.fetchPmpmByPracticeExpandData = this.fetchPmpmByPracticeExpandData.bind(this);
       this.fetchMembershipManagementData = this.fetchMembershipManagementData.bind(this);
+      this.fetchReinsuranceManagementData = this.fetchReinsuranceManagementData.bind(this);
       this.fetchBeneficiariesManagementData = this.fetchBeneficiariesManagementData.bind(this);
       this.fetchBeneficiariesManagementDataByDoctor = this.fetchBeneficiariesManagementDataByDoctor.bind(this);
       this.fetchBeneficiariesManagementDataByLocation = this.fetchBeneficiariesManagementDataByLocation.bind(this);
@@ -742,6 +768,7 @@ class Dashboard extends React.Component {
       this.fetchBeneficiariesManagementByClinicExpandData=this.fetchBeneficiariesManagementByClinicExpandData.bind(this);
       this.fetchSpecialistComparisonReportData = this.fetchSpecialistComparisonReportData.bind(this);
       this.fetchSpecialistComparisonExpandReportData = this.fetchSpecialistComparisonExpandReportData.bind(this);
+      this.fetchSpecialistComparisonExpandPracticeReportData = this.fetchSpecialistComparisonExpandPracticeReportData.bind(this);
       this.toggleBeneficiariesManagementByClinicExpandModal = this.toggleBeneficiariesManagementByClinicExpandModal.bind(this);
       this.toggle = this.toggle.bind(this);
       this.generateDuplicateClaimsXLSX = this.generateDuplicateClaimsXLSX.bind(this);
@@ -752,7 +779,6 @@ class Dashboard extends React.Component {
       this.fetchBeneficiariesManagementDataByLocation = debounce(this.fetchBeneficiariesManagementDataByLocation,500);
       this.fetchBeneficiariesManagementDataByClinic = debounce(this.fetchBeneficiariesManagementDataByClinic,500);
       this.fetchPmpmByPracticeData = debounce(this.fetchPmpmByPracticeData,500);
-      this.fetchReinsuranceManagementData=debounce(this.fetchReinsuranceManagementData,500);
       this.fetchPmpmByPracticeExpandData = debounce(this.fetchPmpmByPracticeExpandData,500);
       this.fetchSettledMonthsData = debounce(this.fetchSettledMonthsData,500);
       this.fetchSettledMonthsExpandData = debounce(this.fetchSettledMonthsExpandData,500);
@@ -761,6 +787,7 @@ class Dashboard extends React.Component {
       this.fetchPatientVisitExpandReportData = debounce(this.fetchPatientVisitExpandReportData,500);
       this.fetchSpecialistComparisonReportData = debounce(this.fetchSpecialistComparisonReportData,500);
       this.fetchSpecialistComparisonExpandReportData = debounce(this.fetchSpecialistComparisonExpandReportData,500);
+      this.fetchSpecialistComparisonExpandPracticeReportData = debounce(this.fetchSpecialistComparisonExpandPracticeReportData,500);
       this.fetchAdmissionsReportData = debounce(this.fetchAdmissionsReportData,500);
       this.fetchAdmissionsReportExpandData = debounce(this.fetchAdmissionsReportExpandData,500);
       this.fetchData = debounce(this.fetchData,500);
@@ -770,6 +797,7 @@ class Dashboard extends React.Component {
       this.fetchBeneficiariesManagementByDoctorExpandData = debounce(this.fetchBeneficiariesManagementByDoctorExpandData,500);
       this.fetchBeneficiariesManagementByLocationExpandData=debounce(this.fetchBeneficiariesManagementByLocationExpandData,500);
       this.fetchBeneficiariesManagementByClinicExpandData=debounce(this.fetchBeneficiariesManagementByClinicExpandData,500);
+      this.fetchReinsuranceManagementData = debounce(this.fetchReinsuranceManagementData,500);
       this.fetchReinsuranceCostReportData=debounce(this.fetchReinsuranceCostReportData,500);
   }
 
@@ -1278,6 +1306,22 @@ class Dashboard extends React.Component {
               } else {
                 document.getElementById("ddItemPMPY_pmpmByPractice").style.backgroundColor = "#20a8d8";
               }
+              if(self.state.showTotalPremium_pmpmByPractice) {
+                document.getElementById("ddItemTotalPremium_pmpmByPractice").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemTotalPremium_pmpmByPractice").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showIpaPremium_pmpmByPractice) {
+                document.getElementById("ddItemIpaPremium_pmpmByPractice").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemIpaPremium_pmpmByPractice").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showDifference_pmpmByPractice) {
+                document.getElementById("ddItemDifference_pmpmByPractice").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemDifference_pmpmByPractice").style.backgroundColor = "#20a8d8";
+              }
+
           }
           if(i == 9) {
               if(self.state.showPlanName_membershipManagement) {
@@ -2029,6 +2073,13 @@ class Dashboard extends React.Component {
     this.state.specialistComparisonExpandReportLoading = false;
   }
 
+  toggleSpecialistComparisonExpandPracticeReportModal() {
+    this.setState({
+      specialistComparisonExpandPracticeReportModal: !this.state.specialistComparisonExpandPracticeReportModal
+    });
+    this.state.specialistComparisonExpandPracticeReportLoading = false;
+  }
+
   toggleSummaryReportModal() {
     this.state.summaryReportsProviderSelectValue =  this.state.claimTotalsProviderSelect;
     this.setState({
@@ -2600,7 +2651,7 @@ class Dashboard extends React.Component {
 
   setSpecialistComparisonExpandPcpName(e) {
     self.state.specialistComparisonExpandPcpNameValue = e;
-    self.getSpecialistComparisonExpandReportData(self.state.specialistComparisonExpandGridPageSize,1,JSON.stringify(self.state.specialistComparisonExpandGridSorted),JSON.stringify(self.state.specialistComparisonExpandGridFiltered));
+    self.getSpecialistComparisonExpandPracticeReportData(self.state.specialistComparisonExpandPracticeGridPageSize,1,JSON.stringify(self.state.specialistComparisonExpandPracticeGridSorted),JSON.stringify(self.state.specialistComparisonExpandPracticeGridFiltered));
   }
 
   setERPatientVisitPcpName(e) {
@@ -2693,6 +2744,15 @@ class Dashboard extends React.Component {
     self.state.specialistComparisonExpandGridSorted = state.sorted;
     self.state.specialistComparisonExpandGridFiltered = state.filtered;
     self.getSpecialistComparisonExpandReportData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
+  }
+
+  fetchSpecialistComparisonExpandPracticeReportData(state, instance) {
+    var page = state.page + 1;
+    self.state.specialistComparisonExpandPracticeGridPage = page;
+    self.state.specialistComparisonExpandPracticeGridPageSize = state.pageSize;
+    self.state.specialistComparisonExpandPracticeGridSorted = state.sorted;
+    self.state.specialistComparisonExpandPracticeGridFiltered = state.filtered;
+    self.getSpecialistComparisonExpandPracticeReportData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
   }
 
   fetchPatientVisitReportData(state, instance) {
@@ -3062,6 +3122,38 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
         
   }
 
+  getSpecialistComparisonExpandPracticeReportData(pageSize,page,sortedArr,filteredArr) {
+    self.setState({ specialistComparisonExpandPracticeReportLoading: true });
+    const formData = new FormData();
+
+      formData.append('year', self.state.specialistComparisonReportYearSelectValue.value);
+      formData.append('provider', self.state.specialistComparisonProviderSelectValue.value);
+      formData.append('pcpName', self.state.specialistComparisonExpandPcpNameValue.value);
+      formData.append('practiceName', self.state.specialistComparisonPracticeName);
+      formData.append('pageSize', pageSize);
+      formData.append('page', page);
+      formData.append('sortedColumns', sortedArr);
+      formData.append('filteredColumns', filteredArr);
+
+      fetch(config.serverUrl+'/getSpecialistComparisonExpandPracticeReportData', {
+          method: 'POST',
+          body: formData 
+        }).then(function(res1) {
+          if (!res1.ok) {
+            if (error.message) {
+              self.setState({errorMessage :error.message});
+            } 
+          }
+          return res1.json();
+        }).then(function(response) {
+          self.setState({specialistComparisonExpandPracticeReportData: response.specialistComparisonExpandPracticeReportData,specialistComparisonExpandPracticeReportPages:response.pages,specialistComparisonExpandPracticeReportTotalCount:response.totalCount,specialistComparisonExpandPracticeReportFileQuery:response.fileQuery});
+          //console.log(response);
+          self.setState({ specialistComparisonExpandPracticeReportLoading: false });
+          self.generateSpecialistComparisonExpandReportXLSX();
+      });
+        
+  }
+
   getPatientVisitReportData(pageSize,page,sortedArr,filteredArr) {
     self.setState({ patientVisitReportLoading: true });
     const formData = new FormData();
@@ -3208,7 +3300,7 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
           return res1.json();
         }).then(function(response) {
           self.setState({reinsuranceManagementData: response.reinsuranceManagementData,reinsuranceManagementPages:response.pages,reinsuranceManagementTotalCount:response.totalCount,reinsuranceManagementFileQuery:response.fileQuery});
-          console.log(response);
+          
           self.setState({ reinsuranceManagementLoading: false });
           self.generateReinsuranceManagementXLSX();
       });
@@ -3670,7 +3762,6 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
 
   setReinsuranceCostReportYearValue(e) {
     self.state.reinsuranceCostReportYearSelectValue = e;
-    console.log(e);
     self.getReinsuranceCostReportData(self.state.reinsuranceCostReportGridPageSize, 1, JSON.stringify(self.state.reinsuranceCostReportGridSorted),JSON.stringify(self.state.reinsuranceCostReportGridFiltered));
   }
   setPmpmByPracticeYearValue(e) {
@@ -4668,6 +4759,15 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
       if(columnName == "pmpy") {
         this.state.showPMPY_pmpmByPractice = !this.state.showPMPY_pmpmByPractice;
       }
+      if(columnName == "totalPremium") {
+        this.state.showTotalPremium_pmpmByPractice = !this.state.showTotalPremium_pmpmByPractice;
+      }
+      if(columnName == "ipaPremium") {
+        this.state.showIpaPremium_pmpmByPractice = !this.state.showIpaPremium_pmpmByPractice;
+      }
+      if(columnName == "difference") {
+        this.state.showDifference_pmpmByPractice = !this.state.showDifference_pmpmByPractice;
+      }
 
       const newArray = this.state.dropdownOpen.map((element, index) => {
         return (index === 8 ? true : false);
@@ -4705,6 +4805,21 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
                 document.getElementById("ddItemPMPY_pmpmByPractice").style.backgroundColor = "";
               } else {
                 document.getElementById("ddItemPMPY_pmpmByPractice").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showTotalPremium_pmpmByPractice) {
+                document.getElementById("ddItemTotalPremium_pmpmByPractice").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemTotalPremium_pmpmByPractice").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showIpaPremium_pmpmByPractice) {
+                document.getElementById("ddItemIpaPremium_pmpmByPractice").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemIpaPremium_pmpmByPractice").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showDifference_pmpmByPractice) {
+                document.getElementById("ddItemDifference_pmpmByPractice").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemDifference_pmpmByPractice").style.backgroundColor = "#20a8d8";
               }
 
               self.generatePmpmByPracticeXLSX();
@@ -6096,6 +6211,12 @@ printTableData_settledMonthsReport() {
         propertiesArr.push("PMPM");
       if(self.state.showPMPY_pmpmByPractice)
         propertiesArr.push("PMPY");
+      if(self.state.showTotalPremium_pmpmByPractice)
+        propertiesArr.push("Total Premium");
+      if(self.state.showIpaPremium_pmpmByPractice)
+        propertiesArr.push("IPA Premium");
+      if(self.state.showDifference_pmpmByPractice)
+        propertiesArr.push("Total Premium - IPA Premium");
       
 
       const formData = new FormData();
@@ -6490,8 +6611,7 @@ printTableData_settledMonthsReport() {
       if(self.state.showClaimId_beneficiariesManagementByDoctorExpand)
         propertiesArr.push("Claim Id");
       if(self.state.showClaimDate_beneficiariesManagementByDoctorExpand)
-        propertiesArr.push("Clinic Name");
-       propertiesArr.push("Claim Date");
+        propertiesArr.push("Claim Date");
       if(self.state.showClaimType_beneficiariesManagementByDoctorExpand)
         propertiesArr.push("Claim Type");
       if(self.state.showClinicName_beneficiariesManagementByDoctorExpand)
@@ -7324,6 +7444,9 @@ printTableData_specialistComparisonReportExpand() {
     formData.append('showTotalNumberOfMemberMonth_pmpmByPractice', self.state.showTotalNumberOfMemberMonth_pmpmByPractice);
     formData.append('showPMPM_pmpmByPractice', self.state.showPMPM_pmpmByPractice);
     formData.append('showPMPY_pmpmByPractice', self.state.showPMPY_pmpmByPractice);
+    formData.append('showTotalPremium_pmpmByPractice', self.state.showTotalPremium_pmpmByPractice);
+    formData.append('showIpaPremium_pmpmByPractice', self.state.showIpaPremium_pmpmByPractice);
+    formData.append('showDifference_pmpmByPractice', self.state.showDifference_pmpmByPractice);
 
       var object = {};
       formData.forEach(function(value, key){
@@ -7470,6 +7593,11 @@ formData.append('showTotalClaimsCost_reinsuranceCostReport', self.state.showTota
       self.state.specialistComparisonSpecialityCode = rowInfo.row.specialityCode;
       self.state.specialistComparisonExpandPcpNameValue = self.state.specialistComparisonPcpNameValue;
       this.toggleSpecialistComparisonExpandReportModal();
+   }
+
+   getSpecialistComparisonExpandDataRow(rowInfo) {
+      self.state.specialistComparisonPracticeName = rowInfo.row.practiceName;
+      this.toggleSpecialistComparisonExpandPracticeReportModal();
    }
 
    getSettledMonthsReportExpandDataRow(rowInfo) {
@@ -9083,16 +9211,7 @@ const horizontalBarOptions = {
                         <b>Specialist Comparison Report - {self.state.specialistComparisonSpecialityCode} Details</b>
                       </div>
                   </Col>    
-                      <FormGroup check inline>
-                      <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Doctor&nbsp;</Label>
-                        <Select
-                          placeholder="Select Doctor"
-                          className="pcpNameSelectStyle"
-                          value={this.state.specialistComparisonExpandPcpNameValue}
-                          options={this.state.pcpReportList}
-                          onChange={this.setSpecialistComparisonExpandPcpName}
-                        />
-                    </FormGroup>
+                     
                     </Row>
                   </ModalHeader>
                   <ModalBody>
@@ -9200,15 +9319,156 @@ const horizontalBarOptions = {
                                   return {
                                     onClick: (e) => {
                                       if(column.Header == "Practice Name") {
-                                        //self.getSpecialistComparisonDataRow(rowInfo);
+                                        self.getSpecialistComparisonExpandDataRow(rowInfo);
                                       }
                                     },
                                     style: {
-                                      //color: column.Header === "Practice Name" ? "#337ab7" : "",
-                                      //cursor: column.Header === "Practice Name" ? "pointer" : ""
+                                      color: column.Header === "Practice Name" ? "#337ab7" : "",
+                                      cursor: column.Header === "Practice Name" ? "pointer" : ""
                                     }
                                   }
                                 }}
+                            />
+                  </ModalBody>
+                  
+                </Modal>
+
+              {/**************Specialist Comparison Expand Practice modal*****************/}
+                <Modal isOpen={this.state.specialistComparisonExpandPracticeReportModal} toggle={this.toggleSpecialistComparisonExpandPracticeReportModal}
+                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                  <ModalHeader toggle={this.toggleSpecialistComparisonExpandPracticeReportModal}>
+                   <Row>
+                   <Col>
+                      <div className="duplicateClaimsHeader">
+                        <b>Specialist Comparison Report Practice Details</b>
+                      </div>
+                  </Col>    
+                      <FormGroup check inline>
+                      <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Doctor&nbsp;</Label>
+                        <Select
+                          placeholder="Select Doctor"
+                          className="pcpNameSelectStyle"
+                          value={this.state.specialistComparisonExpandPcpNameValue}
+                          options={this.state.pcpReportList}
+                          onChange={this.setSpecialistComparisonExpandPcpName}
+                        />
+                    </FormGroup>
+                    </Row>
+                  </ModalHeader>
+                  <ModalBody>
+                  <Row>
+                  <Col md="10">
+                  </Col>
+                  <Col md="2">
+                  
+                        <FormGroup check inline>
+                            <i class="icon-printer icons font-2xl d-block" title="Print" onClick={e => self.printTableData_specialistComparisonReportExpand()} style={{cursor:"pointer",color:"#20a8d8"}}></i>
+                            {/*<a>
+                            <img src="/img/printer.png" title="Print" onClick={e => self.printTableData()} style={{cursor:"pointer"}} />
+                            &nbsp;
+                            </a>*/}
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <a href={config.serverUrl+'/renderSpecialistComparisonExpandReportXLSX/'+self.state.jsonDataForSpecialistComparisonExpandReport} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="icon-doc icons font-2xl d-block" title="Export" style={{color:"#20a8d8"}}></i>
+                                {/*<img src="/img/excel.png" title="Export"/>*/}
+                            </a>
+                            &nbsp;
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <a href={config.serverUrl+'/renderSpecialistComparisonExpandReportPDF/'+self.state.jsonDataForSpecialistComparisonExpandReport} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="fa fa-file-pdf-o font-2xl" title="PDF" style={{color:"#20a8d8"}}></i>
+                              {/*<img src="/img/pdf.png" title="PDF"/>*/}
+                            </a>
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <Dropdown isOpen={this.state.dropdownOpen[23]} toggle={() => {
+                                this.toggle(23);
+                              }}>
+                                <DropdownToggle style={{backgroundColor:"white",borderColor:"white",padding:"0rem 0rem",marginTop:-9}}>
+                                  <i class="icon-grid icons font-2xl d-block" title="More" style={{cursor:"pointer",color:"#20a8d8"}}></i>
+                                  
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                  <DropdownItem toggle={false} id="ddItemSpecialityType_specialistComparisonExpand" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpand("specialityType")}>Speciality Type</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemNumberOfClaims_specialistComparisonExpand" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpand("numberOfClaims")}>Number Of Claims</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemAverageCostPerClaim_specialistComparisonExpand" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpand("averageCostPerClaim")}>Average Cost Per Claim</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemCost_specialistComparisonExpand" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpand("cost")}>Cost</DropdownItem>
+                                </DropdownMenu>
+                              </Dropdown>
+                          </FormGroup>
+                    
+                    </Col>
+                    </Row>
+                    <ReactTable
+                              manual
+                              data={this.state.specialistComparisonExpandPracticeReportData}
+                              loading={this.state.specialistComparisonExpandPracticeReportLoading}
+                              pages={this.state.specialistComparisonExpandPracticeReportPages} // Display the total number of pages
+                              filterable
+                              defaultFilterMethod={(filter, row) =>
+                                String(row[filter.id]) === filter.value}
+                              columns={[
+                                {
+                                  Header: "",
+                                  columns: [
+                                    {
+                                      Header: "Practice Name",
+                                      accessor: "practiceName",
+                                      show: this.state.showPracticeName_specialistComparisonExpandPractice,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Speciality Type",
+                                      accessor: "specialityType",
+                                      show: this.state.showSpecialityType_specialistComparisonExpandPractice,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                    },
+                                    {
+                                      Header: "Patient Name",
+                                      accessor: "patientName",
+                                      show: this.state.showPatientName_specialistComparisonExpandPractice,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                    },
+                                    {
+                                      Header: "PCP Name",
+                                      accessor: "pcpName",
+                                      show: this.state.showPcpName_specialistComparisonExpandPractice,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                    },
+                                    {
+                                      Header: "Number Of Claims",
+                                      accessor: "numberOfClaims",
+                                      show: this.state.showNoOfClaims_specialistComparisonExpandPractice,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                    },
+                                    {
+                                      Header: "Average Cost Per Claim",
+                                      accessor: "averageCostPerClaim",
+                                      show: this.state.showAverageCostPerClaim_specialistComparisonExpandPractice,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                    },
+                                    {
+                                      Header: "Cost",
+                                      accessor: "cost",
+                                      show: this.state.showCost_specialistComparisonExpandPractice,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                    },
+                                  ]
+                                }
+                              ]}
+                              defaultPageSize={100}
+                              onFetchData={this.fetchSpecialistComparisonExpandPracticeReportData}
+                              className="-striped -highlight commonFontFamily"
+                              pageText={'Total Entries '+this.state.specialistComparisonExpandPracticeReportTotalCount+', Page'}
+                              getTrProps={(state, rowInfo, column) => {
+                                  return {
+                                    style: {
+                                      textAlign:"center"
+                                    }
+                                  }
+                                }}
+                                
                             />
                   </ModalBody>
                   
@@ -10294,6 +10554,9 @@ const horizontalBarOptions = {
                                   <DropdownItem toggle={false} id="ddItemTotalMemberMonth_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("totalNumberOfMemberMonth")}>Total Number of Member Month</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPMPM_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("pmpm")}>PMPM</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPMPY_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("pmpy")}>PMPY</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemTotalPremium_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("totalPremium")}>Total Premium</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemIpaPremium_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("ipaPremium")}>IPA Premium</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemDifference_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("difference")}>Total Premium - IPA Premium</DropdownItem>
                                 </DropdownMenu>
                               </Dropdown>
                           </FormGroup>
@@ -10356,6 +10619,30 @@ const horizontalBarOptions = {
                                       Header: "PMPY",
                                       accessor: "pmpy",
                                       show: this.state.showPMPY_pmpmByPractice,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Total Premium",
+                                      accessor: "totalPremium",
+                                      show: this.state.showTotalPremium_pmpmByPractice,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "IPA Premium",
+                                      accessor: "ipaPremium",
+                                      show: this.state.showIpaPremium_pmpmByPractice,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Total Premium - IPA Premium",
+                                      accessor: "difference",
+                                      show: this.state.showDifference_pmpmByPractice,
                                       headerStyle: {"fontWeight":"bold",color:"#62879A"},
                                       filterMethod: (filter, row) =>
                                         row[filter.id].startsWith(filter.value)
@@ -12052,7 +12339,7 @@ const horizontalBarOptions = {
                   </ModalBody>
                   
                 </Modal>
-     *************Beneficiaries Management By Location Expand Modal****************
+     {/*************Beneficiaries Management By Location Expand Modal****************/}
      <Modal isOpen={this.state.beneficiariesManagementByLocationExpandModal} toggle={this.toggleBeneficiariesManagementByLocationExpandModal}
                        className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
                   <ModalHeader toggle={this.toggleBeneficiariesManagementByLocationExpandModal}>
@@ -12096,7 +12383,7 @@ const horizontalBarOptions = {
                                   <DropdownItem toggle={false} id="ddItemClaimDate_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("claimDate")}>Claim Date</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemClaimType_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("claimType")}>Claim Type</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemClinicName_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("clinicName")}>Clinic Name</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemPcpLocation_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("pcpLocation")}>PCP Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPcpLocation_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("pcpLocation")}>PCP Location</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemIcdCodes_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("icdCodes")}>ICD Codes</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemHccCodes_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("hccCodes")}>HCC Codes</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemDrgCode_beneficiariesManagementByLocationExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementByLocationExpand("drgCode")}>DRG Code</DropdownItem>
@@ -12180,7 +12467,7 @@ const horizontalBarOptions = {
                                     {
                                       Header: "DRG Code",
                                       accessor: "drgCode",
-                                      show: this.state.showDrgCode_beneficiariesManagementByLoactionExpand,
+                                      show: this.state.showDrgCode_beneficiariesManagementByLocationExpand,
                                       headerStyle: {"fontWeight":"bold",color:"#62879A"},
                                       filterMethod: (filter, row) =>
                                         row[filter.id].startsWith(filter.value)
@@ -12220,7 +12507,7 @@ const horizontalBarOptions = {
                   </ModalBody>
                   
                 </Modal>
-                *************Beneficiaries Management By Clinic Expand Modal****************
+                {/*************Beneficiaries Management By Clinic Expand Modal****************/}
      <Modal isOpen={this.state.beneficiariesManagementByClinicExpandModal} toggle={this.toggleBeneficiariesManagementByClinicExpandModal}
                        className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
                   <ModalHeader toggle={this.toggleBeneficiariesManagementByClinicExpandModal}>
@@ -12468,8 +12755,8 @@ const horizontalBarOptions = {
                                   <DropdownItem toggle={false} id="ddItemPatientName_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("PatientName")}>Patient Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPcpName_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("PcpName")}>PCP Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemTermedMonth_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("termedMonth")}>Termed Month</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemInstClaims_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("instClaims")}>INST Cost</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemProfClaims_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("profClaims")}>PROF Cost</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemInstClaims_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("instClaims")}>INST Claims</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemProfClaims_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("profClaims")}>PROF Claims</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemTotalCost_reinsuranceManagement" className="commonFontFamily" onClick={e => self.showHideColumn_reinsuranceManagement("totalCost")}>Total Cost</DropdownItem>
                                 </DropdownMenu>
                               </Dropdown>
