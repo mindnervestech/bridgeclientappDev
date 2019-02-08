@@ -531,6 +531,7 @@ class Dashboard extends React.Component {
       jsonDataForDuplicateClaims:"",
       jsonDataForDuplicateClaimsExpand:"",
       jsonDataForAdmissionsReport:"",
+      jsonDataForAdmissionsReportHeader:"",
       jsonDataForAdmissionsReportExpand:"",
       jsonDataForSpecialistComparisonReport:"",
       jsonDataForPatientVisitReport:"",
@@ -2987,6 +2988,7 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
           //console.log(response);
           self.setState({ loading: false });
           self.generateAdmissionsReportXLSX();
+          self.generateAdmissionsReportHeaderXLSX();
       });
         
   }
@@ -7229,6 +7231,21 @@ printTableData_specialistComparisonReportExpand() {
       self.setState({jsonDataForBeneficiariesManagementByDoctor: btoa(JSON.stringify(object))});
    }
 
+  generateAdmissionsReportHeaderXLSX()
+  {
+    const formData = new FormData();
+    formData.append('year',self.state.admissionsReportYearSelectValue.value);
+    formData.append('pcpName',self.state.admissionsReportPcpNameValue.value);
+    formData.append('provider',self.state.admissionsReportProviderSelectValue.value);
+
+    var object = {};
+    formData.forEach(function(value, key){
+        object[key] = value;
+    });
+
+    self.setState({jsonDataForAdmissionsReportHeader:btoa(JSON.stringify(object))});
+  }
+
    generateAdmissionsReportXLSX() {
     const formData = new FormData();
    
@@ -8691,7 +8708,24 @@ const horizontalBarOptions = {
                               options={this.state.yearsList}
                               onChange={this.setAdmissionsReportYearValue}
                             />
-                        </FormGroup>
+                            </FormGroup>
+                            &nbsp;
+                            &nbsp;
+                             <FormGroup check inline>
+                            <a href={config.serverUrl+'/renderAdmissionsReportHeaderXLSX/'+self.state.jsonDataForAdmissionsReportHeader} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="icon-doc icons font-2xl d-block" title="Export" style={{color:"#20a8d8"}}></i>
+                                {/*<img src="/img/excel.png" title="Export"/>*/}
+                            </a>
+                            &nbsp;
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <a href={config.serverUrl+'/renderAdmissionsReportHeaderPDF/'+self.state.jsonDataForAdmissionsReportHeader} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="fa fa-file-pdf-o font-2xl" title="PDF" style={{color:"#20a8d8"}}></i>
+                              {/*<img src="/img/pdf.png" title="PDF"/>*/}
+                            </a>
+                          </FormGroup>
+
+                        
+
+
                       
                   </Row>
                   </ModalHeader>
