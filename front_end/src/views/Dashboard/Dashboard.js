@@ -172,6 +172,15 @@ class Dashboard extends React.Component {
       specialistComparisonExpandPracticeReportTotalCount: 0,
       specialistComparisonExpandPracticeReportFileQuery: "",
 
+      
+
+      specialistComparisonPatientExpandReportModal: false,
+      specialistComparisonPatientExpandReportLoading: false,
+      specialistComparisonPatientExpandReportPages: 0,
+      specialistComparisonPatientExpandReportData: [],
+      specialistComparisonPatientExpandReportTotalCount: 0,
+      specialistComparisonPatientExpandReportFileQuery: "",
+
       summaryReportModal: false,
       summaryReportLoading: false,
       summaryReportPages: 0,
@@ -336,11 +345,20 @@ class Dashboard extends React.Component {
       showAverageCostPerClaim_specialistComparisonExpandPractice: true,
       showCost_specialistComparisonExpandPractice: true,
 
+      
+      showPracticeName_specialistComparisonPatientExpand: true,
+      showSpecialityType_specialistComparisonPatientExpand: true,
+      showPatientName_specialistComparisonPatientExpand: true,
+      showPcpName_specialistComparisonPatientExpand: true,
+      showCost_specialistComparisonPatientExpand: true,
+
       specialistComparisonSpecialityCode: "",
       specialistComparisonPracticeName: "",
+      specialistComparisonPatientName:"",
 
       jsonDataForSpecialistComparisonExpandReport:"",
       jsonDataForSpecialistComparisonExpandPracticeReport:"",
+      jsonDataForSpecialistComparisonPatientExpandReport:"",
 
       showPatientName_patientVisit: true,
       showHicn_patientVisit: true,
@@ -521,6 +539,13 @@ class Dashboard extends React.Component {
       specialistComparisonExpandPracticeGridPageSize:0,
       specialistComparisonExpandPracticeGridSorted:{},
       specialistComparisonExpandPracticeGridFiltered:{},
+
+      specialistComparisonExpandPatientGridPage:0,
+      specialistComparisonExpandPatientGridPageSize:0,
+      specialistComparisonExpandPatientGridSorted:{},
+      specialistComparisonExpandPatientGridFiltered:{},
+
+      
 
       duplicateClaimsExpandMedicareId:"",
       duplicateClaimsExpandFirstServiceDate:"",
@@ -734,6 +759,7 @@ class Dashboard extends React.Component {
       this.togglePatientVisitExpandReportModal = this.togglePatientVisitExpandReportModal.bind(this);
       this.toggleSpecialistComparisonExpandReportModal = this.toggleSpecialistComparisonExpandReportModal.bind(this);
       this.toggleSpecialistComparisonExpandPracticeReportModal = this.toggleSpecialistComparisonExpandPracticeReportModal.bind(this);
+      this.toggleSpecialistComparisonPatientExpandReportModal = this.toggleSpecialistComparisonPatientExpandReportModal.bind(this);
       this.toggleSummaryReportModal = this.toggleSummaryReportModal.bind(this);
       this.toggleSettledMonthsModal = this.toggleSettledMonthsModal.bind(this);
       this.toggleSettledMonthsExpandModal = this.toggleSettledMonthsExpandModal.bind(this);
@@ -770,6 +796,7 @@ class Dashboard extends React.Component {
       this.fetchSpecialistComparisonReportData = this.fetchSpecialistComparisonReportData.bind(this);
       this.fetchSpecialistComparisonExpandReportData = this.fetchSpecialistComparisonExpandReportData.bind(this);
       this.fetchSpecialistComparisonExpandPracticeReportData = this.fetchSpecialistComparisonExpandPracticeReportData.bind(this);
+      this.fetchSpecialistComparisonPatientExpandReportData = this.fetchSpecialistComparisonPatientExpandReportData.bind(this);
       this.toggleBeneficiariesManagementByClinicExpandModal = this.toggleBeneficiariesManagementByClinicExpandModal.bind(this);
       this.toggle = this.toggle.bind(this);
       this.generateDuplicateClaimsXLSX = this.generateDuplicateClaimsXLSX.bind(this);
@@ -1996,6 +2023,35 @@ class Dashboard extends React.Component {
             document.getElementById("ddItemPolicyPeriod_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
           }
           }
+
+          if(i==25)
+          {
+            if(self.state.showPracticeName_specialistComparisonPatientExpand) {
+              document.getElementById("ddItemPracticeName_specialistComparisonExpandPatient").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemPracticeName_specialistComparisonExpandPatient").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showSpecialityType_specialistComparisonPatientExpand) {
+              document.getElementById("ddItemSpecialityType_specialistComparisonExpandPatient").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemSpecialityType_specialistComparisonExpandPatient").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showPatientName_specialistComparisonPatientExpand) {
+              document.getElementById("ddItemPatientName_specialistComparisonExpandPatient").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemPatientName_specialistComparisonExpandPatient").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showPcpName_specialistComparisonPatientExpand) {
+              document.getElementById("ddItemPcpName_specialistComparisonExpandPatient").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemPcpName_specialistComparisonExpandPatient").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showCost_specialistComparisonPatientExpand) {
+              document.getElementById("ddItemCost_specialistComparisonExpandPatient").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemCost_specialistComparisonExpandPatient").style.backgroundColor = "#20a8d8";
+            }
+          }
     }, 300);
   }
 
@@ -2079,6 +2135,12 @@ class Dashboard extends React.Component {
       specialistComparisonExpandPracticeReportModal: !this.state.specialistComparisonExpandPracticeReportModal
     });
     this.state.specialistComparisonExpandPracticeReportLoading = false;
+  }
+  toggleSpecialistComparisonPatientExpandReportModal() {
+    this.setState({
+      specialistComparisonPatientExpandReportModal: !this.state.specialistComparisonPatientExpandReportModal
+    });
+    this.state.specialistComparisonPatientExpandReportLoading = false;
   }
 
   toggleSummaryReportModal() {
@@ -2756,6 +2818,16 @@ class Dashboard extends React.Component {
     self.getSpecialistComparisonExpandPracticeReportData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
   }
 
+  
+  fetchSpecialistComparisonPatientExpandReportData(state, instance) {
+    var page = state.page + 1;
+    self.state.specialistComparisonExpandPatientGridPage = page;
+    self.state.specialistComparisonExpandPatientGridPageSize = state.pageSize;
+    self.state.specialistComparisonExpandPatientGridSorted = state.sorted;
+    self.state.specialistComparisonExpandPatientGridFiltered = state.filtered;
+    self.getSpecialistComparisonPatientExpandReportData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
+  }
+
   fetchPatientVisitReportData(state, instance) {
     var page = state.page + 1;
     self.state.patientVisitGridPage = page;
@@ -3120,6 +3192,38 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
           //console.log(response);
           self.setState({ specialistComparisonExpandReportLoading: false });
           self.generateSpecialistComparisonExpandReportXLSX();
+      });
+        
+  }
+
+  getSpecialistComparisonPatientExpandReportData(pageSize,page,sortedArr,filteredArr) {
+    self.setState({ specialistComparisonPatientExpandReportLoading: true });
+    const formData = new FormData();
+
+      formData.append('year', self.state.specialistComparisonReportYearSelectValue.value);
+      formData.append('provider', self.state.specialistComparisonProviderSelectValue.value);
+      formData.append('pcpName', self.state.specialistComparisonExpandPcpNameValue.value);
+      formData.append('medicareId',self.state.specialistComparisonPatientName)
+      formData.append('practiceName', self.state.specialistComparisonPracticeName);
+      formData.append('pageSize', pageSize);
+      formData.append('page', page);
+      formData.append('sortedColumns', sortedArr);
+      formData.append('filteredColumns', filteredArr);
+
+      fetch(config.serverUrl+'/getSpecialistComparisonPatientExpandReportData', {
+          method: 'POST',
+          body: formData 
+        }).then(function(res1) {
+          if (!res1.ok) {
+            if (error.message) {
+              self.setState({errorMessage :error.message});
+            } 
+          }
+          return res1.json();
+        }).then(function(response) {
+          self.setState({ specialistComparisonPatientExpandReportData: response.specialistComparisonExpandPatientReportData,specialistComparisonPatientExpandReportPages:response.pages,specialistComparisonPatientExpandReportTotalCount:response.totalCount,specialistComparisonPatientExpandReportFileQuery:response.fileQuery});
+          self.setState({ specialistComparisonPatientExpandReportLoading: false });
+          self.generateSpecialistComparisonPatientExpandReportXLSX();
       });
         
   }
@@ -5936,6 +6040,66 @@ showHideColumn_beneficiariesManagementByLocation(columnName){
  
 }
 
+showHideColumn_specialistComparisonPracticeExpand(columnName) {
+    
+  if(columnName == "practiceName") {
+    this.state.showPracticeName_specialistComparisonPatientExpand = !this.state.showPracticeName_specialistComparisonPatientExpand;
+  }
+  if(columnName == "specialityType") {
+    this.state.showSpecialityType_specialistComparisonPatientExpand = !this.state.showSpecialityType_specialistComparisonPatientExpand  ;
+  }
+  if(columnName == "patientName") {
+    this.state.showPatientName_specialistComparisonPatientExpand = !this.state.showPatientName_specialistComparisonPatientExpand;
+  }
+  if(columnName == "pcpName") {
+    this.state.showPcpName_specialistComparisonPatientExpand = !this.state.showPcpName_specialistComparisonPatientExpand;
+  }
+  if(columnName == "cost") {
+    this.state.showCost_specialistComparisonPatientExpand = !this.state.showCost_specialistComparisonPatientExpand;
+  }
+
+  const newArray = this.state.dropdownOpen.map((element, index) => {
+    return (index === 25 ? true : false);
+  });
+  this.setState({
+    dropdownOpen: newArray
+  });
+
+      if(self.state.showPracticeName_specialistComparisonPatientExpand) {
+        document.getElementById("ddItemPracticeName_specialistComparisonExpandPatient").style.backgroundColor = "";
+      } else {
+        document.getElementById("ddItemPracticeName_specialistComparisonExpandPatient").style.backgroundColor = "#20a8d8";
+      }
+      if(self.state.showSpecialityType_specialistComparisonPatientExpand) {
+        document.getElementById("ddItemSpecialityType_specialistComparisonExpandPatient").style.backgroundColor = "";
+      } else {
+        document.getElementById("ddItemSpecialityType_specialistComparisonExpandPatient").style.backgroundColor = "#20a8d8";
+      }
+      if(self.state.showPatientName_specialistComparisonPatientExpand) {
+        document.getElementById("ddItemPatientName_specialistComparisonExpandPatient").style.backgroundColor = "";
+      } else {
+        document.getElementById("ddItemPatientName_specialistComparisonExpandPatient").style.backgroundColor = "#20a8d8";
+      }
+      if(self.state.showPcpName_specialistComparisonPatientExpand) {
+        document.getElementById("ddItemPcpName_specialistComparisonExpandPatient").style.backgroundColor = "";
+      } else {
+        document.getElementById("ddItemPcpName_specialistComparisonExpandPatient").style.backgroundColor = "#20a8d8";
+      }
+      if(self.state.showCost_specialistComparisonPatientExpand) {
+        document.getElementById("ddItemCost_specialistComparisonExpandPatient").style.backgroundColor = "";
+      } else {
+        document.getElementById("ddItemCost_specialistComparisonExpandPatient").style.backgroundColor = "#20a8d8";
+      }
+    
+      self.generateSpecialistComparisonPatientExpandReportXLSX();
+
+}
+
+//   showHideColumn_ReinsuranceCostReportData(columnName) {
+    
+        
+// }
+
    printTableData_duplicateClaims() {
 
       var propertiesArr = [];
@@ -6957,8 +7121,92 @@ printTableData_specialistComparisonReportExpand() {
           return res1.json();
         }).then(function(response)   {
 
+      //console.log(response);
+      printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-Specialist Comparison Report Search", documentTitle:"Print-Specialist Comparison Report Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
+    
+    }).catch((error) => {
+      console.log(error);
+    });
+ }
+
+ printTableData_specialistComparisonPatientReportExpand() {
+
+  var propertiesArr = [];
+
+  if(self.state.showPracticeName_specialistComparisonPatientExpand)
+    propertiesArr.push("Practice Name");
+  if(self.state.showSpecialityType_specialistComparisonPatientExpand)
+    propertiesArr.push("Speciality Type");
+  if(self.state.showPatientName_specialistComparisonPatientExpand)
+    propertiesArr.push("Patient Name");
+  if(self.state.showPcpName_specialistComparisonPatientExpand)
+    propertiesArr.push("PCP Name");
+  if(self.state.showCost_specialistComparisonPatientExpand)
+   propertiesArr.push("Cost");
+    
+  
+
+  const formData = new FormData();
+  formData.append('fileQuery', self.state.specialistComparisonPatientExpandReportFileQuery);
+
+  fetch(config.serverUrl+'/getSpecialistComparisonPatientExpandReportDataForPrint', {
+      method: 'POST',
+      body: formData
+  }).then(function(res1) {
+      if (!res1.ok) {
+        if (error.message) {
+          self.setState({errorMessage :error.message});
+        } 
+      }
+      return res1.json();
+    }).then(function(response)   {
+
+    //console.log(response);
+    printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-Specialist Comparison Patient Report Search", documentTitle:"Print-Specialist Comparison Practice Report Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
+  
+  }).catch((error) => {
+    console.log(error);
+  });
+}
+
+printTableData_specialistComparisonPrecticeReportExpand() {
+
+      var propertiesArr = [];
+
+      if(self.state.showPracticeName_specialistComparisonExpandPractice)
+        propertiesArr.push("Practice Name");
+      if(self.state.showSpecialityType_specialistComparisonExpandPractice)
+        propertiesArr.push("Speciality Type");
+      if(self.state.showPatientName_specialistComparisonExpandPractice)
+        propertiesArr.push("Patient Name");
+      if(self.state.showPcpName_specialistComparisonExpandPractice)
+        propertiesArr.push("PCP Name");
+      if(self.state.showNoOfClaims_specialistComparisonExpandPractice)
+        propertiesArr.push("Number Of Claims");
+      if(self.state.showAverageCostPerClaim_specialistComparisonExpandPractice)
+       propertiesArr.push("Average Cost Per Claim");
+      if(self.state.showCost_specialistComparisonExpandPractice)
+       propertiesArr.push("Cost");
+        
+      
+
+      const formData = new FormData();
+      formData.append('fileQuery', self.state.specialistComparisonExpandPracticeReportFileQuery);
+
+      fetch(config.serverUrl+'/getSpecialistComparisonExpandPracticeReportDataForPrint', {
+          method: 'POST',
+          body: formData
+      }).then(function(res1) {
+          if (!res1.ok) {
+            if (error.message) {
+              self.setState({errorMessage :error.message});
+            } 
+          }
+          return res1.json();
+        }).then(function(response)   {
+
         //console.log(response);
-        printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-Specialist Comparison Report Search", documentTitle:"Print-Specialist Comparison Report Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
+        printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-Specialist Comparison Practice Report Search", documentTitle:"Print-Specialist Comparison Practice Report Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
       
       }).catch((error) => {
         console.log(error);
@@ -7350,6 +7598,46 @@ printTableData_specialistComparisonReportExpand() {
       self.setState({jsonDataForSpecialistComparisonExpandReport: btoa(JSON.stringify(object))});
    }
 
+   generateSpecialistComparisonPatientExpandReportXLSX() {
+    const formData = new FormData();
+   
+    formData.append('fileQuery', self.state.specialistComparisonPatientExpandReportFileQuery);
+    formData.append('showPracticeName_specialistComparisonPatientExpand', self.state.showPracticeName_specialistComparisonPatientExpand);
+    formData.append('showSpecialityType_specialistComparisonPatientExpand', self.state.showSpecialityType_specialistComparisonPatientExpand);
+    formData.append('showPatientName_specialistComparisonPatientExpand', self.state.showPatientName_specialistComparisonPatientExpand);
+    formData.append('showPcpName_specialistComparisonPatientExpand', self.state.showPcpName_specialistComparisonPatientExpand);
+    formData.append('showCost_specialistComparisonPatientExpand', self.state.showCost_specialistComparisonPatientExpand);
+
+      var object = {};
+      formData.forEach(function(value, key){
+          object[key] = value;
+      });
+      
+      self.setState({jsonDataForSpecialistComparisonPatientExpandReport: btoa(JSON.stringify(object))});
+   }
+
+
+   generateSpecialistComparisonExpandPrecticeReportXLSX() {
+    const formData = new FormData();
+
+   
+    formData.append('fileQuery', self.state.specialistComparisonExpandPracticeReportFileQuery);
+    formData.append('showPracticeName_specialistComparisonExpandPractice', self.state.showPracticeName_specialistComparisonExpandPractice);
+    formData.append('showSpecialityType_specialistComparisonExpandPractice', self.state.showSpecialityType_specialistComparisonExpandPractice);
+    formData.append('showPatientName_specialistComparisonExpandPractice', self.state.showPatientName_specialistComparisonExpandPractice);
+    formData.append('showPcpName_specialistComparisonExpandPractice', self.state.showPcpName_specialistComparisonExpandPractice);
+    formData.append('showNoOfClaims_specialistComparisonExpandPractice', self.state.showNoOfClaims_specialistComparisonExpandPractice);
+    formData.append('showAverageCostPerClaim_specialistComparisonExpandPractice', self.state.showAverageCostPerClaim_specialistComparisonExpandPractice);
+    formData.append('showCost_specialistComparisonExpandPractice', self.state.showCost_specialistComparisonExpandPractice);
+
+      var object = {};
+      formData.forEach(function(value, key){
+          object[key] = value;
+      });
+      
+      self.setState({jsonDataForSpecialistComparisonExpandPracticeReport: btoa(JSON.stringify(object))});
+   }
+
    generatePatientVisitReportXLSX() {
       const formData = new FormData();
    
@@ -7616,6 +7904,10 @@ formData.append('showTotalClaimsCost_reinsuranceCostReport', self.state.showTota
       self.state.specialistComparisonPracticeName = rowInfo.row.practiceName;
       this.toggleSpecialistComparisonExpandPracticeReportModal();
    }
+   getSpecialistComparisonPatientExpandDataRow(rowInfo) {
+    self.state.specialistComparisonPatientName = rowInfo.row.medicareId;
+    this.toggleSpecialistComparisonPatientExpandReportModal();
+ }
 
    getSettledMonthsReportExpandDataRow(rowInfo) {
     self.state.settledMonthsSelectedMonth = rowInfo.row.month;
@@ -9488,6 +9780,12 @@ const horizontalBarOptions = {
                                       show: this.state.showCost_specialistComparisonExpandPractice,
                                       headerStyle: {"fontWeight":"bold",color:"#62879A"},
                                     },
+                                    {
+                                      Header: "Medicare ID",
+                                      accessor: "medicareId",
+                                      show: false,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                    },
                                   ]
                                 }
                               ]}
@@ -9496,13 +9794,142 @@ const horizontalBarOptions = {
                               className="-striped -highlight commonFontFamily"
                               pageText={'Total Entries '+this.state.specialistComparisonExpandPracticeReportTotalCount+', Page'}
                               getTrProps={(state, rowInfo, column) => {
-                                  return {
-                                    style: {
-                                      textAlign:"center"
-                                    }
+                                return {
+                                  style: {
+                                    textAlign:"center"
                                   }
-                                }}
+                                }
+                              }}   
+                              getTdProps={(state, rowInfo, column) => {
+                                return {
+                                  onClick: (e) => {
+                                    if(column.Header == "Patient Name") {
+                                      self.getSpecialistComparisonPatientExpandDataRow(rowInfo);
+                                    }
+                                  },
+                                  style: {
+                                    color: column.Header === "Patient Name" ? "#337ab7" : "",
+                                    cursor: column.Header === "Patient Name" ? "pointer" : ""
+                                  }
+                                }
+                              }}
                                 
+                            />
+                  </ModalBody>
+                  
+                </Modal>
+
+                {/**************Specialist Comparison Expand Patient modal*****************/}
+                <Modal isOpen={this.state.specialistComparisonPatientExpandReportModal} toggle={this.toggleSpecialistComparisonPatientExpandReportModal}
+                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                  <ModalHeader toggle={this.toggleSpecialistComparisonPatientExpandReportModal}>
+                   <Row>
+                   <Col>
+                      <div className="duplicateClaimsHeader">
+                        <b>Specialist Comparison Report Patient Details</b>
+                      </div>
+                  </Col>    
+                    </Row>
+                  </ModalHeader>
+                  <ModalBody>
+                  <Row>
+                  <Col md="10">
+                  </Col>
+                  <Col md="2">
+                  
+                        <FormGroup check inline>
+                            <i class="icon-printer icons font-2xl d-block" title="Print" onClick={e => self.printTableData_specialistComparisonPatientReportExpand()} style={{cursor:"pointer",color:"#20a8d8"}}></i>
+                          
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <a href={config.serverUrl+'/renderSpecialistComparisonPatientExpandReportXLSX/'+self.state.jsonDataForSpecialistComparisonPatientExpandReport} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="icon-doc icons font-2xl d-block" title="Export" style={{color:"#20a8d8"}}></i>
+                       
+                            </a>
+                            &nbsp;
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <a href={config.serverUrl+'/renderSpecialistComparisonPatientExpandReportPDF/'+self.state.jsonDataForSpecialistComparisonPatientExpandReport} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="fa fa-file-pdf-o font-2xl" title="PDF" style={{color:"#20a8d8"}}></i>
+
+                            </a>
+                          </FormGroup>
+                          <FormGroup check inline>
+                            <Dropdown isOpen={this.state.dropdownOpen[25]} toggle={() => {
+                                this.toggle(25);
+                              }}>
+                                <DropdownToggle style={{backgroundColor:"white",borderColor:"white",padding:"0rem 0rem",marginTop:-9}}>
+                                  <i class="icon-grid icons font-2xl d-block" title="More" style={{cursor:"pointer",color:"#20a8d8"}}></i>
+                                  
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                  <DropdownItem toggle={false} id="ddItemPracticeName_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPracticeExpand("practiceName")}>Practice Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemSpecialityType_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPracticeExpand("specialityType")}>Speciality Type</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPatientName_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPracticeExpand("patientName")}>Patient Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPcpName_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPracticeExpand("pcpName")}>PCP Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemCost_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPracticeExpand("cost")}>Cost</DropdownItem>
+                                </DropdownMenu>
+                              </Dropdown>
+                          </FormGroup>
+                    
+                    </Col>
+                    </Row>
+                    <ReactTable
+                              manual
+                              data={this.state.specialistComparisonPatientExpandReportData}
+                              loading={this.state.specialistComparisonPatientExpandReportLoading}
+                              pages={this.state.specialistComparisonPatientExpandReportPages} // Display the total number of pages
+                              filterable
+                              defaultFilterMethod={(filter, row) =>
+                                String(row[filter.id]) === filter.value}
+                              columns={[
+                                {
+                                  Header: "",
+                                  columns: [
+                                    {
+                                      Header: "Practice Name",
+                                      accessor: "practiceName",
+                                      show: this.state.showPracticeName_specialistComparisonPatientExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Speciality Type",
+                                      accessor: "specialityType",
+                                      show: this.state.showSpecialityType_specialistComparisonPatientExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                    },
+                                    {
+                                      Header: "Patient Name",
+                                      accessor: "patientName",
+                                      show: this.state.showPatientName_specialistComparisonPatientExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                    },
+                                    {
+                                      Header: "PCP Name",
+                                      accessor: "pcpName",
+                                      show: this.state.showPcpName_specialistComparisonPatientExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                    },
+                                    {
+                                      Header: "Cost",
+                                      accessor: "cost",
+                                      show: this.state.showCost_specialistComparisonPatientExpand,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                    },
+                                  ]
+                                }
+                              ]}
+                              defaultPageSize={100}
+                              onFetchData={this.fetchSpecialistComparisonPatientExpandReportData}
+                              className="-striped -highlight commonFontFamily"
+                              pageText={'Total Entries '+this.state.specialistComparisonExpandPracticeReportTotalCount+', Page'}
+                              getTrProps={(state, rowInfo, column) => {
+                                return {
+                                  style: {
+                                    textAlign:"center"
+                                  }
+                                }
+                              }}                      
                             />
                   </ModalBody>
                   
