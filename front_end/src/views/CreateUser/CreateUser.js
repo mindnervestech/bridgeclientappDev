@@ -46,7 +46,7 @@ class CreateUser extends Component {
         return res1.json();
       }).then(function(response)   {
         
-        if(response == true) {
+        if(response.maintenanceMode == "true") {
           window.location.href = "#/maintenance";
         } 
         

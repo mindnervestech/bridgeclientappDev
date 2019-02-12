@@ -36,6 +36,8 @@ class Settings extends Component {
       deletePopup: false,
       uploadDataPopup: false,
       userIdToDelete: 0,
+      reinsuranceThreshold: 0,
+      reinsuranceCostThreshold: 0,
     };
     self = this;
     this.toggleDeletePopup = this.toggleDeletePopup.bind(this);
@@ -93,6 +95,34 @@ class Settings extends Component {
 
   }
 
+  setReinsuranceThreshold(e) {
+
+      const formData = new FormData();
+        formData.append('reinsuranceThreshold', document.getElementById("reinsuranceReportThreshold").value);
+
+        fetch(config.serverUrl+'/setReinsuranceThreshold', {
+          method: 'POST',
+          body: formData 
+        }).then(function(response)   {
+          
+      });
+
+  }
+
+  setReinsuranceCostThreshold(e) {
+    
+      const formData = new FormData();
+        formData.append('reinsuranceCostThreshold', document.getElementById("reinsuranceCostReportThreshold").value);
+
+        fetch(config.serverUrl+'/setReinsuranceCostThreshold', {
+          method: 'POST',
+          body: formData 
+        }).then(function(response)   {
+          
+      });
+
+  }
+
   componentDidMount() {
     if(localStorage.getItem("user") != null) {
       var check = 0;
@@ -120,12 +150,15 @@ class Settings extends Component {
         return res1.json();
       }).then(function(response)   {
         
-        if(response == true) {
+        if(response.maintenanceMode == "true") {
           document.getElementById("maintenanceSwitch").checked = true;
         } 
-        if(response == false) {
+        if(response.maintenanceMode == "false") {
           document.getElementById("maintenanceSwitch").checked = false;
         }
+
+        document.getElementById("reinsuranceReportThreshold").value = response.reinsuranceThreshold;
+        document.getElementById("reinsuranceCostReportThreshold").value = response.reinsuranceCostThreshold;
 
       });
 
@@ -170,6 +203,32 @@ class Settings extends Component {
                 <button class="btn btn-success btn-lg btn-block" onClick={(e) => self.toggleUploadDataPopup(e)}>Upload Data</button>
               </Col>
             </FormGroup>
+
+            <br/><br/>
+            <FormGroup row>
+              <Col md="3">
+                <b><Label className="commonFontStyle">Reinsurance Report Threshold</Label></b>
+              </Col>
+              <Col md="3">
+                <Input type="text" style={{backgroundColor:"#FAFAFA",borderColor:"#CCCCCC"}} className="commonFontFamily commonBgColor" name="reinsuranceReportThreshold" id="reinsuranceReportThreshold"/> <br/>         
+              </Col>
+              <Col md="1">
+                <Button color="primary" className="commonFontFamily" onClick={(e) => self.setReinsuranceThreshold(e)} block>Save</Button>
+              </Col>
+            </FormGroup>
+
+            <FormGroup row>
+              <Col md="3">
+                <b><Label className="commonFontStyle">Reinsurance Cost Report Threshold</Label></b>
+              </Col>
+              <Col md="3">
+                <Input type="text" style={{backgroundColor:"#FAFAFA",borderColor:"#CCCCCC"}} className="commonFontFamily commonBgColor" name="reinsuranceCostReportThreshold" id="reinsuranceCostReportThreshold"/> <br/>         
+              </Col>
+              <Col md="1">
+                <Button color="primary" className="commonFontFamily" onClick={(e) => self.setReinsuranceCostThreshold(e)} block>Save</Button>
+              </Col>
+            </FormGroup>
+
             </CardBody>
           </Card>  
 

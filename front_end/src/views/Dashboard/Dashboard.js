@@ -827,6 +827,7 @@ class Dashboard extends React.Component {
       this.fetchBeneficiariesManagementByClinicExpandData=debounce(this.fetchBeneficiariesManagementByClinicExpandData,500);
       this.fetchReinsuranceManagementData = debounce(this.fetchReinsuranceManagementData,500);
       this.fetchReinsuranceCostReportData=debounce(this.fetchReinsuranceCostReportData,500);
+      this.fetchSpecialistComparisonPatientExpandReportData = debounce(this.fetchSpecialistComparisonPatientExpandReportData,500);
   }
 
   createRows (data) {
@@ -2290,7 +2291,7 @@ class Dashboard extends React.Component {
         return res1.json();
       }).then(function(response)   {
         
-        if(response == true) {
+        if(response.maintenanceMode == "true") {
           window.location.href = "#/maintenance";
         } 
         
@@ -7121,15 +7122,15 @@ printTableData_specialistComparisonReportExpand() {
           return res1.json();
         }).then(function(response)   {
 
-      //console.log(response);
-      printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-Specialist Comparison Report Search", documentTitle:"Print-Specialist Comparison Report Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
-    
-    }).catch((error) => {
-      console.log(error);
-    });
- }
+        //console.log(response);
+        printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-Specialist Comparison Report Search", documentTitle:"Print-Specialist Comparison Report Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
+      
+      }).catch((error) => {
+        console.log(error);
+      });
+   }
 
- printTableData_specialistComparisonPatientReportExpand() {
+printTableData_specialistComparisonPatientReportExpand() {
 
   var propertiesArr = [];
 
@@ -7169,49 +7170,6 @@ printTableData_specialistComparisonReportExpand() {
   });
 }
 
-printTableData_specialistComparisonPrecticeReportExpand() {
-
-      var propertiesArr = [];
-
-      if(self.state.showPracticeName_specialistComparisonExpandPractice)
-        propertiesArr.push("Practice Name");
-      if(self.state.showSpecialityType_specialistComparisonExpandPractice)
-        propertiesArr.push("Speciality Type");
-      if(self.state.showPatientName_specialistComparisonExpandPractice)
-        propertiesArr.push("Patient Name");
-      if(self.state.showPcpName_specialistComparisonExpandPractice)
-        propertiesArr.push("PCP Name");
-      if(self.state.showNoOfClaims_specialistComparisonExpandPractice)
-        propertiesArr.push("Number Of Claims");
-      if(self.state.showAverageCostPerClaim_specialistComparisonExpandPractice)
-       propertiesArr.push("Average Cost Per Claim");
-      if(self.state.showCost_specialistComparisonExpandPractice)
-       propertiesArr.push("Cost");
-        
-      
-
-      const formData = new FormData();
-      formData.append('fileQuery', self.state.specialistComparisonExpandPracticeReportFileQuery);
-
-      fetch(config.serverUrl+'/getSpecialistComparisonExpandPracticeReportDataForPrint', {
-          method: 'POST',
-          body: formData
-      }).then(function(res1) {
-          if (!res1.ok) {
-            if (error.message) {
-              self.setState({errorMessage :error.message});
-            } 
-          }
-          return res1.json();
-        }).then(function(response)   {
-
-        //console.log(response);
-        printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-Specialist Comparison Practice Report Search", documentTitle:"Print-Specialist Comparison Practice Report Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
-      
-      }).catch((error) => {
-        console.log(error);
-      });
-   }
 
    printTableData_summaryReport() {
 
@@ -8031,6 +7989,15 @@ const horizontalBarOptions = {
         }
 };
 
+const customStyles = {
+  control: () => ({
+    // none of react-select's styles are passed to <Control />
+    width: 200,
+  })
+}
+
+
+
     return (
       <div className="animated fadeIn">
        {/*<h1>Dashboard</h1>
@@ -8472,6 +8439,12 @@ const horizontalBarOptions = {
                     <Label style={{cursor:"pointer"}} className="commonFontFamilyColor" onClick={this.toggleReinsuranceManagementModal}>Reinsurance Report</Label>
                   </FormGroup>
                   </Col>
+                  <Col md="3">
+                  <FormGroup check inline style={{alignItems:"end"}}>
+                    <i class="icon-notebook icons font-2xl d-block reportIconColor"></i>
+                    <Label style={{cursor:"pointer"}} className="commonFontFamilyColor" onClick={this.toggleReinsuranceCostReportModal}>Reinsurance Cost Report</Label>
+                  </FormGroup>
+                  </Col>
               </Row>
                 
               </CardBody>
@@ -8590,7 +8563,7 @@ const horizontalBarOptions = {
                       </Col>
                      
                       <FormGroup check inline style={{marginLeft:80}}>
-                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Provider&nbsp;</Label>
+                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Health Plan&nbsp;</Label>
                      
                           <Select
                           id="duplicateClaimsProviderSelect"
@@ -8969,7 +8942,7 @@ const horizontalBarOptions = {
                       </Col>
                       
                       <FormGroup check inline style={{marginLeft:80}}>
-                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Provider&nbsp;</Label>
+                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Health Plan&nbsp;</Label>
                      
                           <Select
                           id="duplicateClaimsProviderSelect"
@@ -9351,7 +9324,7 @@ const horizontalBarOptions = {
                   </Col>    
                       
                       <FormGroup check inline style={{marginLeft:80}}>
-                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Provider&nbsp;</Label>
+                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Health Plan&nbsp;</Label>
                      
                           <Select
                           id="duplicateClaimsProviderSelect"
@@ -9945,7 +9918,7 @@ const horizontalBarOptions = {
                       </Col>
                       
                       <FormGroup check inline style={{marginLeft:80}}>
-                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Provider&nbsp;</Label>
+                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Health Plan&nbsp;</Label>
                      
                           <Select
                           id="erPatientVisitProviderSelect"
@@ -10308,7 +10281,7 @@ const horizontalBarOptions = {
                       </Col>
                       
                       <FormGroup check inline style={{marginLeft:80}}>
-                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Provider&nbsp;</Label>
+                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Health Plan&nbsp;</Label>
                      
                           <Select
                           id="summaryReportsProviderSelect"
@@ -10606,7 +10579,7 @@ const horizontalBarOptions = {
                       </Col>
                       
                       <FormGroup check inline style={{marginLeft:80}}>
-                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Provider&nbsp;</Label>
+                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Health Plan&nbsp;</Label>
                      
                           <Select
                           id="settledMonthsProviderSelect"
@@ -10944,7 +10917,7 @@ const horizontalBarOptions = {
                       </Col>
                       
                       <FormGroup check inline style={{marginLeft:80}}>
-                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Provider&nbsp;</Label>
+                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Health Plan&nbsp;</Label>
                      
                           <Select
                           id="pmpmByPracticeProviderSelect"
@@ -11468,7 +11441,7 @@ const horizontalBarOptions = {
                       </Col>
 
                       <FormGroup check inline style={{marginLeft:80}}>
-                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Provider&nbsp;</Label>
+                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Health Plan&nbsp;</Label>
                      
                           <Select
                           
@@ -13146,7 +13119,7 @@ const horizontalBarOptions = {
                       </Col>
                       
                       <FormGroup check inline style={{marginLeft:80}}>
-                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Provider&nbsp;</Label>
+                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Health Plan&nbsp;</Label>
                      
                           <Select
                           id="reinsuranceManagementProviderSelect"
@@ -13347,7 +13320,7 @@ const horizontalBarOptions = {
                       </Col>
                       
                       <FormGroup check inline style={{marginLeft:80}}>
-                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Provider&nbsp;</Label>
+                        <Label className="form-check-label" style={{color:'#62879A',fontFamily:'times'}}>Health Plan&nbsp;</Label>
                      
                           <Select
                           id="reinsuranceCostReportProviderSelect"

@@ -91,7 +91,7 @@ class ProviderMapping extends React.Component {
         return res1.json();
       }).then(function(response)   {
         
-        if(response == true) {
+        if(response.maintenanceMode == "true") {
           window.location.href = "#/maintenance";
         } 
         
