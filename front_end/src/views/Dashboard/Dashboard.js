@@ -443,8 +443,7 @@ class Dashboard extends React.Component {
 
       showPlanName_reinsuranceCostReport:true,
       showPolicyPeriod_reinsuranceCostReport:true,
-      showPatientLastName_reinsuranceCostReport:true,
-      showPatientFirstName_reinsuranceCostReport:true,
+      showPatientName_reinsuranceCostReport:true,
       showSubscriberID_reinsuranceCostReport:true,
       showEffectiveDate_reinsuranceCostReport:true,
       showTermedMonth_reinsuranceCostReport:true,
@@ -1961,6 +1960,44 @@ class Dashboard extends React.Component {
                 document.getElementById("ddItemCost_beneficiariesManagementByClinicExpand").style.backgroundColor = "#20a8d8";
               }
             }
+
+            if(i==23){
+            if(self.state.showPracticeName_specialistComparisonExpandPractice) {
+              document.getElementById("ddItemPracticeName_specialistComparisonExpandPractice").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemPracticeName_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showSpecialityType_specialistComparisonExpandPractice) {
+              document.getElementById("ddItemSpecialityType_specialistComparisonExpandPractice").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemSpecialityType_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showPatientName_specialistComparisonExpandPractice) {
+              document.getElementById("ddItemPatientName_specialistComparisonExpandPractice").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemPatientName_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showPcpName_specialistComparisonExpandPractice) {
+              document.getElementById("ddItemPcpName_specialistComparisonExpandPractice").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemPcpName_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showNoOfClaims_specialistComparisonExpandPractice) {
+              document.getElementById("ddItemNumberOfClaims_specialistComparisonExpandPractice").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemNumberOfClaims_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showAverageCostPerClaim_specialistComparisonExpandPractice) {
+              document.getElementById("ddItemAverageCostPerClaim_specialistComparisonExpandPractice").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemAverageCostPerClaim_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+            }
+            if(self.state.showCost_specialistComparisonExpandPractice) {
+              document.getElementById("ddItemCost_specialistComparisonExpandPractice").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemCost_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+            }
+          }
           if(i==24)
           {
             
@@ -1974,16 +2011,10 @@ class Dashboard extends React.Component {
           } else {
             document.getElementById("ddItemPlanName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
           }
-          if(self.state.showPatientFirstName_reinsuranceCostReport) {
-            document.getElementById("ddItemPatientFirstName_reinsuranceCostReport").style.backgroundColor = "";
+          if(self.state.showPatientName_reinsuranceCostReport) {
+            document.getElementById("ddItemPatientName_reinsuranceCostReport").style.backgroundColor = "";
           } else {
-            document.getElementById("ddItemPatientFirstName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
-          }
-          
-          if(self.state.showPatientLastName_reinsuranceCostReport) {
-            document.getElementById("ddItemPatientLastName_reinsuranceCostReport").style.backgroundColor = "";
-          } else {
-            document.getElementById("ddItemPatientLastName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+            document.getElementById("ddItemPatientName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
           }
           if(self.state.showPcpName_reinsuranceCostReport) {
             document.getElementById("ddItemPcpName_reinsuranceCostReport").style.backgroundColor = "";
@@ -3190,7 +3221,6 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
           return res1.json();
         }).then(function(response) {
           self.setState({specialistComparisonExpandReportData: response.specialistComparisonExpandReportData,specialistComparisonExpandReportPages:response.pages,specialistComparisonExpandReportTotalCount:response.totalCount,specialistComparisonExpandReportFileQuery:response.fileQuery});
-          //console.log(response);
           self.setState({ specialistComparisonExpandReportLoading: false });
           self.generateSpecialistComparisonExpandReportXLSX();
       });
@@ -3254,9 +3284,8 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
           return res1.json();
         }).then(function(response) {
           self.setState({specialistComparisonExpandPracticeReportData: response.specialistComparisonExpandPracticeReportData,specialistComparisonExpandPracticeReportPages:response.pages,specialistComparisonExpandPracticeReportTotalCount:response.totalCount,specialistComparisonExpandPracticeReportFileQuery:response.fileQuery});
-          //console.log(response);
           self.setState({ specialistComparisonExpandPracticeReportLoading: false });
-          self.generateSpecialistComparisonExpandReportXLSX();
+          self.generateSpecialistComparisonExpandPrecticeReportXLSX();
       });
         
   }
@@ -5929,6 +5958,78 @@ showHideColumn_beneficiariesManagementByLocation(columnName){
           self.generateSummaryReportXLSX();
 
    }
+
+     showHideColumn_specialistComparisonExpandPractice(columnName) {
+    
+    if(columnName == "practiceName") {
+      this.state.showPracticeName_specialistComparisonExpandPractice = !this.state.showPracticeName_specialistComparisonExpandPractice;
+    }
+    if(columnName == "spacialistType") {
+      this.state.showSpecialityType_specialistComparisonExpandPractice = !this.state.showSpecialityType_specialistComparisonExpandPractice;
+    }
+    if(columnName == "patientName") {
+      this.state.showPatientName_specialistComparisonExpandPractice = !this.state.showPatientName_specialistComparisonExpandPractice;
+    }
+    if(columnName == "pcpName") {
+      this.state.showPcpName_specialistComparisonExpandPractice = !this.state.showPcpName_specialistComparisonExpandPractice;
+    }
+    if(columnName == "numberOfClaims") {
+      this.state.showNoOfClaims_specialistComparisonExpandPractice = !this.state.showNoOfClaims_specialistComparisonExpandPractice;
+    }
+    if(columnName == "averageCostPerClaim") {
+      this.state.showAverageCostPerClaim_specialistComparisonExpandPractice = !this.state.showAverageCostPerClaim_specialistComparisonExpandPractice;
+    }
+    if(columnName == "cost") {
+      this.state.showCost_specialistComparisonExpandPractice = !this.state.showCost_specialistComparisonExpandPractice;
+    }
+
+    const newArray = this.state.dropdownOpen.map((element, index) => {
+      return (index === 23 ? true : false);
+    });
+    this.setState({
+      dropdownOpen: newArray
+    });
+
+        if(self.state.showPracticeName_specialistComparisonExpandPractice) {
+          document.getElementById("ddItemPracticeName_specialistComparisonExpandPractice").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemPracticeName_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+        }
+        if(self.state.showSpecialityType_specialistComparisonExpandPractice) {
+          document.getElementById("ddItemSpecialityType_specialistComparisonExpandPractice").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemSpecialityType_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+        }
+        if(self.state.showPatientName_specialistComparisonExpandPractice) {
+          document.getElementById("ddItemPatientName_specialistComparisonExpandPractice").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemPatientName_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+        }
+        if(self.state.showPcpName_specialistComparisonExpandPractice) {
+          document.getElementById("ddItemPcpName_specialistComparisonExpandPractice").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemPcpName_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+        }
+        if(self.state.showNoOfClaims_specialistComparisonExpandPractice) {
+          document.getElementById("ddItemNumberOfClaims_specialistComparisonExpandPractice").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemNumberOfClaims_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+        }
+        if(self.state.showAverageCostPerClaim_specialistComparisonExpandPractice) {
+          document.getElementById("ddItemAverageCostPerClaim_specialistComparisonExpandPractice").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemAverageCostPerClaim_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+        }
+        if(self.state.showCost_specialistComparisonExpandPractice) {
+          document.getElementById("ddItemCost_specialistComparisonExpandPractice").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemCost_specialistComparisonExpandPractice").style.backgroundColor = "#20a8d8";
+        }
+      
+        self.generateSpecialistComparisonExpandPrecticeReportXLSX();
+
+ }
+
  showHideColumn_ReinsuranceCostReportData(columnName) {
   if(columnName == "subscriberID") {
     this.state.showSubscriberID_reinsuranceCostReport = !this.state.showSubscriberID_reinsuranceCostReport;
@@ -5936,14 +6037,9 @@ showHideColumn_beneficiariesManagementByLocation(columnName){
   if(columnName == "planName") {
     this.state.showPlanName_reinsuranceCostReport = !this.state.showPlanName_reinsuranceCostReport;
   }
-  if(columnName == "patientFirstName") {
-    this.state.showPatientFirstName_reinsuranceCostReport = !this.state.showPatientFirstName_reinsuranceCostReport;
+  if(columnName == "patientName") {
+    this.state.showPatientName_reinsuranceCostReport = !this.state.showPatientName_reinsuranceCostReport;
   }
-  
-  if(columnName == "patientLastName") {
-    this.state.showPatientLastName_reinsuranceCostReport = !this.state.showPatientLastName_reinsuranceCostReport;
-  }
-  
   if(columnName == "policyPeriod") {
     this.state.showPolicyPeriod_reinsuranceCostReport = !this.state.showPolicyPeriod_reinsuranceCostReport;
   }
@@ -5987,16 +6083,10 @@ showHideColumn_beneficiariesManagementByLocation(columnName){
           } else {
             document.getElementById("ddItemPlanName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
           }
-          if(self.state.showPatientFirstName_reinsuranceCostReport) {
-            document.getElementById("ddItemPatientFirstName_reinsuranceCostReport").style.backgroundColor = "";
+          if(self.state.showPatientName_reinsuranceCostReport) {
+            document.getElementById("ddItemPatientName_reinsuranceCostReport").style.backgroundColor = "";
           } else {
-            document.getElementById("ddItemPatientFirstName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
-          }
-          
-          if(self.state.showPatientLastName_reinsuranceCostReport) {
-            document.getElementById("ddItemPatientLastName_reinsuranceCostReport").style.backgroundColor = "";
-          } else {
-            document.getElementById("ddItemPatientLastName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
+            document.getElementById("ddItemPatientName_reinsuranceCostReport").style.backgroundColor = "#20a8d8";
           }
           if(self.state.showPcpName_reinsuranceCostReport) {
             document.getElementById("ddItemPcpName_reinsuranceCostReport").style.backgroundColor = "";
@@ -6041,7 +6131,7 @@ showHideColumn_beneficiariesManagementByLocation(columnName){
  
 }
 
-showHideColumn_specialistComparisonPracticeExpand(columnName) {
+showHideColumn_specialistComparisonPatientExpand(columnName) {
     
   if(columnName == "practiceName") {
     this.state.showPracticeName_specialistComparisonPatientExpand = !this.state.showPracticeName_specialistComparisonPatientExpand;
@@ -6096,10 +6186,7 @@ showHideColumn_specialistComparisonPracticeExpand(columnName) {
 
 }
 
-//   showHideColumn_ReinsuranceCostReportData(columnName) {
-    
-        
-// }
+
 
    printTableData_duplicateClaims() {
 
@@ -6112,7 +6199,7 @@ showHideColumn_specialistComparisonPracticeExpand(columnName) {
       if(self.state.showPatientName_duplicate)
         propertiesArr.push("Patient Name");
       if(self.state.showPcp_duplicate)
-        propertiesArr.push("PCP");
+        propertiesArr.push("PCP Name");
       if(self.state.showEligibleMonth_duplicate)
         propertiesArr.push("Eligible Month");
       if(self.state.showTermedMonth_duplicate)
@@ -6369,7 +6456,7 @@ printTableData_settledMonthsReport() {
       if(self.state.showFacilityLocationName_pmpmByPractice)
         propertiesArr.push("Facility Location Name");
       if(self.state.showProviderName_pmpmByPractice)
-        propertiesArr.push("Provider Name");
+        propertiesArr.push("PCP Name");
       if(self.state.showTotalCost_pmpmByPractice)
         propertiesArr.push("Total Cost");
       if(self.state.showTotalNumberOfMemberMonth_pmpmByPractice)
@@ -6459,10 +6546,8 @@ printTableData_settledMonthsReport() {
     propertiesArr.push("Plan Name");
   if(self.state.showPolicyPeriod_reinsuranceCostReport)
     propertiesArr.push("Policy Period");
-  if(self.state.showPatientLastName_reinsuranceCostReport)
-    propertiesArr.push("Patient Last Name");
-  if(self.state.showPatientFirstName_reinsuranceCostReport)
-    propertiesArr.push("Patient First Name");
+  if(self.state.showPatientName_reinsuranceCostReport)
+    propertiesArr.push("Patient Name");
   if(self.state.showSubscriberID_reinsuranceCostReport)
     propertiesArr.push("HICN/SubscriberID");
   if(self.state.showEffectiveDate_reinsuranceCostReport)
@@ -6744,7 +6829,7 @@ printTableData_settledMonthsReport() {
       if(self.state.showDrgCode_beneficiariesManagementExpand)
         propertiesArr.push("DRG Code");
       if(self.state.showBetosCat_beneficiariesManagementExpand)
-        propertiesArr.push("BetosCat");
+        propertiesArr.push("Betos Cat");
       if(self.state.showCost_beneficiariesManagementExpand)
         propertiesArr.push("Cost");
       
@@ -7014,7 +7099,7 @@ printTableData_settledMonthsReport() {
       if(self.state.showClinicName_duplicateClaimsExpand)
         propertiesArr.push("Clinic Name");
       if(self.state.showProviderName_duplicateClaimsExpand)
-        propertiesArr.push("Provider Name");
+        propertiesArr.push("PCP Name");
       if(self.state.showBetosCat_duplicateClaimsExpand)
         propertiesArr.push("Betos Cat");
       if(self.state.showDrgCode_duplicateClaimsExpand)
@@ -7170,6 +7255,49 @@ printTableData_specialistComparisonPatientReportExpand() {
   });
 }
 
+printTableData_specialistComparisonPrecticeReportExpand() {
+
+      var propertiesArr = [];
+
+      if(self.state.showPracticeName_specialistComparisonExpandPractice)
+        propertiesArr.push("Practice Name");
+      if(self.state.showSpecialityType_specialistComparisonExpandPractice)
+        propertiesArr.push("Speciality Type");
+      if(self.state.showPatientName_specialistComparisonExpandPractice)
+        propertiesArr.push("Patient Name");
+      if(self.state.showPcpName_specialistComparisonExpandPractice)
+        propertiesArr.push("PCP Name");
+      if(self.state.showNoOfClaims_specialistComparisonExpandPractice)
+        propertiesArr.push("Number Of Claims");
+      if(self.state.showAverageCostPerClaim_specialistComparisonExpandPractice)
+       propertiesArr.push("Average Cost Per Claim");
+      if(self.state.showCost_specialistComparisonExpandPractice)
+       propertiesArr.push("Cost");
+        
+      
+
+      const formData = new FormData();
+      formData.append('fileQuery', self.state.specialistComparisonExpandPracticeReportFileQuery);
+
+      fetch(config.serverUrl+'/getSpecialistComparisonExpandPracticeReportDataForPrint', {
+          method: 'POST',
+          body: formData
+      }).then(function(res1) {
+          if (!res1.ok) {
+            if (error.message) {
+              self.setState({errorMessage :error.message});
+            } 
+          }
+          return res1.json();
+        }).then(function(response)   {
+
+        //console.log(response);
+        printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-Specialist Comparison Practice Report Search", documentTitle:"Print-Specialist Comparison Practice Report Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
+      
+      }).catch((error) => {
+        console.log(error);
+      });
+   }
 
    printTableData_summaryReport() {
 
@@ -7791,8 +7919,7 @@ printTableData_specialistComparisonPatientReportExpand() {
 formData.append('fileQuery', self.state.reinsuranceCostReportFileQuery);
 formData.append('showPlanName_reinsuranceCostReport', self.state.showPlanName_reinsuranceCostReport);
 formData.append('showPolicyPeriod_reinsuranceCostReport', self.state.showPolicyPeriod_reinsuranceCostReport);
-formData.append('showPatientLastName_reinsuranceCostReport', self.state.showPatientLastName_reinsuranceCostReport);
-formData.append('showPatientFirstName_reinsuranceCostReport', self.state.showPatientFirstName_reinsuranceCostReport);
+formData.append('showPatientName_reinsuranceCostReport', self.state.showPatientName_reinsuranceCostReport);
 formData.append('showSubscriberID_reinsuranceCostReport', self.state.showSubscriberID_reinsuranceCostReport);
 formData.append('showEffectiveDate_reinsuranceCostReport', self.state.showEffectiveDate_reinsuranceCostReport);
 formData.append('showTermedMonth_reinsuranceCostReport', self.state.showTermedMonth_reinsuranceCostReport);
@@ -8634,7 +8761,7 @@ const customStyles = {
                                   <DropdownItem toggle={false} id="ddItemSubscriberId_duplicate" className="commonFontFamily" onClick={e => self.showHideColumn_duplicate("subscriberId")}>HICN/Subscriber ID</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPlanName_duplicate" className="commonFontFamily" onClick={e => self.showHideColumn_duplicate("planName")}>Plan Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPatientName_duplicate" className="commonFontFamily" onClick={e => self.showHideColumn_duplicate("patientName")}>Patient Name</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemPcp_duplicate" className="commonFontFamily" onClick={e => self.showHideColumn_duplicate("pcp")}>PCP</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPcp_duplicate" className="commonFontFamily" onClick={e => self.showHideColumn_duplicate("pcp")}>PCP Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemEligibleMonth_duplicate" className="commonFontFamily" onClick={e => self.showHideColumn_duplicate("eligibleMonth")}>Eligible Month</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemTermedMonth_duplicate" className="commonFontFamily" onClick={e => self.showHideColumn_duplicate("termedMonth")}>Termed Month</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemClaimDate_duplicate" className="commonFontFamily" onClick={e => self.showHideColumn_duplicate("claimDate")}>Claim Date</DropdownItem>
@@ -8682,7 +8809,7 @@ const customStyles = {
                                         row[filter.id].startsWith(filter.value)
                                     },
                                     {
-                                      Header: "PCP",
+                                      Header: "PCP Name",
                                       accessor: "pcp",
                                       show: this.state.showPcp_duplicate,
                                       headerStyle: {"fontWeight":"bold",color:"#62879A"},
@@ -8808,7 +8935,7 @@ const customStyles = {
                                   <DropdownItem toggle={false} id="ddItemClaimDate_duplicateClaimsExpand" className="commonFontFamily" onClick={e => self.showHideColumn_duplicateClaimsExpand("claimDate")}>Claim Date</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemClaimType_duplicateClaimsExpand" className="commonFontFamily" onClick={e => self.showHideColumn_duplicateClaimsExpand("claimType")}>Claim Type</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemClinicName_duplicateClaimsExpand" className="commonFontFamily" onClick={e => self.showHideColumn_duplicateClaimsExpand("clinicName")}>Clinic Name</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemProviderName_duplicateClaimsExpand" className="commonFontFamily" onClick={e => self.showHideColumn_duplicateClaimsExpand("providerName")}>Provider Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemProviderName_duplicateClaimsExpand" className="commonFontFamily" onClick={e => self.showHideColumn_duplicateClaimsExpand("providerName")}>PCP Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemBetosCat_duplicateClaimsExpand" className="commonFontFamily" onClick={e => self.showHideColumn_duplicateClaimsExpand("betosCat")}>BetosCat</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemDrgCode_duplicateClaimsExpand" className="commonFontFamily" onClick={e => self.showHideColumn_duplicateClaimsExpand("drgCode")}>DRG Code</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemIcdCodes_duplicateClaimsExpand" className="commonFontFamily" onClick={e => self.showHideColumn_duplicateClaimsExpand("icdCodes")}>ICD 9/10 Code(s)</DropdownItem>
@@ -8865,7 +8992,7 @@ const customStyles = {
                                         row[filter.id].startsWith(filter.value)
                                     },
                                     {
-                                      Header: "Provider Name",
+                                      Header: "PCP Name",
                                       accessor: "providerName",
                                       show: this.state.showProviderName_duplicateClaimsExpand,
                                       headerStyle: {"fontWeight":"bold",color:"#62879A"},
@@ -9661,20 +9788,20 @@ const customStyles = {
                   <Col md="2">
                   
                         <FormGroup check inline>
-                            <i class="icon-printer icons font-2xl d-block" title="Print" onClick={e => self.printTableData_specialistComparisonReportExpand()} style={{cursor:"pointer",color:"#20a8d8"}}></i>
+                            <i class="icon-printer icons font-2xl d-block" title="Print" onClick={e => self.printTableData_specialistComparisonPrecticeReportExpand()} style={{cursor:"pointer",color:"#20a8d8"}}></i>
                             {/*<a>
                             <img src="/img/printer.png" title="Print" onClick={e => self.printTableData()} style={{cursor:"pointer"}} />
                             &nbsp;
                             </a>*/}
                           </FormGroup>
                           <FormGroup check inline>
-                            <a href={config.serverUrl+'/renderSpecialistComparisonExpandReportXLSX/'+self.state.jsonDataForSpecialistComparisonExpandReport} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="icon-doc icons font-2xl d-block" title="Export" style={{color:"#20a8d8"}}></i>
+                            <a href={config.serverUrl+'/renderSpecialistComparisonExpandPracticeReportXLSX/'+self.state.jsonDataForSpecialistComparisonExpandPracticeReport} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="icon-doc icons font-2xl d-block" title="Export" style={{color:"#20a8d8"}}></i>
                                 {/*<img src="/img/excel.png" title="Export"/>*/}
                             </a>
                             &nbsp;
                           </FormGroup>
                           <FormGroup check inline>
-                            <a href={config.serverUrl+'/renderSpecialistComparisonExpandReportPDF/'+self.state.jsonDataForSpecialistComparisonExpandReport} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="fa fa-file-pdf-o font-2xl" title="PDF" style={{color:"#20a8d8"}}></i>
+                            <a href={config.serverUrl+'/renderSpecialistComparisonExpandPracticeReportPDF/'+self.state.jsonDataForSpecialistComparisonExpandPracticeReport} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="fa fa-file-pdf-o font-2xl" title="PDF" style={{color:"#20a8d8"}}></i>
                               {/*<img src="/img/pdf.png" title="PDF"/>*/}
                             </a>
                           </FormGroup>
@@ -9687,10 +9814,14 @@ const customStyles = {
                                   
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                  <DropdownItem toggle={false} id="ddItemSpecialityType_specialistComparisonExpand" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpand("specialityType")}>Speciality Type</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemNumberOfClaims_specialistComparisonExpand" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpand("numberOfClaims")}>Number Of Claims</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemAverageCostPerClaim_specialistComparisonExpand" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpand("averageCostPerClaim")}>Average Cost Per Claim</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemCost_specialistComparisonExpand" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpand("cost")}>Cost</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPracticeName_specialistComparisonExpandPractice" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpandPractice("practiceName")}>Practice Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemSpecialityType_specialistComparisonExpandPractice" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpandPractice("spacialistType")}>Speciality Type</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPatientName_specialistComparisonExpandPractice" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpandPractice("patientName")}>Patient Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPcpName_specialistComparisonExpandPractice" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpandPractice("pcpName")}>PCP Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemNumberOfClaims_specialistComparisonExpandPractice" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpandPractice("numberOfClaims")}>Number Of Claims</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemAverageCostPerClaim_specialistComparisonExpandPractice" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpandPractice("averageCostPerClaim")}>Average Cost Per Claim</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemCost_specialistComparisonExpandPractice" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonExpandPractice("cost")}>Cost</DropdownItem>
+                                  
                                 </DropdownMenu>
                               </Dropdown>
                           </FormGroup>
@@ -9834,11 +9965,11 @@ const customStyles = {
                                   
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                  <DropdownItem toggle={false} id="ddItemPracticeName_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPracticeExpand("practiceName")}>Practice Name</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemSpecialityType_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPracticeExpand("specialityType")}>Speciality Type</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemPatientName_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPracticeExpand("patientName")}>Patient Name</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemPcpName_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPracticeExpand("pcpName")}>PCP Name</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemCost_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPracticeExpand("cost")}>Cost</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPracticeName_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPatientExpand("practiceName")}>Practice Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemSpecialityType_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPatientExpand("specialityType")}>Speciality Type</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPatientName_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPatientExpand("patientName")}>Patient Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPcpName_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPatientExpand("pcpName")}>PCP Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemCost_specialistComparisonExpandPatient" className="commonFontFamily" onClick={e => self.showHideColumn_specialistComparisonPatientExpand("cost")}>Cost</DropdownItem>
                                 </DropdownMenu>
                               </Dropdown>
                           </FormGroup>
@@ -9895,7 +10026,7 @@ const customStyles = {
                               defaultPageSize={100}
                               onFetchData={this.fetchSpecialistComparisonPatientExpandReportData}
                               className="-striped -highlight commonFontFamily"
-                              pageText={'Total Entries '+this.state.specialistComparisonExpandPracticeReportTotalCount+', Page'}
+                              pageText={'Total Entries '+this.state.specialistComparisonPatientExpandReportTotalCount+', Page'}
                               getTrProps={(state, rowInfo, column) => {
                                 return {
                                   style: {
@@ -10983,7 +11114,7 @@ const customStyles = {
                                 </DropdownToggle>
                                 <DropdownMenu>
                                   <DropdownItem toggle={false} id="ddItemFacilityLocationName_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("facilityLocationName")}>Facility Location Name</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemProviderName_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("providerName")}>Provider Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemProviderName_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("providerName")}>PCP Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemTotalCost_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("totalCost")}>Total Cost</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemTotalMemberMonth_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("totalNumberOfMemberMonth")}>Total Number of Member Month</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPMPM_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("pmpm")}>PMPM</DropdownItem>
@@ -11018,7 +11149,7 @@ const customStyles = {
                                         row[filter.id].startsWith(filter.value)
                                     },
                                     {
-                                      Header: "Provider Name",
+                                      Header: "PCP Name",
                                       accessor: "providerName",
                                       show: this.state.showProviderName_pmpmByPractice,
                                       headerStyle: {"fontWeight":"bold",color:"#62879A"},
@@ -13386,8 +13517,7 @@ const customStyles = {
                                 <DropdownMenu>
                                   <DropdownItem toggle={false} id="ddItemPlanName_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("planName")}>Plan Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPolicyPeriod_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("policyPeriod")}>Policy Period</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemPatientLastName_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("patientLastName")}>Patient Last Name</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemPatientFirstName_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("patientFirstName")}>Patient First Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPatientName_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("patientName")}>Patient Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemSubscriberID_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("subscriberID")}>SubscriberID</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemEffectiveDate_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("effectiveDate")}>Effective Date</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemTermedMonth_reinsuranceCostReport" className="commonFontFamily" onClick={e => self.showHideColumn_ReinsuranceCostReportData("termedMonth")}>Termed Month</DropdownItem>
@@ -13431,17 +13561,9 @@ const customStyles = {
                                         row[filter.id].startsWith(filter.value)
                                     },
                                     {
-                                      Header: "Patient Last Name",
-                                      accessor: "patientLastName",
-                                      show: this.state.showPatientLastName_reinsuranceCostReport,
-                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                                      filterMethod: (filter, row) =>
-                                        row[filter.id].startsWith(filter.value)
-                                    },
-                                    { 
-                                      Header: "Patient First Name",
-                                      accessor: "patientFirstName",
-                                      show: this.state.showPatientFirstName_reinsuranceCostReport,
+                                      Header: "Patient Name",
+                                      accessor: "patientName",
+                                      show: this.state.showPatientName_reinsuranceCostReport,
                                       headerStyle: {"fontWeight":"bold",color:"#62879A"},
                                       filterMethod: (filter, row) =>
                                         row[filter.id].startsWith(filter.value)
