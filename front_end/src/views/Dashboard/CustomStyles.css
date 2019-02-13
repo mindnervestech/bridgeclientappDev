@@ -72,6 +72,20 @@ input[type="checkbox"] {
   font-family: serif;
 }
 
+.topMarginStyle button{
+    background: transparent !important;
+    border: 1px solid #ccc;
+    border-radius: 4px !important;
+    box-shadow: none !important;
+    width: 200px !important;
+    border-width: 1px !important;
+    font-family: serif;
+}
+
+.modalWidth {
+    max-width: 1270px !important;
+}
+
 .topMarginStyle {
   margin-bottom: 10px;
 }
@@ -99,4 +113,14 @@ input[type="checkbox"] {
 .commonFontFamilyColor {
   font-family: serif;
   color: #62879A;
+}
+#locationSelect{
+    width: auto;
+}
+.location-style{
+    width: 200px;
+    background: transparent;
+    box-shadow: none;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }

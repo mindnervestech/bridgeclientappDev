@@ -421,6 +421,7 @@ class Dashboard extends React.Component {
 
       showFacilityLocationName_pmpmByPractice: false,
       showProviderName_pmpmByPractice: true,
+      showMra_pmpmByPractice: true,
       showTotalCost_pmpmByPractice: true,
       showTotalNumberOfMemberMonth_pmpmByPractice: true,
       showPMPM_pmpmByPractice: true,
@@ -1313,6 +1314,11 @@ class Dashboard extends React.Component {
                 document.getElementById("ddItemProviderName_pmpmByPractice").style.backgroundColor = "";
               } else {
                 document.getElementById("ddItemProviderName_pmpmByPractice").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showMra_pmpmByPractice) {
+                document.getElementById("ddItemMra_pmpmByPractice").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemMra_pmpmByPractice").style.backgroundColor = "#20a8d8";
               }
               if(self.state.showTotalCost_pmpmByPractice) {
                 document.getElementById("ddItemTotalCost_pmpmByPractice").style.backgroundColor = "";
@@ -4883,6 +4889,9 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
       if(columnName == "providerName") {
         this.state.showProviderName_pmpmByPractice = !this.state.showProviderName_pmpmByPractice;
       }
+      if(columnName == "mra") {
+        this.state.showMra_pmpmByPractice = !this.state.showMra_pmpmByPractice;
+      }
       if(columnName == "totalCost") {
         this.state.showTotalCost_pmpmByPractice = !this.state.showTotalCost_pmpmByPractice;
       }
@@ -4921,6 +4930,11 @@ getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
                 document.getElementById("ddItemProviderName_pmpmByPractice").style.backgroundColor = "";
               } else {
                 document.getElementById("ddItemProviderName_pmpmByPractice").style.backgroundColor = "#20a8d8";
+              }
+              if(self.state.showMra_pmpmByPractice) {
+                document.getElementById("ddItemMra_pmpmByPractice").style.backgroundColor = "";
+              } else {
+                document.getElementById("ddItemMra_pmpmByPractice").style.backgroundColor = "#20a8d8";
               }
               if(self.state.showTotalCost_pmpmByPractice) {
                 document.getElementById("ddItemTotalCost_pmpmByPractice").style.backgroundColor = "";
@@ -6040,6 +6054,7 @@ showHideColumn_beneficiariesManagementByLocation(columnName){
   if(columnName == "patientName") {
     this.state.showPatientName_reinsuranceCostReport = !this.state.showPatientName_reinsuranceCostReport;
   }
+  
   if(columnName == "policyPeriod") {
     this.state.showPolicyPeriod_reinsuranceCostReport = !this.state.showPolicyPeriod_reinsuranceCostReport;
   }
@@ -6457,6 +6472,8 @@ printTableData_settledMonthsReport() {
         propertiesArr.push("Facility Location Name");
       if(self.state.showProviderName_pmpmByPractice)
         propertiesArr.push("PCP Name");
+      if(self.state.showMra_pmpmByPractice)
+        propertiesArr.push("MRA");
       if(self.state.showTotalCost_pmpmByPractice)
         propertiesArr.push("Total Cost");
       if(self.state.showTotalNumberOfMemberMonth_pmpmByPractice)
@@ -6466,11 +6483,11 @@ printTableData_settledMonthsReport() {
       if(self.state.showPMPY_pmpmByPractice)
         propertiesArr.push("PMPY");
       if(self.state.showTotalPremium_pmpmByPractice)
-        propertiesArr.push("Total Premium");
+        propertiesArr.push("Total Expenses");
       if(self.state.showIpaPremium_pmpmByPractice)
         propertiesArr.push("IPA Premium");
       if(self.state.showDifference_pmpmByPractice)
-        propertiesArr.push("Total Premium - IPA Premium");
+        propertiesArr.push("Total Expenses - IPA Premium");
       
 
       const formData = new FormData();
@@ -6641,7 +6658,7 @@ printTableData_settledMonthsReport() {
       if(self.state.showPatientDob_membershipManagement)
         propertiesArr.push("Patient DOB");
       if(self.state.showAssignedPcp_membershipManagement)
-        propertiesArr.push("Assigned PCP");
+        propertiesArr.push("PCP Name");
       if(self.state.showPcpLocation_membershipManagement)
         propertiesArr.push("PCP Location");
       if(self.state.showIpaEffectiveDate_membershipManagement)
@@ -7831,6 +7848,7 @@ printTableData_specialistComparisonPrecticeReportExpand() {
     formData.append('fileQuery', self.state.pmpmByPracticeFileQuery);
     formData.append('showFacilityLocationName_pmpmByPractice', self.state.showFacilityLocationName_pmpmByPractice);
     formData.append('showProviderName_pmpmByPractice', self.state.showProviderName_pmpmByPractice);
+    formData.append('showMra_pmpmByPractice', self.state.showMra_pmpmByPractice);
     formData.append('showTotalCost_pmpmByPractice', self.state.showTotalCost_pmpmByPractice);
     formData.append('showTotalNumberOfMemberMonth_pmpmByPractice', self.state.showTotalNumberOfMemberMonth_pmpmByPractice);
     formData.append('showPMPM_pmpmByPractice', self.state.showPMPM_pmpmByPractice);
@@ -8172,7 +8190,7 @@ const customStyles = {
                     <ReactMultiSelectCheckboxes 
                     id="locationSelect"
                     placeholder="Select Location"
-                    className="optionSelectStyle"
+                    className="location-style"
                     value={this.state.locationSelectValue}
                     options={this.state.locationList} 
                     onChange={this.setLocationValue}
@@ -8682,7 +8700,7 @@ const customStyles = {
 
 
        <Modal isOpen={this.state.large} toggle={this.toggleLarge}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleLarge}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -8890,7 +8908,7 @@ const customStyles = {
 
               {/**************Duplicate Claims expand modal*****************/}
                 <Modal isOpen={this.state.duplicateClaimsExpandModal} toggle={this.toggleDuplicateClaimsExpandModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200,zIndex:"9999"}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleDuplicateClaimsExpandModal}>
                    
                       <div className="duplicateClaimsHeader">
@@ -9061,7 +9079,7 @@ const customStyles = {
                 
               {/**************Admissions Report modal*****************/}
                 <Modal isOpen={this.state.admissionsReportModal} toggle={this.toggleAdmissionsReportModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'} >
                   <ModalHeader toggle={this.toggleAdmissionsReportModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -9261,7 +9279,7 @@ const customStyles = {
 
               {/**************Admissions Report expand modal*****************/}
                 <Modal isOpen={this.state.admissionsReportExpandModal} toggle={this.toggleAdmissionsReportExpandModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200,zIndex:"9999"}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleAdmissionsReportExpandModal}>
                    
                       <div className="duplicateClaimsHeader">
@@ -9441,7 +9459,7 @@ const customStyles = {
 
               {/**************Specialist Comparison Report modal*****************/}
                 <Modal isOpen={this.state.specialistComparisonReportModal} toggle={this.toggleSpecialistComparisonReportModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleSpecialistComparisonReportModal}>
                    <Row>
                    <Col>
@@ -9629,7 +9647,7 @@ const customStyles = {
 
               {/**************Specialist Comparison Expand Report modal*****************/}
                 <Modal isOpen={this.state.specialistComparisonExpandReportModal} toggle={this.toggleSpecialistComparisonExpandReportModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleSpecialistComparisonExpandReportModal}>
                    <Row>
                    <Col>
@@ -9761,7 +9779,7 @@ const customStyles = {
 
               {/**************Specialist Comparison Expand Practice modal*****************/}
                 <Modal isOpen={this.state.specialistComparisonExpandPracticeReportModal} toggle={this.toggleSpecialistComparisonExpandPracticeReportModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleSpecialistComparisonExpandPracticeReportModal}>
                    <Row>
                    <Col>
@@ -9925,7 +9943,7 @@ const customStyles = {
 
                 {/**************Specialist Comparison Expand Patient modal*****************/}
                 <Modal isOpen={this.state.specialistComparisonPatientExpandReportModal} toggle={this.toggleSpecialistComparisonPatientExpandReportModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleSpecialistComparisonPatientExpandReportModal}>
                    <Row>
                    <Col>
@@ -10041,7 +10059,7 @@ const customStyles = {
 
               {/**************Patient Visit Report modal*****************/}
                 <Modal isOpen={this.state.patientVisitReportModal} toggle={this.togglePatientVisitReportModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.togglePatientVisitReportModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -10233,7 +10251,7 @@ const customStyles = {
 
               {/**************Patient Visit Expand Report modal*****************/}
                 <Modal isOpen={this.state.patientVisitExpandReportModal} toggle={this.togglePatientVisitExpandReportModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.togglePatientVisitExpandReportModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -10404,7 +10422,7 @@ const customStyles = {
 
               {/**************Summary Report modal*****************/}
                 <Modal isOpen={this.state.summaryReportModal} toggle={this.toggleSummaryReportModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleSummaryReportModal}>
                    <Row>
                       <Col className="duplicateClaimsHeader">
@@ -10702,7 +10720,7 @@ const customStyles = {
 
               {/**************Settled Months Report modal*****************/}
                 <Modal isOpen={this.state.settledMonthsModal} toggle={this.toggleSettledMonthsModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleSettledMonthsModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -10908,7 +10926,7 @@ const customStyles = {
 
                 {/**************Settled Months Expand Report modal*****************/}
                 <Modal isOpen={this.state.settledMonthsExpandModal} toggle={this.toggleSettledMonthsExpandModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleSettledMonthsExpandModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -11040,7 +11058,7 @@ const customStyles = {
 
               {/**************PMPM by Practice Report modal*****************/}
                 <Modal isOpen={this.state.pmpmByPracticeModal} toggle={this.togglePmpmByPracticeModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.togglePmpmByPracticeModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -11115,13 +11133,14 @@ const customStyles = {
                                 <DropdownMenu>
                                   <DropdownItem toggle={false} id="ddItemFacilityLocationName_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("facilityLocationName")}>Facility Location Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemProviderName_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("providerName")}>PCP Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemMra_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("mra")}>MRA</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemTotalCost_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("totalCost")}>Total Cost</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemTotalMemberMonth_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("totalNumberOfMemberMonth")}>Total Number of Member Month</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPMPM_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("pmpm")}>PMPM</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPMPY_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("pmpy")}>PMPY</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemTotalPremium_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("totalPremium")}>Total Premium</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemTotalPremium_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("totalPremium")}>Total Expenses</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemIpaPremium_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("ipaPremium")}>IPA Premium</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemDifference_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("difference")}>Total Premium - IPA Premium</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemDifference_pmpmByPractice" className="commonFontFamily" onClick={e => self.showHideColumn_pmpmByPractice("difference")}>Total Expenses - IPA Premium</DropdownItem>
                                 </DropdownMenu>
                               </Dropdown>
                           </FormGroup>
@@ -11152,6 +11171,14 @@ const customStyles = {
                                       Header: "PCP Name",
                                       accessor: "providerName",
                                       show: this.state.showProviderName_pmpmByPractice,
+                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "MRA",
+                                      accessor: "mra",
+                                      show: this.state.showMra_pmpmByPractice,
                                       headerStyle: {"fontWeight":"bold",color:"#62879A"},
                                       filterMethod: (filter, row) =>
                                         row[filter.id].startsWith(filter.value)
@@ -11189,7 +11216,7 @@ const customStyles = {
                                         row[filter.id].startsWith(filter.value)
                                     },
                                     {
-                                      Header: "Total Premium",
+                                      Header: "Total Expenses",
                                       accessor: "totalPremium",
                                       show: this.state.showTotalPremium_pmpmByPractice,
                                       headerStyle: {"fontWeight":"bold",color:"#62879A"},
@@ -11205,7 +11232,7 @@ const customStyles = {
                                         row[filter.id].startsWith(filter.value)
                                     },
                                     {
-                                      Header: "Total Premium - IPA Premium",
+                                      Header: "Total Expenses - IPA Premium",
                                       accessor: "difference",
                                       show: this.state.showDifference_pmpmByPractice,
                                       headerStyle: {"fontWeight":"bold",color:"#62879A"},
@@ -11248,7 +11275,7 @@ const customStyles = {
 
                 {/**************PMPM by Practice Expand Report modal*****************/}
                 <Modal isOpen={this.state.pmpmByPracticeExpandModal} toggle={this.togglePmpmByPracticeExpandModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.togglePmpmByPracticeExpandModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -11395,7 +11422,7 @@ const customStyles = {
 
               {/**************Patients List Modal*****************/}
                 <Modal isOpen={this.state.membershipManagementModal} toggle={this.toggleMembershipManagementModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleMembershipManagementModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -11438,7 +11465,7 @@ const customStyles = {
                                   <DropdownItem toggle={false} id="ddItemInsuranceId_membershipManagement" className="commonFontFamily" onClick={e => self.showHideColumn_membershipManagement("insuranceId")}>Insurance ID</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPatientName_membershipManagement" className="commonFontFamily" onClick={e => self.showHideColumn_membershipManagement("patientName")}>Patient Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPatientDob_membershipManagement" className="commonFontFamily" onClick={e => self.showHideColumn_membershipManagement("patientDob")}>Patient DOB</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemAssignedPcp_membershipManagement" className="commonFontFamily" onClick={e => self.showHideColumn_membershipManagement("assignedPcp")}>Assigned PCP</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemAssignedPcp_membershipManagement" className="commonFontFamily" onClick={e => self.showHideColumn_membershipManagement("assignedPcp")}>PCP Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPcpLocation_membershipManagement" className="commonFontFamily" onClick={e => self.showHideColumn_membershipManagement("pcpLocation")}>PCP Location</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemIpaEffectiveDate_membershipManagement" className="commonFontFamily" onClick={e => self.showHideColumn_membershipManagement("ipaEffectiveDate")}>IPA Effective Date</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemMra_membershipManagement" className="commonFontFamily" onClick={e => self.showHideColumn_membershipManagement("mra")}>MRA</DropdownItem>
@@ -11503,7 +11530,7 @@ const customStyles = {
                                         row[filter.id].startsWith(filter.value)
                                     },
                                     {
-                                      Header: "Assigned PCP",
+                                      Header: "PCP Name",
                                       accessor: "assignedPcp",
                                       show: this.state.showAssignedPcp_membershipManagement,
                                       headerStyle: {"fontWeight":"bold",color:"#62879A"},
@@ -11564,7 +11591,7 @@ const customStyles = {
 
               {/**************Beneficiaries Management Report Modal*****************/}
                 <Modal isOpen={this.state.beneficiariesManagementModal} toggle={this.toggleBeneficiariesManagementModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleBeneficiariesManagementModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -12569,7 +12596,7 @@ const customStyles = {
 
                 {/**************Beneficiaries Management Report Expand Modal*****************/}
                 <Modal isOpen={this.state.beneficiariesManagementExpandModal} toggle={this.toggleBeneficiariesManagementExpandModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleBeneficiariesManagementExpandModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -12738,7 +12765,7 @@ const customStyles = {
 
               {/**************Beneficiaries Management By Doctor Expand Modal*****************/}
                 <Modal isOpen={this.state.beneficiariesManagementByDoctorExpandModal} toggle={this.toggleBeneficiariesManagementByDoctorExpandModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleBeneficiariesManagementByDoctorExpandModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -12906,7 +12933,7 @@ const customStyles = {
                 </Modal>
      {/*************Beneficiaries Management By Location Expand Modal****************/}
      <Modal isOpen={this.state.beneficiariesManagementByLocationExpandModal} toggle={this.toggleBeneficiariesManagementByLocationExpandModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleBeneficiariesManagementByLocationExpandModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -13074,7 +13101,7 @@ const customStyles = {
                 </Modal>
                 {/*************Beneficiaries Management By Clinic Expand Modal****************/}
      <Modal isOpen={this.state.beneficiariesManagementByClinicExpandModal} toggle={this.toggleBeneficiariesManagementByClinicExpandModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleBeneficiariesManagementByClinicExpandModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -13242,7 +13269,7 @@ const customStyles = {
                 </Modal>
                   {/**************Reinsurance Management Report modal*****************/}
                    <Modal isOpen={this.state.reinsuranceManagementModal} toggle={this.toggleReinsuranceManagementModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleReinsuranceManagementModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
@@ -13443,7 +13470,7 @@ const customStyles = {
                 
                                 {/**************Reinsurance Cost Report modal*****************/}
                   <Modal isOpen={this.state.reinsuranceCostReportModal} toggle={this.toggleReinsuranceCostReportModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
+                       className={'modal-lg ' + this.props.className + ' modalWidth'}>
                   <ModalHeader toggle={this.toggleReinsuranceCostReportModal}>
                   <Row>  
                       <Col className="duplicateClaimsHeader">
