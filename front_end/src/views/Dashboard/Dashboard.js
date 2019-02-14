@@ -6894,7 +6894,7 @@ printTableData_settledMonthsReport() {
       if(self.state.showDrgCode_beneficiariesManagementByDoctorExpand)
         propertiesArr.push("DRG Code");
       if(self.state.showBetosCat_beneficiariesManagementByDoctorExpand)
-        propertiesArr.push("BetosCat");
+        propertiesArr.push("Betos Cat");
       if(self.state.showCost_beneficiariesManagementByDoctorExpand)
         propertiesArr.push("Cost");
       
