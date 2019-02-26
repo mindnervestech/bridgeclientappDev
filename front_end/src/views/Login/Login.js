@@ -64,6 +64,9 @@ class Login extends Component {
             if(permission.module == "Settings") {
               self.state.menuItems.push(nav.items[4]);
             }
+            if (permission.module == "Reports") {
+              self.state.menuItems.push(nav.items[5]);
+            }
           })
           /*self.state.menuItems.forEach(function(permission) {
             if(permission == null) {

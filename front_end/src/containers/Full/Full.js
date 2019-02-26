@@ -19,8 +19,9 @@ import Authorization from '../../views/Authorization/';
 import ClaimDetails from '../../views/ClaimDetails/';
 import Settings from '../../views/Settings/';
 import Maintenance from '../../views/Maintenance/';
-
-
+import AdmissionReport from "../../views/Reports/AdmissionReport/";
+import DuplicateClaimsReport from "../../views/Reports/DuplicateClaimsReport/";
+import Reports from "../../views/Reports/";
 class Full extends Component {
   componentDidMount() {
     //console.log("Application on load...");
@@ -28,7 +29,6 @@ class Full extends Component {
     if(localStorage.getItem("user") == null || localStorage.getItem("user") == undefined) {
       window.location.href = "#/login";
     }
-
   }
   render() {
     return (
@@ -37,8 +37,7 @@ class Full extends Component {
         <div className="app-body">
             <Sidebar {...this.props}/>
           {
-            <main className="main" style={{backgroundColor:"#F9F9F9"}}>
-              
+            <main className="main" style={{ backgroundColor: "#f7f3f0" }}>
               <Container fluid>
                 <Switch>
                   <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
@@ -53,6 +52,9 @@ class Full extends Component {
                   <Route path="/claimDetails" name="ClaimDetails" component={ClaimDetails}/>
                   <Route path="/settings" name="Settings" component={Settings}/>
                   <Route path="/maintenance" name="Maintenance" component={Maintenance}/>
+                  <Route path="/admissionreport" name="AdmissionReport" component={AdmissionReport}/>
+                  <Route path="/duplicateclaimsreport" name="DuplicateClaimsReport" component={DuplicateClaimsReport} />
+                  <Route path="/reports" name="Reports" component={Reports} />
                   <Redirect from="/" to="/dashboard"/>
                 </Switch>
               </Container>
