@@ -10,128 +10,174 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
+  Label,
+  Card,
+  CardHeader,
+  CardBody,
 } from 'reactstrap';
+import Select from 'react-select';
 
 class AdmissionReport extends Component {
+
   constructor(props, context) {
     super(props, context);
 
     this.state = {
 
+      yearsList: [],
+      ProviderList: [],
+      pcpReportList: [],
+      reportProviderArr: [],
       admissionsReportData: [],
       loading: false,
-      admissionsReportPages: 0,
       exportModeltoggleView: false,
-
+      showPcpName_admissions: true,
+      showTotalCost_admissions: true,
       showPatientName_admissions: true,
       showSubscriberId_admissions: true,
-      showPcpName_admissions: true,
       showEligibleMonth_admissions: true,
       showTotalNoOfAdmissions_admissions: true,
-      showTotalCost_admissions: true,
       
-      fetchAdmissionsReportData: [],
-      admissionsReportYearSelectValue: "all",
-      admissionsReportProviderSelectValue: { value: 'all', label: 'All' },
-      admissionsReportPcpNameValue: "",
-
+      currentYear:0,
+      admissionsReportPages: 0,
       admissionsReportGridPage: 0,
       admissionsReportGridPageSize: 0,
+      
+      admissionsReportPcpNameValue: "",
+      admissionsReportYearSelectValue: "",
+      admissionsReportProviderSelectValue:"",
       admissionsReportGridSorted: {},
-      admissionsReportGridFiltered: {}
+      admissionsReportGridFiltered: {},
+      
     };
     self = this;
     
+    self.state.admissionsReportProviderSelectValue = { value: 'all', label: 'All' };
     self.state.admissionsReportPcpNameValue = { value: 'all', label: 'All' };
-    
+    // self.state.admissionsReportYearSelectValue = { value: 'all', label: 'All' };
     this.fetchAdmissionsReportData = this.fetchAdmissionsReportData.bind(this);
     this.getAdmissionsReports = this.getAdmissionsReports.bind(this);
+
     this.exportModelToggle = this.exportModelToggle.bind(this);
     this.backToReports = this.backToReports.bind(this);
+
     this.fetchAdmissionsReportData = debounce(this.fetchAdmissionsReportData, 500);
     
   }
 
-  toggleAdmissionsReportModal() {
-    this.state.admissionsReportProviderSelectValue = this.state.claimTotalsProviderSelect;
-    this.state.admissionsReportPcpNameValue = self.state.optionSelectValue;
-    this.setState({
-      pcpReportList: this.state.pcpList
-    })
-    this.setState({
-      admissionsReportModal: !this.state.admissionsReportModal
+  componentDidMount() {
+    fetch(config.serverUrl + '/getAllPlanAndPCP', {
+      method: 'GET'
+    }).then(function (res1) {
+      return res1.json();
+    }).then(function (response) {
+      self.setState({ ProviderList: response.planList,pcpReportList:response.pcpList, yearsList:response.yearsList});
+     
+      for(var i=0;i<self.state.yearsList.length;i++) {
+        if(self.state.yearsList[i].value >= self.state.currentYear) {
+          self.state.currentYear = self.state.yearsList[i].value;
+        } console.log(self.state.currentYear);
+        self.state.admissionsReportYearSelectValue = { value: self.state.currentYear, label: self.state.currentYear };
+      }
+     
+      
+      self.setState({
+        ProviderList: self.state.ProviderList.concat({ value: 'all', label: 'All' }),
+        pcpReportList:self.state.pcpReportList.concat({value:'all', label:'All'}),
+        yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
+      });
     });
-    this.state.loading = false;
+    
   }
 
   setAdmissionsReportProviderValue(e) {
     self.state.admissionsReportProviderSelectValue = e;
     self.getPCPForReportProviders(self.state.admissionsReportProviderSelectValue.value);
-    setTimeout(function () {
-      self.getAdmissionsReports(self.state.admissionsReportGridPageSize, 1, JSON.stringify(self.state.admissionsReportGridSorted), JSON.stringify(self.state.admissionsReportGridFiltered));
+    setTimeout(function(){
+      self.getAdmissionsReports(self.state.admissionsReportGridPageSize, 1, JSON.stringify(self.state.admissionsReportGridSorted),JSON.stringify(self.state.admissionsReportGridFiltered));
     }, 1000);
+  }
+  setAdmissionsReportPcpName(e) {
+    self.state.admissionsReportPcpNameValue = e;
+    self.getAdmissionsReports(self.state.admissionsReportGridPageSize, 1, JSON.stringify(self.state.admissionsReportGridSorted),JSON.stringify(self.state.admissionsReportGridFiltered));
+  }
+ 
+  setAdmissionsReportYearValue(e) {
+    self.state.admissionsReportYearSelectValue = e;
+    self.getAdmissionsReports(self.state.admissionsReportGridPageSize, 1, JSON.stringify(self.state.admissionsReportGridSorted),JSON.stringify(self.state.admissionsReportGridFiltered));
+  }
+
+  getPCPForReportProviders(providerName) {
+    this.state.reportProviderArr = [];
+    this.state.reportProviderArr[0] = providerName;
+    const formData = new FormData();
+    formData.append('providerArr', self.state.reportProviderArr);
+    fetch(config.serverUrl + '/getPCPForAllProviders', {
+      method: 'POST',
+      body: formData
+    }).then(function (res1) {
+      return res1.json();
+    }).then(function (response) {
+      self.setState({ pcpReportList: response });
+      self.setState({
+        pcpReportList: self.state.pcpReportList.concat({ value: 'all', label: 'All' })
+      });
+      self.state.admissionsReportPcpNameValue = { value: 'all', label: 'All' };
+    });
   }
 
   fetchAdmissionsReportData(state, instance) {
-    console.log("fetch data");
+  
     var page = state.page + 1;
     self.state.admissionsReportGridPage = page;
     self.state.admissionsReportGridPageSize = state.pageSize;
     self.state.admissionsReportGridSorted = state.sorted;
     self.state.admissionsReportGridFiltered = state.filtered;
-    self.getAdmissionsReports(state.pageSize, page, JSON.stringify(state.sorted), JSON.stringify(state.filtered));
+    setTimeout(function () {
+      self.getAdmissionsReports(state.pageSize, page, JSON.stringify(state.sorted), JSON.stringify(state.filtered));
+    }, 1000);
   }
 
-  getAdmissionsReports(pageSize, page, sortedArr, filteredArr) {
+  getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
     self.setState({ loading: true });
     const formData = new FormData();
-    console.log("reaport data")
-    formData.append("year", self.state.admissionsReportYearSelectValue);
-    formData.append("provider", self.state.admissionsReportProviderSelectValue.value);
-    formData.append("pcpName", self.state.admissionsReportPcpNameValue.value);
-    formData.append("pageSize", pageSize);
-    formData.append("page", page);
-    formData.append("sortedColumns", sortedArr);
-    formData.append("filteredColumns", filteredArr);
+        console.log(this.state.admissionsReportYearSelectValue);
+      formData.append('year', self.state.admissionsReportYearSelectValue.value);
+      formData.append('provider', self.state.admissionsReportProviderSelectValue.value);
+      formData.append('pcpName', self.state.admissionsReportPcpNameValue.value);
+      formData.append('pageSize', pageSize);
+      formData.append('page', page);
+      formData.append('sortedColumns', sortedArr);
+      formData.append('filteredColumns', filteredArr);
 
-    fetch(config.serverUrl + "/getAdmissionsReportData", {
-      method: "POST",
-      body: formData
-    })
-      .then(function (res1) {
-        if (!res1.ok) {
-          if (error.message) {
-            self.setState({ errorMessage: error.message });
+      fetch(config.serverUrl+'/getAdmissionsReportData', {
+          method: 'POST',
+          body: formData 
+        }).then(function(res1) {
+          if (!res1.ok) {
+            if (error.message) {
+              self.setState({errorMessage :error.message});
+            } 
           }
-        }
-        return res1.json();
-      })
-      .then(function (response) {
-        self.setState({
-          admissionsReportData: response.admissionsReportData,
-          admissionsReportPages: response.pages,
-          admissionsReportTotalCount: response.totalCount,
-          admissionsReportFileQuery: response.fileQuery
-        });
-        //console.log(response);
-        self.setState({ loading: false });
-        self.generateAdmissionsReportXLSX();
-        self.generateAdmissionsReportHeaderXLSX();
-        console.log("url");
+          return res1.json();
+        }).then(function(response) {
+          self.setState({admissionsReportData: response.admissionsReportData,admissionsReportPages:response.pages,admissionsReportTotalCount:response.totalCount,admissionsReportFileQuery:response.fileQuery});
+          self.setState({ loading: false });
+          self.generateAdmissionsReportXLSX();
+          self.generateAdmissionsReportHeaderXLSX();
       });
+        
   }
  
   exportModelToggle() {
     this.setState({
       exportModeltoggleView : !this.state.exportModeltoggleView
     })
-    console.log("clicked");
-    console.log(this.state.exportModeltoggleView);
   }
 
   printTableData_admissionsReport() {
+    
     var propertiesArr = [];
-
     if(self.state.showPatientName_admissions)
       propertiesArr.push("Patient Name");
     if(self.state.showSubscriberId_admissions)
@@ -182,9 +228,8 @@ class AdmissionReport extends Component {
       formData.forEach(function(value, key){
           object[key] = value;
       });
-      
       self.setState({jsonDataForAdmissionsReport: btoa(JSON.stringify(object))});
-   }
+  }
 
   backToReports() {
     window.location.href = "#reports";
@@ -193,8 +238,8 @@ class AdmissionReport extends Component {
   render() {
     return (
       <React.Fragment>
-        <row className="header">
-    
+        <Row className="header">
+        <Col md="10">
           <FormGroup check inline>
             <img id="backButton" onClick={this.backToReports}  src="/img/header-back-button.png" />
           </FormGroup>
@@ -205,18 +250,64 @@ class AdmissionReport extends Component {
           <FormGroup check inline>
             <img id="uploadButton" onClick={this.exportModelToggle} src="/img/upload-header-button.png" />
           </FormGroup>
-
-        </row>
-
+          </Col>
+        </Row>
+        <Row>
+          <Col md="3">
+            <Row>
+              <Card id="selectCardStyle">
+              <CardHeader Style={{backgroundColor:'white'}}>Year</CardHeader>
+              <CardBody>
+                  <Select
+                    
+                      id="admissionsReportYearSelect"
+                      className="Col md='5'"
+                      value={this.state.admissionsReportYearSelectValue}
+                      options={this.state.yearsList}
+                      onChange={this.setAdmissionsReportYearValue}
+                            />
+              </CardBody>
+              </Card>
+            </Row>
+            <Row>
+              <Card id="selectCardStyle">
+              <CardHeader>Health Plan</CardHeader>
+              <CardBody>
+              <Select
+                          id="duplicateClaimsProviderSelect"
+                          className="Col md='5'"
+                          value={this.state.admissionsReportProviderSelectValue}
+                          options={this.state.ProviderList}
+                          onChange={this.setAdmissionsReportProviderValue}
+                        />
+              </CardBody>
+              </Card>
+            </Row>
+            <Row>
+              <Card id="selectCardStyle">
+              <CardHeader>Doctor</CardHeader>
+              <CardBody>
+              <Select
+                            placeholder="Select Doctor"
+                            className="Col md='5'"
+                            value={this.state.admissionsReportPcpNameValue}
+                            options={this.state.pcpReportList}
+                            onChange={this.setAdmissionsReportPcpName}
+                          />  
+              </CardBody>
+              </Card>
+            </Row>
+          </Col>
+          <Col md="9">          
         <div>
           <ReactTable
             manual
             data={this.state.admissionsReportData}
             loading={this.state.loading}
-            pages={this.state.admissionsReportPages} // Display the total number of pages
+            pages={this.state.admissionsReportPages}
             filterable
             defaultFilterMethod={(filter, row) =>
-              String(row[filter.id]) === filter.value}
+            String(row[filter.id]) === filter.value}
             columns={[
               {
                 Header: "",
@@ -302,7 +393,8 @@ class AdmissionReport extends Component {
             pageText={
               "Total Entries " + this.state.admissionsReportTotalCount + ", Page"
             }
-            getTrProps={(state, rowInfo, column) => {
+    
+                getTrProps={(state, rowInfo, column) => {
               return {
                 style: {
                   textAlign: "center",
@@ -310,7 +402,8 @@ class AdmissionReport extends Component {
                 }
               };
             }}
-            getTheadProps={(state, rowInfo, column) => {
+    
+                getTheadProps={(state, rowInfo, column) => {
               return {
                 style: {
                   backgroundColor: "#333333",
@@ -318,63 +411,59 @@ class AdmissionReport extends Component {
                 }
               };
             }}
-            getTdProps={(state, rowInfo, column) => {
+    
+                getTdProps={(state, rowInfo, column) => {
               return {
                 onClick: e => {
                   if (column.Header == "HICN/Subscriber ID") {
-                    self.getAdmissionsReportExpandDataRow(rowInfo);
-                  }
+                  self.getAdmissionsReportExpandDataRow(rowInfo);
+                 }
                 },
-                style: {
-                  color: column.Header === "HICN/Subscriber ID" ? "#337ab7" : "",
-                  cursor: column.Header === "HICN/Subscriber ID" ? "pointer" : ""
-                }
+               style: {
+             color: column.Header === "HICN/Subscriber ID" ? "#337ab7" : "",
+            cursor: column.Header === "HICN/Subscriber ID" ? "pointer" : ""
+          }
+    
               };
-            }}
-          />
-        </div>
+        }}
+       />
+    </div>
+  </Col>
+</Row>
      
     
-{/*     
-    -----------------------------------Export Model------------------------ */}
+{/* -----------------------------------Export Model------------------------ */}
         
-    <Modal isOpen={this.state.exportModeltoggleView} toggle={this.exportModelToggle}
+  <Modal isOpen={this.state.exportModeltoggleView} toggle={this.exportModelToggle}
         className={'modal-lg ' + this.props.className + ' exportModalWidth'}>
-         {/* <ModalHeader toggle={this.exportModelToggle}>
-        
-          </ModalHeader> */}
-          <ModalBody>
-            <Row>
-            <FormGroup>
-            <p id="exportText">Export To:</p>
-             </FormGroup>
-            </Row>
-            <Row>
-            <FormGroup check inline>
-       
-              <img id="printButton" src="/img/print-button.png" onClick={e => self.printTableData_admissionsReport()} />
-              <p id="text-align-print">Print</p> 
-              </FormGroup>
+      <ModalBody>
+          <Row>
+                <FormGroup>
+                   <p id="exportText">Export To:</p>
+               </FormGroup>
+          </Row>
+          <Row>
                 <FormGroup check inline>
-                    <a href={config.serverUrl+'/renderAdmissionsReportXLSX/'+self.state.jsonDataForAdmissionsReport} target="_blank" >
-                <img id="xlsButton" src="/img/export-doc.png" />
-                </a>
-                <p id="text-align-doc">Doc</p>
+                    <img id="printButton" src="/img/print-button.png" onClick={e => self.printTableData_admissionsReport()} />
+                    <p id="text-align-print">Print</p> 
                 </FormGroup>
                 <FormGroup check inline>
-                  <a href={config.serverUrl+'/renderAdmissionsReportPDF/'+self.state.jsonDataForAdmissionsReport} target="_blank" >
-                <img id="pdfButton" src="/img/pdfButton.png" />
-                </a>
-                <p id="text-align-pdf">Pdf</p>
+                    <a href={config.serverUrl+'/renderAdmissionsReportXLSX/'+self.state.jsonDataForAdmissionsReport} target="_blank" >
+                    <img id="xlsButton" src="/img/export-doc.png" />
+                    </a>
+                    <p id="text-align-doc">Doc</p>
+                </FormGroup>
+                <FormGroup check inline>
+                    <a href={config.serverUrl+'/renderAdmissionsReportPDF/'+self.state.jsonDataForAdmissionsReport} target="_blank" >
+                    <img id="pdfButton" src="/img/pdfButton.png" />
+                    </a>
+                    <p id="text-align-pdf">Pdf</p>
               </FormGroup>
             </Row>
-            <Row>
-   
-              
-              </Row>
-            </ModalBody>
-
-         </Modal>
+          <Row>
+        </Row>
+      </ModalBody>
+    </Modal>
 
     </React.Fragment>
   );
