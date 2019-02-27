@@ -1,18 +1,41 @@
 import React, { Component } from 'react';
 import "./ReportsSyl.css";
+var debounce = require("lodash.debounce");
+import config from '../Config/ServerUrl';
 import {
-    Row,
-    Col,
-    FormGroup,
-    Card,
-    CardHeader,
-    CardBody,
-    Label,
-} from "reactstrap";
+  Row,
+  Col,
+  FormGroup,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Label,
+  Card,
+  CardHeader,
+  CardBody,
+} from 'reactstrap';
+import Select from 'react-select';
 class Reports extends Component {
 
-    constructor(props, context) {
+      constructor(props, context) {
         super(props, context);
+
+        this.state = {
+          pcpNameValue: "",
+          yearSelectValue: "",
+          providerSelectValue: "",
+          yearsList: [],
+          providerList: [],
+          pcpList: [],
+          reportProviderArr: [],
+          currentYear:0,
+        };
+
+        self = this;
+        self.state.providerSelectValue = { value: 'all', label: 'All' };
+        self.state.pcpNameValue = { value: 'all', label: 'All' };
+        self.state.yearSelectValue = { value: 'all', label: 'All' };
+
         this.openAddmisionReportToggle = this.openAddmisionReportToggle.bind(this);
         this.openDuplicateClaimsReportToggle = this.openDuplicateClaimsReportToggle.bind(this);
         this.openSpecialistComparisonReportToggle = this.openSpecialistComparisonReportToggle.bind(this);
@@ -39,6 +62,64 @@ class Reports extends Component {
                 window.location.href = "#/AuthorizationError";
             }
         }
+
+        {
+          fetch(config.serverUrl + '/getAllPlanAndPCP', {
+            method: 'GET'
+          }).then(function (res1) {
+            return res1.json();
+          }).then(function (response) {
+            self.setState({ providerList: response.planList,pcpList:response.pcpList, yearsList:response.yearsList});
+           
+            for(var i=0;i<self.state.yearsList.length;i++) {
+              if(self.state.yearsList[i].value >= self.state.currentYear) {
+                self.state.currentYear = self.state.yearsList[i].value;
+              } console.log(self.state.currentYear);
+              self.state.yearSelectValue = { value: self.state.currentYear, label: self.state.currentYear };
+            }
+            self.setState({
+              providerList: self.state.providerList.concat({ value: 'all', label: 'All' }),
+              pcpList:self.state.pcpList.concat({value:'all', label:'All'}),
+              yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
+            });
+            
+          });
+      }
+    }
+
+    setProviderValue(e) {
+      self.state.providerSelectValue = e;
+      localStorage.setItem('provider', self.state.providerSelectValue.value);
+      self.getPCPForProviders(self.state.providerSelectValue.value);
+
+    }
+    setPcpName(e) {
+      self.state.pcpNameValue = e;
+      localStorage.setItem('pcpName', self.state.pcpNameValue.value);
+    }
+   
+    setYearValue(e) {
+      self.state.yearSelectValue = e;
+      localStorage.setItem('year', self.state.yearSelectValue.value);
+    }
+  
+    getPCPForProviders(providerName) {
+      this.state.reportProviderArr = [];
+      this.state.reportProviderArr[0] = providerName;
+      const formData = new FormData();
+      formData.append('providerArr', self.state.reportProviderArr);
+      fetch(config.serverUrl + '/getPCPForAllProviders', {
+        method: 'POST',
+        body: formData
+      }).then(function (res1) {
+        return res1.json();
+      }).then(function (response) {
+        self.setState({ pcpReportList: response });
+        self.setState({
+          pcpList: self.state.pcpList.concat({ value: 'all', label: 'All' })
+        });
+        self.state.pcpNameValue = { value: 'all', label: 'All' };
+      });
     }
 
     openAddmisionReportToggle() {
@@ -87,9 +168,57 @@ class Reports extends Component {
  render() {
      return (
          <React.Fragment>
-             <Row style={{height:"30px"}}>
+             <Row style={{height:"50px"}}>
              </Row>
-             
+             <Row>
+          <Col md="3">
+            <Row>
+              <Card id="selectCardStyle">
+              <CardHeader Style={{backgroundColor:'white'}}>Year</CardHeader>
+              <CardBody>
+                  <Select
+                    
+                      id="admissionsReportYearSelect"
+                      className="Col md='5'"
+                      value={this.state.yearSelectValue}
+                      options={this.state.yearsList}
+                      onChange={this.setYearValue}
+                            />
+              </CardBody>
+              </Card>
+            </Row>
+            <Row>
+              <Card id="selectCardStyle">
+              <CardHeader>Health Plan</CardHeader>
+              <CardBody>
+              <Select
+                          id="duplicateClaimsProviderSelect"
+                          className="Col md='5'"
+                          value={this.state.providerSelectValue}
+                          options={this.state.providerList}
+                          onChange={this.setProviderValue}
+                        />
+              </CardBody>
+              </Card>
+            </Row>
+            <Row>
+              <Card id="selectCardStyle">
+              <CardHeader>Doctor</CardHeader>
+              <CardBody>
+              <Select
+                            placeholder="Select Doctor"
+                            className="Col md='5'"
+                            value={this.state.pcpNameValue}
+                            options={this.state.pcpList}
+                            onChange={this.setPcpName}
+                          />  
+              </CardBody>
+              </Card>
+            </Row>
+          </Col>
+          <Col md="9">  
+
+         
             <Card style={{height:"600px"}}>
               <CardHeader style={{backgroundColor:"white",padding:"0.40rem 1.25rem"}}>
                 <b className="commonFontFamilyColor" style={{fontSize:"20px"}}>Reports</b>
@@ -161,6 +290,8 @@ class Reports extends Component {
               </Row>
            </CardBody>
            </Card>
+           </Col>
+           </Row>
     </React.Fragment>
         
     );

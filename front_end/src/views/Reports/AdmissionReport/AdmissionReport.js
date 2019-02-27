@@ -54,7 +54,7 @@ class AdmissionReport extends Component {
     
     self.state.admissionsReportProviderSelectValue = { value: 'all', label: 'All' };
     self.state.admissionsReportPcpNameValue = { value: 'all', label: 'All' };
-    // self.state.admissionsReportYearSelectValue = { value: 'all', label: 'All' };
+    self.state.admissionsReportYearSelectValue = { value: 'all', label: 'All' };
     this.fetchAdmissionsReportData = this.fetchAdmissionsReportData.bind(this);
     this.getAdmissionsReports = this.getAdmissionsReports.bind(this);
 
@@ -76,18 +76,24 @@ class AdmissionReport extends Component {
       for(var i=0;i<self.state.yearsList.length;i++) {
         if(self.state.yearsList[i].value >= self.state.currentYear) {
           self.state.currentYear = self.state.yearsList[i].value;
-        } console.log(self.state.currentYear);
+        }
         self.state.admissionsReportYearSelectValue = { value: self.state.currentYear, label: self.state.currentYear };
       }
      
-      
+    
       self.setState({
         ProviderList: self.state.ProviderList.concat({ value: 'all', label: 'All' }),
         pcpReportList:self.state.pcpReportList.concat({value:'all', label:'All'}),
         yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
       });
     });
-    
+
+    if (localStorage.getItem('provider') != null)
+    self.state.admissionsReportProviderSelectValue = { value: localStorage.getItem('provider'), label: localStorage.getItem('provider')};
+    if (localStorage.getItem('pcpName') != null)
+      self.state.admissionsReportPcpNameValue = { value: localStorage.getItem('pcpName'), label: localStorage.getItem('pcpName') };
+    if (localStorage.getItem('year') != null)
+      self.state.admissionsReportYearSelectValue = { value: localStorage.getItem('year'), label: localStorage.getItem('year') }; 
   }
 
   setAdmissionsReportProviderValue(e) {
