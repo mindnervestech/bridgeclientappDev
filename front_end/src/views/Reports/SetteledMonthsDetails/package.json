@@ -1,0 +1,6 @@
+{
+    "name": "SettledMonthsDetails",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./SettledMonthsDetails.js"
+  }

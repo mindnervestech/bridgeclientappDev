@@ -9,7 +9,6 @@
   margin-left: 20px;
 }
 #uploadButton{
-  width: 27px;
   margin-top: 5px;
   cursor: pointer;
 }
@@ -62,7 +61,40 @@
   margin-top: 10px;
   cursor: pointer;
 }
+.reports-page-body{
+  background-color: white;
+}
+
 #selectCardStyle{
   width: 300px;
   margin-top: 10px;
+}
+
+.commonFontFamilyColor {
+  color:unset;
+}
+
+.filterCardHeaderStyle2 {
+    background-color: white !important;
+    padding: 0.40rem 1.25rem !important;
+    color:#4c4c4c;
+    font-size: 15px;
+}
+.dropdown-item:hover
+{
+  background-color: #d03b3cfa !important;
+}
+button:focus{
+  outline: 5px auto;
+  outline-color: #f93435 !important;
+
+}
+.dropdown-item:active {
+  color: black !important;
+}
+.ReactTable{
+  width: -webkit-fill-available !important;
+}
+.tab-content.tabpenal{
+  padding: 0rem !important;
 }

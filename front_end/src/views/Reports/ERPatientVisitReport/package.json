@@ -1,0 +1,6 @@
+{
+    "name": "ERPatientVisitReport",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./ERPatientVisitReport.js"
+  }

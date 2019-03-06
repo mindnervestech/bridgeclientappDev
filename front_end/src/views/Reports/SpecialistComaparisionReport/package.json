@@ -1,0 +1,6 @@
+{
+    "name": "SpecialistComaparisionReport",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./SpecialistComaparisionReport.js"
+  }

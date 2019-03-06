@@ -14,6 +14,7 @@ import {
   Card,
   CardHeader,
   CardBody,
+  Dropdown, DropdownToggle, DropdownMenu, DropdownItem,
 } from 'reactstrap';
 import Select from 'react-select';
 
@@ -37,7 +38,8 @@ class AdmissionReport extends Component {
       showSubscriberId_admissions: true,
       showEligibleMonth_admissions: true,
       showTotalNoOfAdmissions_admissions: true,
-      
+      dropdownOpen: new Array(1).fill(false),
+
       currentYear:0,
       admissionsReportPages: 0,
       admissionsReportGridPage: 0,
@@ -51,7 +53,6 @@ class AdmissionReport extends Component {
       
     };
     self = this;
-    
     self.state.admissionsReportProviderSelectValue = { value: 'all', label: 'All' };
     self.state.admissionsReportPcpNameValue = { value: 'all', label: 'All' };
     self.state.admissionsReportYearSelectValue = { value: 'all', label: 'All' };
@@ -66,6 +67,12 @@ class AdmissionReport extends Component {
   }
 
   componentDidMount() {
+    {
+      localStorage.removeItem('admissionsReportExpandPatientName');
+      localStorage.removeItem('admissionsReportExpandSubscriberId');
+      localStorage.removeItem('admissionsReportExpandPcpName');
+      localStorage.removeItem('admissionsReportExpandEligibleMonth');
+    }
     fetch(config.serverUrl + '/getAllPlanAndPCP', {
       method: 'GET'
     }).then(function (res1) {
@@ -91,7 +98,7 @@ class AdmissionReport extends Component {
     if (localStorage.getItem('provider') != null)
     self.state.admissionsReportProviderSelectValue = { value: localStorage.getItem('provider'), label: localStorage.getItem('provider')};
     if (localStorage.getItem('pcpName') != null)
-      self.state.admissionsReportPcpNameValue = { value: localStorage.getItem('pcpName'), label: localStorage.getItem('pcpName') };
+      self.state.admissionsReportPcpNameValue = { value: localStorage.getItem('pcpName'), label: localStorage.getItem('pcpNameLabel') };
     if (localStorage.getItem('year') != null)
       self.state.admissionsReportYearSelectValue = { value: localStorage.getItem('year'), label: localStorage.getItem('year') }; 
   }
@@ -99,17 +106,21 @@ class AdmissionReport extends Component {
   setAdmissionsReportProviderValue(e) {
     self.state.admissionsReportProviderSelectValue = e;
     self.getPCPForReportProviders(self.state.admissionsReportProviderSelectValue.value);
+    localStorage.setItem('provider' , self.state.admissionsReportProviderSelectValue.value)
     setTimeout(function(){
       self.getAdmissionsReports(self.state.admissionsReportGridPageSize, 1, JSON.stringify(self.state.admissionsReportGridSorted),JSON.stringify(self.state.admissionsReportGridFiltered));
     }, 1000);
   }
   setAdmissionsReportPcpName(e) {
     self.state.admissionsReportPcpNameValue = e;
+    localStorage.setItem('pcpName', self.state.admissionsReportPcpNameValue.value);
+    localStorage.setItem('pcpNameLabel', self.state.admissionsReportPcpNameValue.label);
     self.getAdmissionsReports(self.state.admissionsReportGridPageSize, 1, JSON.stringify(self.state.admissionsReportGridSorted),JSON.stringify(self.state.admissionsReportGridFiltered));
   }
  
   setAdmissionsReportYearValue(e) {
     self.state.admissionsReportYearSelectValue = e;
+    localStorage.setItem('year', self.state.admissionsReportYearSelectValue.value);
     self.getAdmissionsReports(self.state.admissionsReportGridPageSize, 1, JSON.stringify(self.state.admissionsReportGridSorted),JSON.stringify(self.state.admissionsReportGridFiltered));
   }
 
@@ -170,10 +181,18 @@ class AdmissionReport extends Component {
           self.setState({admissionsReportData: response.admissionsReportData,admissionsReportPages:response.pages,admissionsReportTotalCount:response.totalCount,admissionsReportFileQuery:response.fileQuery});
           self.setState({ loading: false });
           self.generateAdmissionsReportXLSX();
-          self.generateAdmissionsReportHeaderXLSX();
+          
       });
         
   }
+
+  getAdmissionsReportExpandDataRow(rowInfo) {
+    localStorage.setItem('admissionsReportExpandPatientName',rowInfo.row.patientName);
+    localStorage.setItem('admissionsReportExpandSubscriberId',rowInfo.row.subscriberId);
+    localStorage.setItem('admissionsReportExpandPcpName',rowInfo.row.pcpName);
+    localStorage.setItem('admissionsReportExpandEligibleMonth',rowInfo.row.eligibleMonth);
+    window.location.href = "#/admissionReportExpand";
+ }
  
   exportModelToggle() {
     this.setState({
@@ -241,9 +260,116 @@ class AdmissionReport extends Component {
     window.location.href = "#reports";
   }
 
+  toggle(i) {
+    console.log("toggle");
+    const newArray = this.state.dropdownOpen.map((element, index) => {
+      return (index === i ? !element : false);
+    });
+    this.setState({
+      dropdownOpen: newArray
+    });
+    setTimeout(function () {
+      if (i == 0) {
+        if(self.state.showPatientName_admissions) {
+          document.getElementById("ddItemPatientName_admissions").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemPatientName_admissions").style.backgroundColor = "#d03b3c";
+        }
+        if(self.state.showSubscriberId_admissions) {
+          document.getElementById("ddItemSubscriberId_admissions").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemSubscriberId_admissions").style.backgroundColor = "#d03b3c";
+        }
+        if(self.state.showPcpName_admissions) {
+          document.getElementById("ddItemPcpName_admissions").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemPcpName_admissions").style.backgroundColor = "#d03b3c";
+        }
+        if(self.state.showEligibleMonth_admissions) {
+          document.getElementById("ddItemEligibleMonth_admissions").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemEligibleMonth_admissions").style.backgroundColor = "#d03b3c";
+        }
+        if(self.state.showTotalNoOfAdmissions_admissions) {
+          document.getElementById("ddItemTotalNoOfAdmissions_admissions").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemTotalNoOfAdmissions_admissions").style.backgroundColor = "#d03b3c";
+        }
+        if(self.state.showTotalCost_admissions) {
+          document.getElementById("ddItemTotalCost_admissions").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemTotalCost_admissions").style.backgroundColor = "#d03b3c";
+        }
+      }
+    }, 300);
+  }
+  showHideColumn_admissions(columnName) {
+    
+    if(columnName == "patientName") {
+      this.state.showPatientName_admissions = !this.state.showPatientName_admissions;
+    }
+    if(columnName == "subscriberId") {
+      this.state.showSubscriberId_admissions = !this.state.showSubscriberId_admissions;
+    }
+    if(columnName == "pcpName") {
+      this.state.showPcpName_admissions = !this.state.showPcpName_admissions;
+    }
+    if(columnName == "eligibleMonth") {
+      this.state.showEligibleMonth_admissions = !this.state.showEligibleMonth_admissions;
+    }
+    if(columnName == "totalNoOfAdmissions") {
+      this.state.showTotalNoOfAdmissions_admissions = !this.state.showTotalNoOfAdmissions_admissions;
+    }
+    if(columnName == "totalCost") {
+      this.state.showTotalCost_admissions = !this.state.showTotalCost_admissions;
+    }
+
+    const newArray = this.state.dropdownOpen.map((element, index) => {
+      return (index === 0 ? true : false);
+    });
+    this.setState({
+      dropdownOpen: newArray
+    });
+
+    if(self.state.showPatientName_admissions) {
+        document.getElementById("ddItemPatientName_admissions").style.backgroundColor = "";
+      } else {
+        document.getElementById("ddItemPatientName_admissions").style.backgroundColor = "#d03b3c";
+      }
+      if(self.state.showSubscriberId_admissions) {
+        document.getElementById("ddItemSubscriberId_admissions").style.backgroundColor = "";
+      } else {
+        document.getElementById("ddItemSubscriberId_admissions").style.backgroundColor = "#d03b3c";
+      }
+      if(self.state.showPcpName_admissions) {
+        document.getElementById("ddItemPcpName_admissions").style.backgroundColor = "";
+      } else {
+        document.getElementById("ddItemPcpName_admissions").style.backgroundColor = "#d03b3c";
+      }
+      if(self.state.showEligibleMonth_admissions) {
+        document.getElementById("ddItemEligibleMonth_admissions").style.backgroundColor = "";
+      } else {
+        document.getElementById("ddItemEligibleMonth_admissions").style.backgroundColor = "#d03b3c";
+      }
+      if(self.state.showTotalNoOfAdmissions_admissions) {
+        document.getElementById("ddItemTotalNoOfAdmissions_admissions").style.backgroundColor = "";
+      } else {
+        document.getElementById("ddItemTotalNoOfAdmissions_admissions").style.backgroundColor = "#d03b3c";
+      }
+      if(self.state.showTotalCost_admissions) {
+        document.getElementById("ddItemTotalCost_admissions").style.backgroundColor = "";
+      } else {
+        document.getElementById("ddItemTotalCost_admissions").style.backgroundColor = "#d03b3c";
+      }
+
+      self.generateAdmissionsReportXLSX();
+
+ }
+
   render() {
     return (
       <React.Fragment>
+  
         <Row className="header">
         <Col md="10">
           <FormGroup check inline>
@@ -251,18 +377,38 @@ class AdmissionReport extends Component {
           </FormGroup>
           <FormGroup check inline>
             
-            <h2>Admission Report Data</h2>
+            <h2>Admissions Report - Details</h2>
           </FormGroup>
           <FormGroup check inline>
             <img id="uploadButton" onClick={this.exportModelToggle} src="/img/upload-header-button.png" />
           </FormGroup>
           </Col>
+          <Col md="2">
+            <FormGroup check inline style={{ float: "right" }}>
+            <Dropdown isOpen={this.state.dropdownOpen[0]} toggle={() => {
+                                this.toggle(0);
+                              }}>
+                              <DropdownToggle style={{backgroundColor:"#f7f3f0",borderColor:"#f7f3f0",padding:"0rem 0rem"}}>
+                                  <i class="icon-grid icons font-2xl d-block" title="More" style={{cursor:"pointer",color:"rgba(208, 82, 89, 0.95)",marginTop:"11px" }}></i>
+                                  
+                                </DropdownToggle>
+                                <DropdownMenu>
+                                  <DropdownItem toggle={false} id="ddItemPatientName_admissions" className="commonFontFamily" onClick={e => self.showHideColumn_admissions("patientName")}>Patient Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemSubscriberId_admissions" className="commonFontFamily" onClick={e => self.showHideColumn_admissions("subscriberId")}>HICN/Subscriber ID</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemPcpName_admissions" className="commonFontFamily" onClick={e => self.showHideColumn_admissions("pcpName")}>PCP Name</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemEligibleMonth_admissions" className="commonFontFamily" onClick={e => self.showHideColumn_admissions("eligibleMonth")}>Eligible Month</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemTotalNoOfAdmissions_admissions" className="commonFontFamily" onClick={e => self.showHideColumn_admissions("totalNoOfAdmissions")}>Total Number Of Admissions</DropdownItem>
+                                  <DropdownItem toggle={false} id="ddItemTotalCost_admissions" className="commonFontFamily" onClick={e => self.showHideColumn_admissions("totalCost")}>Total Cost</DropdownItem>
+                                </DropdownMenu>
+                              </Dropdown>
+            </FormGroup>
+            </Col>
         </Row>
         <Row>
-          <Col md="3">
-            <Row>
-              <Card id="selectCardStyle">
-              <CardHeader Style={{backgroundColor:'white'}}>Year</CardHeader>
+          <Col xs="12" md="3" >
+            
+              <Card>
+              <CardHeader className="filterCardHeaderStyle2">Year</CardHeader>
               <CardBody>
                   <Select
                     
@@ -274,10 +420,10 @@ class AdmissionReport extends Component {
                             />
               </CardBody>
               </Card>
-            </Row>
-            <Row>
-              <Card id="selectCardStyle">
-              <CardHeader>Health Plan</CardHeader>
+            
+            
+              <Card>
+              <CardHeader className="filterCardHeaderStyle2">Health Plan</CardHeader>
               <CardBody>
               <Select
                           id="duplicateClaimsProviderSelect"
@@ -288,10 +434,10 @@ class AdmissionReport extends Component {
                         />
               </CardBody>
               </Card>
-            </Row>
-            <Row>
-              <Card id="selectCardStyle">
-              <CardHeader>Doctor</CardHeader>
+            
+            
+              <Card >
+              <CardHeader className="filterCardHeaderStyle2">Doctor</CardHeader>
               <CardBody>
               <Select
                             placeholder="Select Doctor"
@@ -302,9 +448,9 @@ class AdmissionReport extends Component {
                           />  
               </CardBody>
               </Card>
-            </Row>
+            
           </Col>
-          <Col md="9">          
+          <Col xs="12" md="9" >          
         <div>
           <ReactTable
             manual

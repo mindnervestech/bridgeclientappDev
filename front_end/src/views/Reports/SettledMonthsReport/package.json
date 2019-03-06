@@ -1,0 +1,6 @@
+{
+    "name": "SettledMonthsReport",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./SettledMonthsReport.js"
+  }

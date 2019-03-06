@@ -1,0 +1,6 @@
+{
+    "name": "DuplicateClaimsReport",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./DuplicateClaimsReport.js"
+  }

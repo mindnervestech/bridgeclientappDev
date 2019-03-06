@@ -1,0 +1,6 @@
+{
+    "name": "BeneficiariesReportByLocationExpand",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./BeneficiariesReportByLocationExpand.js"
+  }
