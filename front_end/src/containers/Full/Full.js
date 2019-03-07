@@ -100,7 +100,7 @@ class Full extends Component {
                   <Route path="/beneficiariesReportByPatientDetails" name="BeneficiariesReportByPatientDetails" component={BeneficiariesReportByPatientDetails} />
                   <Route path="/specialistComparisionPatientDetails" name="SpecialistComparisionPatientDetails" component={SpecialistComparisionPatientDetails} />
                   <Route path="/reports" name="Reports" component={Reports} />
-                  <Redirect from="/" to="/dashboard"/>
+                  <Redirect from="/" to="/dashboard" />
                 </Switch>
               </Container>
             </main>

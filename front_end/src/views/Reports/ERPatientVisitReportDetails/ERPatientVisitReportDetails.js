@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactTable from "react-table";
 var debounce = require("lodash.debounce");
 import config from '../../Config/ServerUrl';
-import '../ReportsSyl.css';
+import '../ReportsStyle.css';
 import {
   Row,
   Col,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import "./ReportsSyl.css";
+import "./ReportsStyle.css";
 var debounce = require("lodash.debounce");
 import config from '../Config/ServerUrl';
 import {
