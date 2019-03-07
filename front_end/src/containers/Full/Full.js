@@ -30,17 +30,22 @@ import PMPMByPrecticeReport from '../../views/Reports/PMPMByPrecticeReport/';
 import ReinsuranceCostReport from '../../views/Reports/ReinsuranceCostReport/';
 import ReinsuranceReport from '../../views/Reports/ReinsuranceReport/';
 import DuplicateClaimsDetails from '../../views/Reports/DuplicateClaimsDetails/';
-import AdmissionReportExpand from '../../views/Reports/AdmissionReportExpand/';
-import SpecialistComparisonReportExpand from '../../views/Reports/SpecialistComparisonReportExpand/';
-import SpecialistComparisionPrecticeExpand from '../../views/Reports/SpecialistComparisionPrecticeExpand/';
-import ERPatientVisitReportExpand from '../../views/Reports/ERPatientVisitReportExpand/';
+import AdmissionReportDetails from '../../views/Reports/AdmissionReportDetails/';
+import SpecialistComparisonReportDetails from '../../views/Reports/SpecialistComparisonReportDetails/';
+import SpecialistComparisionPrecticeDetails from '../../views/Reports/SpecialistComparisionPrecticeDetails/SpecialistComparisionPrecticeDetails';
+import ERPatientVisitReportDetails from '../../views/Reports/ERPatientVisitReportDetails/ERPatientVisitReportDetails';
 import SettledMonthsDetails from '../../views/Reports/SetteledMonthsDetails/';
-import PMPMByPrecticeExpand from '../../views/Reports/PMPMByPrecticeExpand/'
+import PMPMByPrecticeDetails from '../../views/Reports/PMPMByPrecticeDetails/PMPMByPrecticeDetails'
 import BeneficiariesReportByPatient from '../../views/Reports/BeneficiariesReportByPatient/'; 
-import BeneficiariesReportByDoctorExpand from '../../views/Reports/BeneficiariesReportByDoctorExpand/';
-import BeneficiariesReportByLocationExpand from '../../views/Reports/BeneficiariesReportByLocationExpand/';
-import BeneficiariesReportByPatientExpand from '../../views/Reports/BeneficiariesReportByPatientExpand/';
-import BeneficiariesReportByClinicExpand from '../../views/Reports/BeneficiariesReportByClinicExpand/';
+import BeneficiariesReportByLocation from '../../views/Reports/BeneficiariesReportByLocation/';
+import BeneficiariesReportByDoctor from '../../views/Reports/BeneficiariesReportByDoctor/';
+import BeneficiariesReportByClinic from '../../views/Reports/BeneficiariesReportByClinic/';
+import BeneficiariesReportByDoctorDetails from '../../views/Reports/BeneficiariesReportByDoctorDetails/';
+import BeneficiariesReportByLocationDetails from '../../views/Reports/BeneficiariesReportByLocationDetails/BeneficiariesReportByLocationDetails';
+import BeneficiariesReportByPatientDetails from '../../views/Reports/BeneficiariesReportByPatientDetails/BeneficiariesReportByPatientDetails';
+import BeneficiariesReportByClinicDetails from '../../views/Reports/BeneficiariesReportByClinicDetails/';
+import SpecialistComparisionPatientDetails from '../../views/Reports/SpecialistComparisionPatientDetails/';
+
 class Full extends Component {
   componentDidMount() {
     if(localStorage.getItem("user") == null || localStorage.getItem("user") == undefined) {
@@ -52,7 +57,7 @@ class Full extends Component {
       <div className="app">
         <Header />
         <div className="app-body">
-            <Sidebar {...this.props}/>
+          <Sidebar {...this.props} />
           {
             <main className="main" style={{ backgroundColor: "#f7f3f0" }}>
               <Container fluid>
@@ -79,17 +84,21 @@ class Full extends Component {
                   <Route path="/reinsuranceReport" name="ReinsuranceReport" component={ReinsuranceReport} />
                   <Route path="/reinsuranceCostReport" name="ReinsuranceCostReport" component={ReinsuranceCostReport} />
                   <Route path="/duplicateClaimsDetails" name="DuplicateClaimsDetails" component={DuplicateClaimsDetails} />
-                  <Route path="/admissionReportExpand" name="AdmissionReportExpand" component={AdmissionReportExpand} />
-                  <Route path="/specialistComparisonReportExpand" name="SpecialistComparisonReportExpand" component={SpecialistComparisonReportExpand} />
-                  <Route path="/specialistComparisionPrecticeExpand" name="SpecialistComparisionPrecticeExpand" component={SpecialistComparisionPrecticeExpand} />
-                  <Route path="/erPatientVisitReportExpand" name="ERPatientVisitReportExpand" component={ERPatientVisitReportExpand} />
+                  <Route path="/admissionReportDetails" name="AdmissionReportDetails" component={AdmissionReportDetails} />
+                  <Route path="/specialistComparisonReportDetails" name="SpecialistComparisonReportDetails" component={SpecialistComparisonReportDetails} />
+                  <Route path="/specialistComparisionPrecticeDetails" name="SpecialistComparisionPrecticeDetails" component={SpecialistComparisionPrecticeDetails} />
+                  <Route path="/erPatientVisitReportDetails" name="ERPatientVisitReportDetails" component={ERPatientVisitReportDetails} />
                   <Route path="/settledMonthsDetails" name="SettledMonthsDetails" component={SettledMonthsDetails} />
-                  <Route path="/pmpmByPrecticeExpand" name="PMPMByPrecticeExpand" component={PMPMByPrecticeExpand} />
+                  <Route path="/pmpmByPrecticeDetails" name="PMPMByPrecticeDetails" component={PMPMByPrecticeDetails} />
                   <Route path="/beneficiariesReportByPatient" name="BeneficiariesReportByPatient" component={BeneficiariesReportByPatient} />
-                  <Route path="/beneficiariesReportByClinicExpand" name="BeneficiariesReportByClinicExpand" component={BeneficiariesReportByClinicExpand} />
-                  <Route path="/beneficiariesReportByDoctorExpand" name="BeneficiariesReportByDoctorExpand" component={BeneficiariesReportByDoctorExpand} />
-                  <Route path="/beneficiariesReportByLocationExpand" name="BeneficiariesReportByLocationExpand" component={BeneficiariesReportByLocationExpand} />
-                  <Route path="/beneficiariesReportByPatientExpand" name="BeneficiariesReportByPatientExpand" component={BeneficiariesReportByPatientExpand} />
+                  <Route path="/beneficiariesReportByLocation" name="BeneficiariesReportByLocation" component={BeneficiariesReportByLocation} />
+                  <Route path="/beneficiariesReportByDoctor" name="BeneficiariesReportByDoctor" component={BeneficiariesReportByDoctor} />
+                  <Route path="/beneficiariesReportByClinic" name="BeneficiariesReportByClinic" component={BeneficiariesReportByClinic} />
+                  <Route path="/BeneficiariesReportByClinicDetails" name="BeneficiariesReportByClinicDetails" component={BeneficiariesReportByClinicDetails} />
+                  <Route path="/beneficiariesReportByDoctorDetails" name="BeneficiariesReportByDoctorDetails" component={BeneficiariesReportByDoctorDetails} />
+                  <Route path="/beneficiariesReportByLocationDetails" name="BeneficiariesReportByLocationDetails" component={BeneficiariesReportByLocationDetails} />
+                  <Route path="/beneficiariesReportByPatientDetails" name="BeneficiariesReportByPatientDetails" component={BeneficiariesReportByPatientDetails} />
+                  <Route path="/specialistComparisionPatientDetails" name="SpecialistComparisionPatientDetails" component={SpecialistComparisionPatientDetails} />
                   <Route path="/reports" name="Reports" component={Reports} />
                   <Redirect from="/" to="/dashboard"/>
                 </Switch>

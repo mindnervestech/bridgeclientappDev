@@ -38,9 +38,9 @@ class ERPatientVisitReport extends Component {
         patientVisitReportPages: 0,
         patientVisitReportData: [],
         patientVisitReportTotalCount: 0,
-      patientVisitReportFileQuery: "",
-      dropdownOpen: new Array(1).fill(false), 
-      
+        patientVisitReportFileQuery: "",
+        dropdownOpen: new Array(1).fill(false), 
+        
         showPatientName_patientVisit: true,
         showHicn_patientVisit: true,
         showPcpName_patientVisit: true,
@@ -95,36 +95,38 @@ class ERPatientVisitReport extends Component {
   }
 
   getValueFromLocalStorage() {
-    if (localStorage.getItem('provider') != null) {
-      self.state.providerSelectValue = { value: localStorage.getItem('provider'), label: localStorage.getItem('provider') };
-      self.getPCPForProviders(self.state.providerSelectValue.value);
+
+    if (localStorage.getItem('providerForReports') != null) {
+      self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
     }
-      if (localStorage.getItem('pcpName') != null)
-      self.state.pcpNameValue = { value: localStorage.getItem('pcpName'), label: localStorage.getItem('pcpNameLabel') };
-    if (localStorage.getItem('year') != null)
-      self.state.yearSelectValue = { value: localStorage.getItem('year'), label: localStorage.getItem('year') };
-  
-}  
+    if (localStorage.getItem('pcpNameForReports') != null) {
+      self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));
+    }
+    if (localStorage.getItem('yearForReports') != null) {
+      self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
+
+    }
+  }
 
   setProviderValue(e) {
     self.state.providerSelectValue = e;
-    localStorage.setItem('provider', self.state.providerSelectValue.value);
-    self.getPCPForReportProviders(self.state.providerSelectValue.value);
+    self.getPCPForProviders(self.state.providerSelectValue.value);
+    localStorage.setItem('provider', JSON.stringify(e));
       setTimeout(function () {
      self.getPatientVisitReportData(self.state.patientVisitGridPageSize, 1, JSON.stringify(self.state.patientVisitGridSorted),JSON.stringify(self.state.patientVisitGridFiltered));
     }, 1000);
   }
 
   setPcpName(e) {
+
     self.state.pcpNameValue = e;
-    localStorage.setItem('pcpName', self.state.pcpNameValue.value);
-    localStorage.setItem('pcpNameLabel', self.state.pcpNameValue.label);
+    localStorage.setItem('pcpName', JSON.stringify(e));
     self.getPatientVisitReportData(self.state.patientVisitGridPageSize, 1, JSON.stringify(self.state.patientVisitGridSorted),JSON.stringify(self.state.patientVisitGridFiltered));
    }
  
   setYearValue(e) {
     self.state.yearSelectValue = e;
-    localStorage.setItem('year', self.state.yearSelectValue.value);
+    localStorage.setItem('year', JSON.stringify(e));
     self.getPatientVisitReportData(self.state.patientVisitGridPageSize, 1, JSON.stringify(self.state.patientVisitGridSorted),JSON.stringify(self.state.patientVisitGridFiltered));
   }
 
@@ -258,7 +260,7 @@ class ERPatientVisitReport extends Component {
   }
   getERPatientVisitExpandDataRow(rowInfo) {
     localStorage.setItem('ERPatientVisitExpandReportMedicareId', rowInfo.row.hicn);
-    window.location.href = "#/erPatientVisitReportExpand";
+    window.location.href = "#/erPatientVisitReportDetails";
  }
   backToReports() {
     window.location.href = "#reports";

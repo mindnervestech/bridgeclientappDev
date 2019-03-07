@@ -1,0 +1,6 @@
+{
+    "name": "BeneficiariesReportByDoctor",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./BeneficiariesReportByDoctor.js"
+  }

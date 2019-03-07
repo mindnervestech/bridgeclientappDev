@@ -30,6 +30,10 @@ class AdmissionReport extends Component {
       pcpReportList: [],
       reportProviderArr: [],
       admissionsReportData: [],
+      pcpNameValue: "",
+      yearSelectValue: "",
+      providerSelectValue:"",
+
       loading: false,
       exportModeltoggleView: false,
       showPcpName_admissions: true,
@@ -45,17 +49,15 @@ class AdmissionReport extends Component {
       admissionsReportGridPage: 0,
       admissionsReportGridPageSize: 0,
       
-      admissionsReportPcpNameValue: "",
-      admissionsReportYearSelectValue: "",
-      admissionsReportProviderSelectValue:"",
+
       admissionsReportGridSorted: {},
       admissionsReportGridFiltered: {},
       
     };
     self = this;
-    self.state.admissionsReportProviderSelectValue = { value: 'all', label: 'All' };
-    self.state.admissionsReportPcpNameValue = { value: 'all', label: 'All' };
-    self.state.admissionsReportYearSelectValue = { value: 'all', label: 'All' };
+    self.state.providerSelectValue = { value: 'all', label: 'All' };
+    self.state.pcpNameValue = { value: 'all', label: 'All' };
+    self.state.yearSelectValue = { value: 'all', label: 'All' };
     this.fetchAdmissionsReportData = this.fetchAdmissionsReportData.bind(this);
     this.getAdmissionsReports = this.getAdmissionsReports.bind(this);
 
@@ -68,10 +70,7 @@ class AdmissionReport extends Component {
 
   componentDidMount() {
     {
-      localStorage.removeItem('admissionsReportExpandPatientName');
       localStorage.removeItem('admissionsReportExpandSubscriberId');
-      localStorage.removeItem('admissionsReportExpandPcpName');
-      localStorage.removeItem('admissionsReportExpandEligibleMonth');
     }
     fetch(config.serverUrl + '/getAllPlanAndPCP', {
       method: 'GET'
@@ -95,36 +94,38 @@ class AdmissionReport extends Component {
       });
     });
 
-    if (localStorage.getItem('provider') != null)
-    self.state.admissionsReportProviderSelectValue = { value: localStorage.getItem('provider'), label: localStorage.getItem('provider')};
-    if (localStorage.getItem('pcpName') != null)
-      self.state.admissionsReportPcpNameValue = { value: localStorage.getItem('pcpName'), label: localStorage.getItem('pcpNameLabel') };
-    if (localStorage.getItem('year') != null)
-      self.state.admissionsReportYearSelectValue = { value: localStorage.getItem('year'), label: localStorage.getItem('year') }; 
+    if (localStorage.getItem('providerForReports') != null) {
+      self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
+    }
+    if (localStorage.getItem('pcpNameForReports') != null) {
+      self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));
+    }
+    if (localStorage.getItem('yearForReports') != null) {
+      self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
+    }
   }
 
-  setAdmissionsReportProviderValue(e) {
-    self.state.admissionsReportProviderSelectValue = e;
-    self.getPCPForReportProviders(self.state.admissionsReportProviderSelectValue.value);
-    localStorage.setItem('provider' , self.state.admissionsReportProviderSelectValue.value)
+  setProviderValue(e) {
+    self.state.providerSelectValue = e;
+    self.getPCPForProviders(self.state.providerSelectValue.value);
+    localStorage.setItem('provider', JSON.stringify(e));
     setTimeout(function(){
       self.getAdmissionsReports(self.state.admissionsReportGridPageSize, 1, JSON.stringify(self.state.admissionsReportGridSorted),JSON.stringify(self.state.admissionsReportGridFiltered));
     }, 1000);
   }
-  setAdmissionsReportPcpName(e) {
-    self.state.admissionsReportPcpNameValue = e;
-    localStorage.setItem('pcpName', self.state.admissionsReportPcpNameValue.value);
-    localStorage.setItem('pcpNameLabel', self.state.admissionsReportPcpNameValue.label);
+  setPcpName(e) {
+    self.state.pcpNameValue = e;
+    localStorage.setItem('pcpName', JSON.stringify(e));
     self.getAdmissionsReports(self.state.admissionsReportGridPageSize, 1, JSON.stringify(self.state.admissionsReportGridSorted),JSON.stringify(self.state.admissionsReportGridFiltered));
   }
  
-  setAdmissionsReportYearValue(e) {
-    self.state.admissionsReportYearSelectValue = e;
-    localStorage.setItem('year', self.state.admissionsReportYearSelectValue.value);
+  setYearValue(e) {
+    self.state.yearSelectValue = e;
+    localStorage.setItem('year', JSON.stringify(e));
     self.getAdmissionsReports(self.state.admissionsReportGridPageSize, 1, JSON.stringify(self.state.admissionsReportGridSorted),JSON.stringify(self.state.admissionsReportGridFiltered));
   }
 
-  getPCPForReportProviders(providerName) {
+  getPCPForProviders(providerName) {
     this.state.reportProviderArr = [];
     this.state.reportProviderArr[0] = providerName;
     const formData = new FormData();
@@ -139,7 +140,7 @@ class AdmissionReport extends Component {
       self.setState({
         pcpReportList: self.state.pcpReportList.concat({ value: 'all', label: 'All' })
       });
-      self.state.admissionsReportPcpNameValue = { value: 'all', label: 'All' };
+      self.state.pcpNameValue = { value: 'all', label: 'All' };
     });
   }
 
@@ -159,9 +160,9 @@ class AdmissionReport extends Component {
     self.setState({ loading: true });
     const formData = new FormData();
         console.log(this.state.admissionsReportYearSelectValue);
-      formData.append('year', self.state.admissionsReportYearSelectValue.value);
-      formData.append('provider', self.state.admissionsReportProviderSelectValue.value);
-      formData.append('pcpName', self.state.admissionsReportPcpNameValue.value);
+      formData.append('year', self.state.yearSelectValue.value);
+      formData.append('provider', self.state.providerSelectValue.value);
+      formData.append('pcpName', self.state.pcpNameValue.value);
       formData.append('pageSize', pageSize);
       formData.append('page', page);
       formData.append('sortedColumns', sortedArr);
@@ -187,11 +188,8 @@ class AdmissionReport extends Component {
   }
 
   getAdmissionsReportExpandDataRow(rowInfo) {
-    localStorage.setItem('admissionsReportExpandPatientName',rowInfo.row.patientName);
     localStorage.setItem('admissionsReportExpandSubscriberId',rowInfo.row.subscriberId);
-    localStorage.setItem('admissionsReportExpandPcpName',rowInfo.row.pcpName);
-    localStorage.setItem('admissionsReportExpandEligibleMonth',rowInfo.row.eligibleMonth);
-    window.location.href = "#/admissionReportExpand";
+    window.location.href = "#/admissionReportDetails";
  }
  
   exportModelToggle() {
@@ -414,9 +412,9 @@ class AdmissionReport extends Component {
                     
                       id="admissionsReportYearSelect"
                       className="Col md='5'"
-                      value={this.state.admissionsReportYearSelectValue}
+                      value={this.state.yearSelectValue}
                       options={this.state.yearsList}
-                      onChange={this.setAdmissionsReportYearValue}
+                      onChange={this.setYearValue}
                             />
               </CardBody>
               </Card>
@@ -428,9 +426,9 @@ class AdmissionReport extends Component {
               <Select
                           id="duplicateClaimsProviderSelect"
                           className="Col md='5'"
-                          value={this.state.admissionsReportProviderSelectValue}
+                          value={this.state.providerSelectValue}
                           options={this.state.ProviderList}
-                          onChange={this.setAdmissionsReportProviderValue}
+                          onChange={this.setProviderValue}
                         />
               </CardBody>
               </Card>
@@ -442,9 +440,9 @@ class AdmissionReport extends Component {
               <Select
                             placeholder="Select Doctor"
                             className="Col md='5'"
-                            value={this.state.admissionsReportPcpNameValue}
+                            value={this.state.pcpNameValue}
                             options={this.state.pcpReportList}
-                            onChange={this.setAdmissionsReportPcpName}
+                            onChange={this.setPcpName}
                           />  
               </CardBody>
               </Card>

@@ -57,8 +57,6 @@ class SettledMonthsDetails extends Component {
         self.state.yearSelectValue = { value: 'all', label: 'All' };
         
         this.exportModelToggle = this.exportModelToggle.bind(this);
-
-        this.getValueFromLocalStorage = this.getValueFromLocalStorage.bind(this);
         this.backToReports = this.backToReports.bind(this);
         this.fetchSettledMonthsExpandData = this.fetchSettledMonthsExpandData.bind(this);
         this.fetchSettledMonthsExpandData = debounce(this.fetchSettledMonthsExpandData, 500);
@@ -88,28 +86,16 @@ class SettledMonthsDetails extends Component {
                 yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
             });
         });
-        self.getValueFromLocalStorage();
-        self.getSettledMonthsRowData();
- 
-    }
 
-  getSettledMonthsRowData()
-  {
-    self.state.settledMonthsSelectedMonth = localStorage.getItem('settledMonthsSelectedMonth');
-  }
+      self.state.settledMonthsSelectedMonth = localStorage.getItem('settledMonthsSelectedMonth');
 
- 
-
-  getValueFromLocalStorage() {
-    if (localStorage.getItem('provider') != null) {
-      self.state.providerSelectValue = { value: localStorage.getItem('provider'), label: localStorage.getItem('provider') };
-    }
-      if (localStorage.getItem('pcpName') != null)
-      self.state.pcpNameValue = { value: localStorage.getItem('pcpName'), label: localStorage.getItem('pcpNameLabel') };
+    if (localStorage.getItem('provider') != null)
+      self.state.providerSelectValue = JSON.parse(localStorage.getItem('provider'));
+    if (localStorage.getItem('pcpName') != null)
+      self.state.pcpNameValue =JSON.parse(localStorage.getItem('pcpName'));
     if (localStorage.getItem('year') != null)
-      self.state.yearSelectValue = { value: localStorage.getItem('year'), label: localStorage.getItem('year') };
-  
-}  
+      self.state.yearSelectValue =JSON.parse(localStorage.getItem('year'));
+  }
 
 fetchSettledMonthsExpandData(state, instance) {
     var page = state.page + 1;

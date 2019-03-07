@@ -70,7 +70,7 @@ class SettledMonthsReport extends Component {
       
     this.exportModelToggle = this.exportModelToggle.bind(this);
     this.fetchSettledMonthsData = this.fetchSettledMonthsData.bind(this);
-    this.getValueFromLocalStorage = this.getValueFromLocalStorage.bind(this);
+
     this.backToReports = this.backToReports.bind(this);
 
     this.fetchSettledMonthsData = debounce(this.fetchSettledMonthsData,500);
@@ -98,171 +98,23 @@ class SettledMonthsReport extends Component {
         yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
       });
     });
-    self.getValueFromLocalStorage();
- 
+
+    if (localStorage.getItem('providerForReports') != null) {
+      self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
+    }
+    if (localStorage.getItem('pcpNameForReports') != null) {
+      self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));
+    }
+    if (localStorage.getItem('yearForReports') != null){
+      self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
+
   }
-
-  toggle(i) {
-    console.log("toggle");
-    const newArray = this.state.dropdownOpen.map((element, index) => {
-      return (index === i ? !element : false);
-    });
-    this.setState({
-      dropdownOpen: newArray
-    });
-    setTimeout(function () {
-      if (i == 0) {
-        if (self.state.showPcpLocation_settledMonths) {
-          document.getElementById("ddItemPcpLocation_settledMonths").style.backgroundColor = "";
-        } else {
-          document.getElementById("ddItemPcpLocation_settledMonths").style.backgroundColor = "#d03b3c";
-        }
-        if (self.state.showMonth_settledMonths) {
-          document.getElementById("ddItemMonth_settledMonths").style.backgroundColor = "";
-        } else {
-          document.getElementById("ddItemMonth_settledMonths").style.backgroundColor = "#d03b3c";
-        }
-        if (self.state.showMembership_settledMonths) {
-          document.getElementById("ddItemMembership_settledMonths").style.backgroundColor = "";
-        } else {
-          document.getElementById("ddItemMembership_settledMonths").style.backgroundColor = "#d03b3c";
-        }
-        if (self.state.showIpaPremium_settledMonths) {
-          document.getElementById("ddItemIpaPremium_settledMonths").style.backgroundColor = "";
-        } else {
-          document.getElementById("ddItemIpaPremium_settledMonths").style.backgroundColor = "#d03b3c";
-        }
-        if (self.state.showTotalExpenses_settledMonths) {
-          document.getElementById("ddItemTotalExpenses_settledMonths").style.backgroundColor = "";
-        } else {
-          document.getElementById("ddItemTotalExpenses_settledMonths").style.backgroundColor = "#d03b3c";
-        }
-        if (self.state.showStopLoss_settledMonths) {
-          document.getElementById("ddItemStoploss_settledMonths").style.backgroundColor = "";
-        } else {
-          document.getElementById("ddItemStoploss_settledMonths").style.backgroundColor = "#d03b3c";
-        }
-        if (self.state.showNetPremium_settledMonths) {
-          document.getElementById("ddItemNetPremium_settledMonths").style.backgroundColor = "";
-        } else {
-          document.getElementById("ddItemNetPremium_settledMonths").style.backgroundColor = "#d03b3c";
-        }
-        if (self.state.showRiskSharing_settledMonths) {
-          document.getElementById("ddItemRiskSharing_settledMonths").style.backgroundColor = "";
-        } else {
-          document.getElementById("ddItemRiskSharing_settledMonths").style.backgroundColor = "#d03b3c";
-        }
-        if (self.state.showSurplusDeficit_settledMonths) {
-          document.getElementById("ddItemSurplusDeficit_settledMonths").style.backgroundColor = "";
-        } else {
-          document.getElementById("ddItemSurplusDeficit_settledMonths").style.backgroundColor = "#d03b3c";
-        }
-      }
-    }, 300);
-  }
-  showHideColumn_settledMonths(columnName) {
-    
-    if(columnName == "pcpLocation") {
-      this.state.showPcpLocation_settledMonths = !this.state.showPcpLocation_settledMonths;
-    }
-    if(columnName == "month") {
-      this.state.showMonth_settledMonths = !this.state.showMonth_settledMonths;
-    }
-    if(columnName == "membership") {
-      this.state.showMembership_settledMonths = !this.state.showMembership_settledMonths;
-    }
-    if(columnName == "ipaPremium") {
-      this.state.showIpaPremium_settledMonths = !this.state.showIpaPremium_settledMonths;
-    }
-    if(columnName == "totalExpenses") {
-      this.state.showTotalExpenses_settledMonths = !this.state.showTotalExpenses_settledMonths;
-    }
-    if(columnName == "stoploss") {
-      this.state.showStopLoss_settledMonths = !this.state.showStopLoss_settledMonths;
-    }
-    if(columnName == "netPremium") {
-      this.state.showNetPremium_settledMonths = !this.state.showNetPremium_settledMonths;
-    }
-    if(columnName == "riskSharing") {
-      this.state.showRiskSharing_settledMonths = !this.state.showRiskSharing_settledMonths;
-    }
-    if(columnName == "surplusDeficit") {
-      this.state.showSurplusDeficit_settledMonths = !this.state.showSurplusDeficit_settledMonths;
-    }
-
-    const newArray = this.state.dropdownOpen.map((element, index) => {
-      return (index === 0 ? true : false);
-    });
-    this.setState({
-      dropdownOpen: newArray
-    });
-
-            if(self.state.showPcpLocation_settledMonths) {
-              document.getElementById("ddItemPcpLocation_settledMonths").style.backgroundColor = "";
-            } else {
-              document.getElementById("ddItemPcpLocation_settledMonths").style.backgroundColor = "#d03b3c";
-            } 
-            if(self.state.showMonth_settledMonths) {
-              document.getElementById("ddItemMonth_settledMonths").style.backgroundColor = "";
-            } else {
-              document.getElementById("ddItemMonth_settledMonths").style.backgroundColor = "#d03b3c";
-            } 
-            if(self.state.showMembership_settledMonths) {
-              document.getElementById("ddItemMembership_settledMonths").style.backgroundColor = "";
-            } else {
-              document.getElementById("ddItemMembership_settledMonths").style.backgroundColor = "#d03b3c";
-            }
-            if(self.state.showIpaPremium_settledMonths) {
-              document.getElementById("ddItemIpaPremium_settledMonths").style.backgroundColor = "";
-            } else {
-              document.getElementById("ddItemIpaPremium_settledMonths").style.backgroundColor = "#d03b3c";
-            }
-            if(self.state.showTotalExpenses_settledMonths) {
-              document.getElementById("ddItemTotalExpenses_settledMonths").style.backgroundColor = "";
-            } else {
-              document.getElementById("ddItemTotalExpenses_settledMonths").style.backgroundColor = "#d03b3c";
-            }
-            if(self.state.showStopLoss_settledMonths) {
-              document.getElementById("ddItemStoploss_settledMonths").style.backgroundColor = "";
-            } else {
-              document.getElementById("ddItemStoploss_settledMonths").style.backgroundColor = "#d03b3c";
-            }
-            if(self.state.showNetPremium_settledMonths) {
-              document.getElementById("ddItemNetPremium_settledMonths").style.backgroundColor = "";
-            } else {
-              document.getElementById("ddItemNetPremium_settledMonths").style.backgroundColor = "#d03b3c";
-            }
-            if(self.state.showRiskSharing_settledMonths) {
-              document.getElementById("ddItemRiskSharing_settledMonths").style.backgroundColor = "";
-            } else {
-              document.getElementById("ddItemRiskSharing_settledMonths").style.backgroundColor = "#d03b3c";
-            }
-            if(self.state.showSurplusDeficit_settledMonths) {
-              document.getElementById("ddItemSurplusDeficit_settledMonths").style.backgroundColor = "";
-            } else {
-              document.getElementById("ddItemSurplusDeficit_settledMonths").style.backgroundColor = "#d03b3c";
-            }
-
-            self.generateSettledMonthsXLSX();
- }
-
-
-  getValueFromLocalStorage() {
-    if (localStorage.getItem('provider') != null) {
-      self.state.providerSelectValue = { value: localStorage.getItem('provider'), label: localStorage.getItem('provider') };
-      self.getPCPForProviders(self.state.providerSelectValue.value);
-    }
-      if (localStorage.getItem('pcpName') != null)
-      self.state.pcpNameValue = { value: localStorage.getItem('pcpName'), label: localStorage.getItem('pcpNameLabel') };
-    if (localStorage.getItem('year') != null)
-      self.state.yearSelectValue = { value: localStorage.getItem('year'), label: localStorage.getItem('year') };
-  
 }  
 
   setProviderValue(e) {
     self.state.providerSelectValue = e;
-    localStorage.setItem('provider', self.state.providerSelectValue.value);
     self.getPCPForProviders(self.state.providerSelectValue.value);
+    localStorage.setItem('provider', JSON.stringify(e));
     setTimeout(function(){
       self.getSettledMonthsData(self.state.settledMonthsGridPageSize, 1, JSON.stringify(self.state.settledMonthsGridSorted),JSON.stringify(self.state.settledMonthsGridFiltered));
     }, 1000);
@@ -270,14 +122,13 @@ class SettledMonthsReport extends Component {
 
   setPcpName(e) {
     self.state.pcpNameValue = e;
-    localStorage.setItem('pcpName', self.state.pcpNameValue.value);
-    localStorage.setItem('pcpNameLabel', self.state.pcpNameValue.label);
+    localStorage.setItem('pcpName', JSON.stringify(e));
     self.getSettledMonthsData(self.state.settledMonthsGridPageSize, 1, JSON.stringify(self.state.settledMonthsGridSorted),JSON.stringify(self.state.settledMonthsGridFiltered));
 }
  
   setYearValue(e) {
     self.state.yearSelectValue = e;
-    localStorage.setItem('year', self.state.yearSelectValue.value);
+    localStorage.setItem('year', JSON.stringify(e));
     self.getSettledMonthsData(self.state.settledMonthsGridPageSize, 1, JSON.stringify(self.state.settledMonthsGridSorted), JSON.stringify(self.state.settledMonthsGridFiltered));
     }
 
@@ -424,6 +275,149 @@ getSettledMonthsReportExpandDataRow(rowInfo) {
   backToReports() {
     window.location.href = "#reports";
   }
+  toggle(i) {
+    console.log("toggle");
+    const newArray = this.state.dropdownOpen.map((element, index) => {
+      return (index === i ? !element : false);
+    });
+    this.setState({
+      dropdownOpen: newArray
+    });
+    setTimeout(function () {
+      if (i == 0) {
+        if (self.state.showPcpLocation_settledMonths) {
+          document.getElementById("ddItemPcpLocation_settledMonths").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemPcpLocation_settledMonths").style.backgroundColor = "#d03b3c";
+        }
+        if (self.state.showMonth_settledMonths) {
+          document.getElementById("ddItemMonth_settledMonths").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemMonth_settledMonths").style.backgroundColor = "#d03b3c";
+        }
+        if (self.state.showMembership_settledMonths) {
+          document.getElementById("ddItemMembership_settledMonths").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemMembership_settledMonths").style.backgroundColor = "#d03b3c";
+        }
+        if (self.state.showIpaPremium_settledMonths) {
+          document.getElementById("ddItemIpaPremium_settledMonths").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemIpaPremium_settledMonths").style.backgroundColor = "#d03b3c";
+        }
+        if (self.state.showTotalExpenses_settledMonths) {
+          document.getElementById("ddItemTotalExpenses_settledMonths").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemTotalExpenses_settledMonths").style.backgroundColor = "#d03b3c";
+        }
+        if (self.state.showStopLoss_settledMonths) {
+          document.getElementById("ddItemStoploss_settledMonths").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemStoploss_settledMonths").style.backgroundColor = "#d03b3c";
+        }
+        if (self.state.showNetPremium_settledMonths) {
+          document.getElementById("ddItemNetPremium_settledMonths").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemNetPremium_settledMonths").style.backgroundColor = "#d03b3c";
+        }
+        if (self.state.showRiskSharing_settledMonths) {
+          document.getElementById("ddItemRiskSharing_settledMonths").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemRiskSharing_settledMonths").style.backgroundColor = "#d03b3c";
+        }
+        if (self.state.showSurplusDeficit_settledMonths) {
+          document.getElementById("ddItemSurplusDeficit_settledMonths").style.backgroundColor = "";
+        } else {
+          document.getElementById("ddItemSurplusDeficit_settledMonths").style.backgroundColor = "#d03b3c";
+        }
+      }
+    }, 300);
+  }
+  showHideColumn_settledMonths(columnName) {
+    
+    if(columnName == "pcpLocation") {
+      this.state.showPcpLocation_settledMonths = !this.state.showPcpLocation_settledMonths;
+    }
+    if(columnName == "month") {
+      this.state.showMonth_settledMonths = !this.state.showMonth_settledMonths;
+    }
+    if(columnName == "membership") {
+      this.state.showMembership_settledMonths = !this.state.showMembership_settledMonths;
+    }
+    if(columnName == "ipaPremium") {
+      this.state.showIpaPremium_settledMonths = !this.state.showIpaPremium_settledMonths;
+    }
+    if(columnName == "totalExpenses") {
+      this.state.showTotalExpenses_settledMonths = !this.state.showTotalExpenses_settledMonths;
+    }
+    if(columnName == "stoploss") {
+      this.state.showStopLoss_settledMonths = !this.state.showStopLoss_settledMonths;
+    }
+    if(columnName == "netPremium") {
+      this.state.showNetPremium_settledMonths = !this.state.showNetPremium_settledMonths;
+    }
+    if(columnName == "riskSharing") {
+      this.state.showRiskSharing_settledMonths = !this.state.showRiskSharing_settledMonths;
+    }
+    if(columnName == "surplusDeficit") {
+      this.state.showSurplusDeficit_settledMonths = !this.state.showSurplusDeficit_settledMonths;
+    }
+
+    const newArray = this.state.dropdownOpen.map((element, index) => {
+      return (index === 0 ? true : false);
+    });
+    this.setState({
+      dropdownOpen: newArray
+    });
+
+            if(self.state.showPcpLocation_settledMonths) {
+              document.getElementById("ddItemPcpLocation_settledMonths").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemPcpLocation_settledMonths").style.backgroundColor = "#d03b3c";
+            } 
+            if(self.state.showMonth_settledMonths) {
+              document.getElementById("ddItemMonth_settledMonths").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemMonth_settledMonths").style.backgroundColor = "#d03b3c";
+            } 
+            if(self.state.showMembership_settledMonths) {
+              document.getElementById("ddItemMembership_settledMonths").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemMembership_settledMonths").style.backgroundColor = "#d03b3c";
+            }
+            if(self.state.showIpaPremium_settledMonths) {
+              document.getElementById("ddItemIpaPremium_settledMonths").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemIpaPremium_settledMonths").style.backgroundColor = "#d03b3c";
+            }
+            if(self.state.showTotalExpenses_settledMonths) {
+              document.getElementById("ddItemTotalExpenses_settledMonths").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemTotalExpenses_settledMonths").style.backgroundColor = "#d03b3c";
+            }
+            if(self.state.showStopLoss_settledMonths) {
+              document.getElementById("ddItemStoploss_settledMonths").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemStoploss_settledMonths").style.backgroundColor = "#d03b3c";
+            }
+            if(self.state.showNetPremium_settledMonths) {
+              document.getElementById("ddItemNetPremium_settledMonths").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemNetPremium_settledMonths").style.backgroundColor = "#d03b3c";
+            }
+            if(self.state.showRiskSharing_settledMonths) {
+              document.getElementById("ddItemRiskSharing_settledMonths").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemRiskSharing_settledMonths").style.backgroundColor = "#d03b3c";
+            }
+            if(self.state.showSurplusDeficit_settledMonths) {
+              document.getElementById("ddItemSurplusDeficit_settledMonths").style.backgroundColor = "";
+            } else {
+              document.getElementById("ddItemSurplusDeficit_settledMonths").style.backgroundColor = "#d03b3c";
+            }
+
+            self.generateSettledMonthsXLSX();
+ }
 
   render() {
     return (

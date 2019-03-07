@@ -1,0 +1,6 @@
+{
+    "name": "PMPMByPrecticeDetails",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./PMPMByPrecticeDetails.js"
+  }

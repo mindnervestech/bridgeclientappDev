@@ -77,7 +77,6 @@ class SummaryReport extends Component {
       
     this.exportModelToggle = this.exportModelToggle.bind(this);
     this.fetchSummaryReportData = this.fetchSummaryReportData.bind(this);
-    this.getValueFromLocalStorage = this.getValueFromLocalStorage.bind(this);
     this.backToReports = this.backToReports.bind(this);
 
     this.fetchSummaryReportData = debounce(this.fetchSummaryReportData,500);
@@ -105,30 +104,25 @@ class SummaryReport extends Component {
         yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
       });
     });
-    self.getValueFromLocalStorage();
- 
-  }
 
-  getValueFromLocalStorage() {
-    if (localStorage.getItem('provider') != null) {
-      self.state.providerSelectValue = { value: localStorage.getItem('provider'), label: localStorage.getItem('provider') };
+      if (localStorage.getItem('providerForReports') != null) {
+        self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
+      }
+      if (localStorage.getItem('yearForReports') != null) {
+        self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
+      }
     }
-   if (localStorage.getItem('year') != null)
-      self.state.yearSelectValue = { value: localStorage.getItem('year'), label: localStorage.getItem('year') };
-  
-}  
 
   setProviderValue(e) {
     self.state.providerSelectValue = e;
-   localStorage.setItem('provider', self.state.providerSelectValue.value);
-   
+    localStorage.setItem('provider', JSON.stringify(e));
       setTimeout(function () {
         self.getSummaryReportData(self.state.summaryGridPageSize, 1, JSON.stringify(self.state.summaryGridSorted),JSON.stringify(self.state.summaryGridFiltered))
     }, 1000);
   }
   setYearValue(e) {
     self.state.yearSelectValue = e;
-    localStorage.setItem('year', self.state.yearSelectValue.value);
+    localStorage.setItem('year', JSON.stringify(e));
     self.getSummaryReportData(self.state.summaryGridPageSize, 1, JSON.stringify(self.state.summaryGridSorted),JSON.stringify(self.state.summaryGridFiltered));
   }
 

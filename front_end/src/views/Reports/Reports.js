@@ -52,7 +52,11 @@ class Reports extends Component {
         this.openReinsuranceCostReportToggle = this.openReinsuranceCostReportToggle.bind(this);        
     };
 
-    componentDidMount() {
+  componentDidMount() {
+      
+    localStorage.removeItem('year');
+    localStorage.removeItem('pcpName');
+    localStorage.removeItem('provider');
         if (localStorage.getItem("user") != null) {
             var check = 0;
             JSON.parse(localStorage.getItem("user")).permissions.forEach(function (permission) {
@@ -75,14 +79,19 @@ class Reports extends Component {
           }).then(function (response) {
             self.setState({ providerList: response.planList,pcpList:response.pcpList, yearsList:response.yearsList});
           for (var i = 0; i < self.state.yearsList.length; i++) {
-              if (self.state.yearsList[i].value >= self.state.currentYear) {
-                self.state.currentYear = self.state.yearsList[i].value;
-              }
-              if (localStorage.getItem('year') == null) {
-                self.state.yearSelectValue = { value: self.state.currentYear, label: self.state.currentYear };
-              }
+            if (self.state.yearsList[i].value >= self.state.currentYear) {
+              self.state.currentYear = self.state.yearsList[i].value;
             }
+          }
             
+            if(localStorage.getItem('yearForReports')===null){
+            localStorage.setItem('yearForReports', JSON.stringify(self.state.yearSelectValue));
+            }else if(localStorage.getItem('yearForReports')===null){
+              self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
+            } else {
+              self.state.yearSelectValue = { value: self.state.currentYear, label: self.state.currentYear };
+              self.setValueToLocalStorage();
+            }
             self.setState({
               pcpList:self.state.pcpList.concat({value:'all', label:'All'}),
               yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' }),
@@ -90,59 +99,58 @@ class Reports extends Component {
             });
           });
       }
-      self.getValueFromLocalStorage();
-      self.setValuesToLocalStorage();
+
+        self.getValueFromLocalStorage();
+      self.setValueToLocalStorage();
+  
     }
 
   getValueFromLocalStorage() {
 
-    if (localStorage.getItem('provider') != null) {
-      self.state.providerSelectValue = { value: localStorage.getItem('provider'), label: localStorage.getItem('provider') };
-
+    if (localStorage.getItem('providerForReports') != null) {
+      self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
     }
-      if (localStorage.getItem('pcpName') != null)
-      self.state.pcpNameValue = { value: localStorage.getItem('pcpName'), label: localStorage.getItem('pcpNameLabel') };
-    if (localStorage.getItem('year') != null)
-      self.state.yearSelectValue = { value: localStorage.getItem('year'), label: localStorage.getItem('year') };
+    if (localStorage.getItem('pcpNameForReports') != null) {
+      self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));
+    }
+    if (localStorage.getItem('yearForReports') != null) {
+      self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
+    }
 
   }
 
-
-  
     setProviderValue(e) {
       self.state.providerSelectValue = e;
-      localStorage.setItem('provider', self.state.providerSelectValue.value);
+      localStorage.setItem('providerForReports', JSON.stringify(e));
       self.getPCPForProviders(self.state.providerSelectValue.value);
-     
-    }
+      self.setValueToLocalStorage();
+  }
+
+  setValueToLocalStorage() {
+    localStorage.setItem('pcpNameForReports', JSON.stringify(self.state.pcpNameValue));
+    localStorage.setItem('yearForReports', JSON.stringify(self.state.yearSelectValue));
+    localStorage.setItem('providerForReports', JSON.stringify(self.state.providerSelectValue));
+    localStorage.setItem('pcpName', JSON.stringify(self.state.pcpNameValue));
+    localStorage.setItem('year', JSON.stringify(self.state.yearSelectValue));
+    localStorage.setItem('provider', JSON.stringify(self.state.providerSelectValue));
+  }
+  
     setPcpName(e) {
       self.state.pcpNameValue = e;
-      console.log(self.state.pcpNameValue);
-      localStorage.setItem('pcpName', self.state.pcpNameValue.value);
-      localStorage.setItem('pcpNameLabel', self.state.pcpNameValue.label);
-      self.setValueFromLocalStorage();
+      localStorage.setItem('pcpNameForReports', JSON.stringify(e));
+      self.setValueToLocalStorage();
+      self.getPCPForProviders(self.state.providerSelectValue.value);
     }
    
     setYearValue(e) {
       self.state.yearSelectValue = e;
-      localStorage.setItem('year', self.state.yearSelectValue.value);
-      self.setValueFromLocalStorage();
-      
-    }
-  setValuesToLocalStorage() {
-    localStorage.setItem('provider', self.state.providerSelectValue.value);
-    localStorage.setItem('pcpName', self.state.pcpNameValue.value);
-    localStorage.setItem('pcpNameLabel', self.state.pcpNameValue.label);
-    localStorage.setItem('year', self.state.yearSelectValue.value);
+      localStorage.setItem('yearForReports', JSON.stringify(e));
+      self.setValueToLocalStorage();
+      self.getPCPForProviders(self.state.providerSelectValue.value);
   }
-  setValueFromLocalStorage()
-  {
-    self.setState({
-      providerSelectValue: { value: localStorage.getItem('provider'), label: localStorage.getItem('provider') },
-      yearSelectValue: { value: localStorage.getItem('year'), label: localStorage.getItem('year') }
-    });
-  }
-    getPCPForProviders(providerName) {
+  
+  getPCPForProviders(providerName) {
+    console.log(self.state.yearSelectValue);
       this.state.reportProviderArr = [];
       this.state.reportProviderArr[0] = providerName;
       const formData = new FormData();
@@ -228,11 +236,11 @@ class Reports extends Component {
           <Card>
               <CardHeader className="filterCardHeaderStyle2"><img style={{marginBottom:"3px"}}src="/img/year_icon.png"/>&nbsp;&nbsp;Year</CardHeader>
             <CardBody>
-                <Select
+                 <Select
                   
-                    id="admissionsReportYearSelect"
-                    className="Col md='5'"
-                    value={this.state.yearSelectValue}
+                   id="admissionsReportYearSelect"
+                   className="Col md='5'"
+                   value={self.state.yearSelectValue}
                     options={this.state.yearsList}
                     onChange={this.setYearValue}
                           />

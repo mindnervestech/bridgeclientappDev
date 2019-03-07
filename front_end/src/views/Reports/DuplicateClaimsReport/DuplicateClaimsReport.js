@@ -102,27 +102,29 @@ class DuplicateClaimsReport extends Component {
         yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
       });
     });
-    console.log(self.state.providerList);
     self.getValueFromLocalStorage();
  
   }
 
+
   getValueFromLocalStorage() {
-    if (localStorage.getItem('provider') != null) {
-      self.state.providerSelectValue = { value: localStorage.getItem('provider'), label: localStorage.getItem('provider') };
-      self.getPCPForProviders(self.state.providerSelectValue.value);
+
+    if (localStorage.getItem('providerForReports') != null) {
+      self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
     }
-      if (localStorage.getItem('pcpName') != null)
-      self.state.pcpNameValue = { value: localStorage.getItem('pcpName'), label: localStorage.getItem('pcpNameLabel') };
-    if (localStorage.getItem('year') != null)
-      self.state.yearSelectValue = { value: localStorage.getItem('year'), label: localStorage.getItem('year') };
-  
+    if (localStorage.getItem('pcpNameForReports') != null) {
+      self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));
+    }
+    if (localStorage.getItem('yearForReports') != null){
+      self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
+
+  }
 }  
 
   setProviderValue(e) {
     self.state.providerSelectValue = e;
     self.getPCPForProviders(self.state.providerSelectValue.value);
-    localStorage.setItem('provider', self.state.providerSelectValue.value);
+    localStorage.setItem('provider', JSON.stringify(e));
     setTimeout(function(){
       self.getDuplicateClaimReports(self.state.duplicateClaimsGridPageSize, 1, JSON.stringify(self.state.duplicateClaimsGridSoreted),JSON.stringify(self.state.duplicateClaimsGridFiltered));
     }, 1000);
@@ -130,14 +132,13 @@ class DuplicateClaimsReport extends Component {
 
   setPcpName(e) {
     self.state.pcpNameValue = e;
-    localStorage.setItem('pcpName', self.state.pcpNameValue.value);
-    localStorage.setItem('pcpNameLabel', self.state.pcpNameValue.label);
+    localStorage.setItem('pcpName', JSON.stringify(e));
     self.getDuplicateClaimReports(self.state.duplicateClaimsGridPageSize, 1, JSON.stringify(self.state.duplicateClaimsGridSoreted),JSON.stringify(self.state.duplicateClaimsGridFiltered));
   }
  
   setYearValue(e) {
     self.state.yearSelectValue = e;
-    localStorage.setItem('year', self.state.yearSelectValue.value);
+    localStorage.setItem('year', JSON.stringify(e));
     self.getDuplicateClaimReports(self.state.duplicateClaimsGridPageSize, 1, JSON.stringify(self.state.duplicateClaimsGridSoreted),JSON.stringify(self.state.duplicateClaimsGridFiltered));
   }
 

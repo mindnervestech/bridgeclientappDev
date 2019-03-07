@@ -68,8 +68,6 @@ class DuplicateClaimsDetails extends Component {
     self.state.yearSelectValue = { value: 'all', label: 'All' };
         
     this.exportModelToggle = this.exportModelToggle.bind(this);
-
-    this.getValueFromLocalStorage = this.getValueFromLocalStorage.bind(this);
     this.backToReports = this.backToReports.bind(this);
     this.fetchDuplicateClaimsExpandData = this.fetchDuplicateClaimsExpandData.bind(this);
     this.fetchDuplicateClaimsExpandData = debounce(this.fetchDuplicateClaimsExpandData,500);
@@ -98,9 +96,15 @@ class DuplicateClaimsDetails extends Component {
         yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
       });
     });
-    self.getValueFromLocalStorage();
+
+    if (localStorage.getItem('provider') != null)
+      self.state.providerSelectValue = JSON.parse(localStorage.getItem('provider'));
+    if (localStorage.getItem('pcpName') != null)
+      self.state.pcpNameValue =JSON.parse(localStorage.getItem('pcpName'));
+    if (localStorage.getItem('year') != null)
+      self.state.yearSelectValue =JSON.parse(localStorage.getItem('year'));
+
     self.getDuplicateClaimReportsRowData();
- 
   }
   getDuplicateClaimReportsRowData(rowInfo) {
     self.setState({
@@ -112,17 +116,6 @@ class DuplicateClaimsDetails extends Component {
     });
 
  }
-
-  getValueFromLocalStorage() {
-    if (localStorage.getItem('provider') != null) {
-      self.state.providerSelectValue = { value: localStorage.getItem('provider'), label: localStorage.getItem('provider') };
-    }
-      if (localStorage.getItem('pcpName') != null)
-      self.state.pcpNameValue = { value: localStorage.getItem('pcpName'), label: localStorage.getItem('pcpNameLabel') };
-    if (localStorage.getItem('year') != null)
-      self.state.yearSelectValue = { value: localStorage.getItem('year'), label: localStorage.getItem('year') };
-  
-}  
 
   fetchDuplicateClaimsExpandData(state, instance) {
     var page = state.page + 1;

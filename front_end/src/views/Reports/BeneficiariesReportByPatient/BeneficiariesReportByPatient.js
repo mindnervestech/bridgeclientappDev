@@ -115,8 +115,7 @@ class BeneficiariesReportByPatient extends Component {
 
       
     this.exportModelToggle = this.exportModelToggle.bind(this);
-    
-    this.getValueFromLocalStorage = this.getValueFromLocalStorage.bind(this);
+
     this.backToReports = this.backToReports.bind(this);
     this.fetchBeneficiariesManagementData = this.fetchBeneficiariesManagementData.bind(this);
     this.fetchBeneficiariesManagementData = debounce(this.fetchBeneficiariesManagementData,500);
@@ -139,41 +138,31 @@ class BeneficiariesReportByPatient extends Component {
     }).then(function (res1) {
       return res1.json();
     }).then(function (response) {
-      self.setState({ providerList: response.planList,pcpList:response.pcpList, yearsList:response.yearsList});
-     
-      for(var i=0;i<self.state.yearsList.length;i++) {
-        if(self.state.yearsList[i].value >= self.state.currentYear) {
-          self.state.currentYear = self.state.yearsList[i].value;
-        } 
-        if(localStorage.getItem('year')==null)
-        self.state.yearSelectValue = { value: self.state.currentYear, label: self.state.currentYear };
-      }
+      self.setState({ providerList: response.planList, pcpList: response.pcpList, yearsList: response.yearsList });
+ 
       self.setState({
         providerList: self.state.providerList.concat({ value: 'all', label: 'All' }),
-        pcpList:self.state.pcpList.concat({value:'all', label:'All'}),
+        pcpList: self.state.pcpList.concat({ value: 'all', label: 'All' }),
         yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
       });
     });
-    self.getValueFromLocalStorage();
- 
+
+    if (localStorage.getItem('providerForReports') != null) {
+      self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
+    }
+    if (localStorage.getItem('pcpNameForReports') != null) {
+      self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));
+    }
+    if (localStorage.getItem('yearForReports') != null) {
+      self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
+  
+    }
   }
 
-  getValueFromLocalStorage() {
-    if (localStorage.getItem('provider') != null) {
-      self.state.providerSelectValue = { value: localStorage.getItem('provider'), label: localStorage.getItem('provider') };
-      self.getPCPForProviders(self.state.providerSelectValue.value);
-    }
-      if (localStorage.getItem('pcpName') != null)
-      self.state.pcpNameValue = { value: localStorage.getItem('pcpName'), label: localStorage.getItem('pcpNameLabel') };
-    if (localStorage.getItem('year') != null)
-      self.state.yearSelectValue = { value: localStorage.getItem('year'), label: localStorage.getItem('year') };
-  
-}  
-
     setProviderValue(e) {
-        self.state.providerSelectValue = e;
-        localStorage.setItem('provider', self.state.providerSelectValue.value);
-        self.getPCPForProviders(self.state.providerSelectValue.value);
+      self.state.providerSelectValue = e;
+      self.getPCPForProviders(self.state.providerSelectValue.value);
+      localStorage.setItem('provider', JSON.stringify(e));
        if(self.state.activeTab == '1') {
           setTimeout(function(){
             self.getBeneficiariesManagementData(self.state.beneficiariesManagementGridPageSize, 1, JSON.stringify(self.state.beneficiariesManagementGridSorted),JSON.stringify(self.state.beneficiariesManagementGridFiltered));
@@ -200,8 +189,7 @@ class BeneficiariesReportByPatient extends Component {
 
   setPcpName(e) {
     self.state.pcpNameValue = e;
-    localStorage.setItem('pcpName', self.state.pcpNameValue.value);
-    localStorage.setItem('pcpNameLabel', self.state.pcpNameValue.label);
+    localStorage.setItem('pcpName', JSON.stringify(e));
     if(self.state.activeTab == '1') {
       self.getBeneficiariesManagementData(self.state.beneficiariesManagementGridPageSize, 1, JSON.stringify(self.state.beneficiariesManagementGridSorted),JSON.stringify(self.state.beneficiariesManagementGridFiltered));
     }
@@ -218,7 +206,7 @@ class BeneficiariesReportByPatient extends Component {
  
   setYearValue(e) {
     self.state.yearSelectValue = e;
-    localStorage.setItem('year', self.state.yearSelectValue.value);
+    localStorage.setItem('year', JSON.stringify(e));
     if(self.state.activeTab == '1') {
       self.getBeneficiariesManagementData(self.state.beneficiariesManagementGridPageSize, 1, JSON.stringify(self.state.beneficiariesManagementGridSorted),JSON.stringify(self.state.beneficiariesManagementGridFiltered));
     }
@@ -673,23 +661,23 @@ generateBeneficiariesManagementByDoctorXLSX() {
 
   getBeneficiariesManagementDataRow(rowInfo) {
     localStorage.setItem('beneficiariesManagementSelectedMedicareId',rowInfo.row.medicareId);
-    window.location.href = "#/beneficiariesReportByPatientExpand";
+    window.location.href = "#/beneficiariesReportByPatientDetails";
     }
     
     getBeneficiariesManagementByClinicDataRow(rowInfo)
     {
        localStorage.setItem('beneficiariesManagementSelectedClinicName',rowInfo.row.clinicName);
-      window.location.href = "#/beneficiariesReportByClinicExpand";
+      window.location.href = "#/beneficiariesReportByClinicDetails";
   }
   getBeneficiariesManagementByLocationDataRow(rowInfo)
   {
     console.log('working');
     localStorage.setItem('beneficiariesManagementSelectedPcpLocation',rowInfo.row.pcpLocation);
-    window.location.href = "#/beneficiariesReportByLocationExpand";
+    window.location.href = "#/beneficiariesReportByLocationDetails";
   }
   getBeneficiariesManagementByDoctorDataRow(rowInfo) {
     localStorage.setItem('beneficiariesManagementSelectedPcpId',rowInfo.row.pcpId);
-     window.location.href = "#/beneficiariesReportByDoctorExpand";
+     window.location.href = "#/beneficiariesReportByDoctorDetails";
   }
 
   backToReports() {

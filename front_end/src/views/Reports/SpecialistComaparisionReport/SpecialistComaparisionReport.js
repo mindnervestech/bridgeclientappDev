@@ -62,14 +62,14 @@ class SpecialistComaparisionReport extends Component {
       
     this.exportModelToggle = this.exportModelToggle.bind(this);
     this.fetchSpecialistComparisonReportData = this.fetchSpecialistComparisonReportData.bind(this);
-    this.getValueFromLocalStorage = this.getValueFromLocalStorage.bind(this);
     this.backToReports = this.backToReports.bind(this);
 
     this.fetchSpecialistComparisonReportData = debounce(this.fetchSpecialistComparisonReportData,500);
   }
 
   componentDidMount() {
-
+    localStorage.removeItem('specialistComparisonPracticeName');
+    localStorage.removeItem('specialistComparisonPatientName');
     localStorage.removeItem('specialistComparisonSpecialityCode');
     fetch(config.serverUrl + '/getAllPlanAndPCP', {
       method: 'GET'
@@ -77,57 +77,42 @@ class SpecialistComaparisionReport extends Component {
       return res1.json();
     }).then(function (response) {
       self.setState({ providerList: response.planList,pcpList:response.pcpList, yearsList:response.yearsList});
-     
-      for(var i=0;i<self.state.yearsList.length;i++) {
-        if(self.state.yearsList[i].value >= self.state.currentYear) {
-          self.state.currentYear = self.state.yearsList[i].value;
-        } 
-        if(localStorage.getItem('year')==null)
-        self.state.yearSelectValue = { value: self.state.currentYear, label: self.state.currentYear };
-      }
       self.setState({
         providerList: self.state.providerList.concat({ value: 'all', label: 'All' }),
         pcpList:self.state.pcpList.concat({value:'all', label:'All'}),
         yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
       });
     });
-    self.getValueFromLocalStorage();
+    if (localStorage.getItem('providerForReports') != null) {
+      self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
+    }
+    if (localStorage.getItem('pcpNameForReports') != null) {
+      self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));
+    }
+    if (localStorage.getItem('yearForReports') != null){
+      self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
+  }
  
   }
 
-  getValueFromLocalStorage() {
-    if (localStorage.getItem('provider') != null) {
-      self.state.providerSelectValue = { value: localStorage.getItem('provider'), label: localStorage.getItem('provider') };
-      self.getPCPForProviders(self.state.providerSelectValue.value);
-    }
-      if (localStorage.getItem('pcpName') != null)
-      self.state.pcpNameValue = { value: localStorage.getItem('pcpName'), label: localStorage.getItem('pcpNameLabel') };
-    if (localStorage.getItem('year') != null)
-      self.state.yearSelectValue = { value: localStorage.getItem('year'), label: localStorage.getItem('year') };
-  
-}  
-
   setProviderValue(e) {
     self.state.providerSelectValue = e;
-      self.getPCPForProviders(self.state.providerSelectValue.value);
-      localStorage.setItem('provider', self.state.providerSelectValue.value);
+    self.getPCPForProviders(self.state.providerSelectValue.value);
+    localStorage.setItem('provider', JSON.stringify(e));
     setTimeout(function(){
       self.getSpecialistComparisonReportData(self.state.specialistComparisonGridPageSize, 1, JSON.stringify(self.state.specialistComparisonGridSorted),JSON.stringify(self.state.specialistComparisonGridFiltered));
     }, 1000);
-    
-
   }
 
   setPcpName(e) {
     self.state.pcpNameValue = e;
-    localStorage.setItem('pcpName', self.state.pcpNameValue.value);
-    localStorage.setItem('pcpNameLabel', self.state.pcpNameValue.label);
+    localStorage.setItem('pcpName', JSON.stringify(e));
     self.getSpecialistComparisonReportData(self.state.specialistComparisonGridPageSize, 1, JSON.stringify(self.state.specialistComparisonGridSorted),JSON.stringify(self.state.specialistComparisonGridFiltered));  
   }
  
   setYearValue(e) {
-      self.state.yearSelectValue = e;
-      localStorage.setItem('year', self.state.yearSelectValue.value);
+    self.state.yearSelectValue = e;
+    localStorage.setItem('year', JSON.stringify(e));
     self.getSpecialistComparisonReportData(self.state.specialistComparisonGridPageSize, 1, JSON.stringify(self.state.specialistComparisonGridSorted),JSON.stringify(self.state.specialistComparisonGridFiltered));
     }
 
@@ -263,7 +248,7 @@ class SpecialistComaparisionReport extends Component {
   getSpecialistComparisonDataRow(rowInfo) {
      
     localStorage.setItem('specialistComparisonSpecialityCode',rowInfo.row.specialityCode);
-    window.location.href = "#/specialistComparisonReportExpand";
+    window.location.href = "#/specialistComparisonReportDetails";
  }
 
   backToReports() {

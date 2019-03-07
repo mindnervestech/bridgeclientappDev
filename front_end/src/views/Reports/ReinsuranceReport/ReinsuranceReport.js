@@ -99,21 +99,23 @@ class ReinsuranceReport extends Component {
   }
 
   getValueFromLocalStorage() {
-    if (localStorage.getItem('provider') != null) {
-      self.state.providerSelectValue = { value: localStorage.getItem('provider'), label: localStorage.getItem('provider') };
-      self.getPCPForProviders(self.state.providerSelectValue.value);
+
+    if (localStorage.getItem('providerForReports') != null) {
+      self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
     }
-      if (localStorage.getItem('pcpName') != null)
-      self.state.pcpNameValue = { value: localStorage.getItem('pcpName'), label: localStorage.getItem('pcpNameLabel') };
-    if (localStorage.getItem('year') != null)
-      self.state.yearSelectValue = { value: localStorage.getItem('year'), label: localStorage.getItem('year') };
-  
+    if (localStorage.getItem('pcpNameForReports') != null) {
+      self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));
+    }
+    if (localStorage.getItem('yearForReports') != null){
+      self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
+
+  }
 }  
 
   setProviderValue(e) {
     self.state.providerSelectValue = e;
-    localStorage.setItem('provider', self.state.providerSelectValue.value);
     self.getPCPForProviders(self.state.providerSelectValue.value);
+    localStorage.setItem('provider', JSON.stringify(e));
     setTimeout(function(){
       self.getReinsuranceManagementData(self.state.reinsuranceManagementGridPageSize, 1, JSON.stringify(self.state.reinsuranceManagementGridSorted),JSON.stringify(self.state.reinsuranceManagementGridFiltered));
     }, 1000);
@@ -121,14 +123,13 @@ class ReinsuranceReport extends Component {
 
   setPcpName(e) {
     self.state.pcpNameValue = e;
-    localStorage.setItem('pcpName', self.state.pcpNameValue.value);
-    localStorage.setItem('pcpNameLabel', self.state.pcpNameValue.label);
+    localStorage.setItem('pcpName', JSON.stringify(e));
     self.getReinsuranceManagementData(self.state.reinsuranceManagementGridPageSize, 1, JSON.stringify(self.state.reinsuranceManagementGridSorted),JSON.stringify(self.state.reinsuranceManagementGridFiltered));
    }
  
   setYearValue(e) {
     self.state.yearSelectValue = e;
-    localStorage.setItem('year', self.state.yearSelectValue.value);
+    localStorage.setItem('year', JSON.stringify(e));
     self.getReinsuranceManagementData(self.state.reinsuranceManagementGridPageSize, 1, JSON.stringify(self.state.reinsuranceManagementGridSorted),JSON.stringify(self.state.reinsuranceManagementGridFiltered));
      }
 

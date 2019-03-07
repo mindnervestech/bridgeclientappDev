@@ -98,3 +98,12 @@ button:focus{
 .tab-content.tabpenal{
   padding: 0rem !important;
 }
+.ReactTable .-loading{
+  background: #0808081f !important;
+}
+.ReactTable .-loading > div{
+  font-size: 20px !important;
+    color: rgba(214, 3, 3, 0.85) !important;
+    top: 7% !important;
+
+}
