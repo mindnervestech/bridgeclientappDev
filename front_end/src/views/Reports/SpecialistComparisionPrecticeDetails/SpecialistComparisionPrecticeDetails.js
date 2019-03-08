@@ -69,26 +69,15 @@ class SpecialistComparisionPrecticeDetails extends Component {
   componentDidMount() {
     localStorage.removeItem('specialistComparisonPatientName');
     localStorage.removeItem('pcpNameExpand');
-    fetch(config.serverUrl + '/getAllPlanAndPCP', {
-      method: 'GET'
-    }).then(function (res1) {
-      return res1.json();
-    }).then(function (response) {
-      self.setState({ providerList: response.planList,pcpList:response.pcpList, yearsList:response.yearsList});
 
-      self.setState({
-        providerList: self.state.providerList.concat({ value: 'all', label: 'All' }),
-        pcpList:self.state.pcpList.concat({value:'all', label:'All'}),
-        yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
-      });
-    });
 
       if (localStorage.getItem('provider') != null)
         self.state.providerSelectValue = JSON.parse(localStorage.getItem('provider'));
       if (localStorage.getItem('pcpName') != null)
         self.state.pcpNameValue =JSON.parse(localStorage.getItem('pcpName'));
       if (localStorage.getItem('year') != null)
-        self.state.yearSelectValue =JSON.parse(localStorage.getItem('year'));
+      self.state.yearSelectValue = JSON.parse(localStorage.getItem('year'));
+      self.getPCPForProviders(self.state.providerSelectValue.value);
 
     self.getSpecialistComaprisionPracticeReportsRowData();
  
@@ -103,6 +92,25 @@ class SpecialistComparisionPrecticeDetails extends Component {
    self.state.pcpNameValue = e;
    localStorage.setItem('pcpNameExpand', JSON.stringify(e));
    self.getSpecialistComparisonExpandPracticeReportData(self.state.specialistComparisonExpandPracticeGridPageSize,1,JSON.stringify(self.state.specialistComparisonExpandPracticeGridSorted),JSON.stringify(self.state.specialistComparisonExpandPracticeGridFiltered));
+  }
+  
+  getPCPForProviders(providerName) {
+    this.state.reportProviderArr = [];
+    this.state.reportProviderArr[0] = providerName;
+    const formData = new FormData();
+    formData.append('providerArr', self.state.reportProviderArr);
+    fetch(config.serverUrl + '/getPCPForAllProviders', {
+      method: 'POST',
+      body: formData
+    }).then(function (res1) {
+      return res1.json();
+    }).then(function (response) {
+      self.setState({ pcpList: response });
+      self.setState({
+        pcpList: self.state.pcpList.concat({ value: 'all', label: 'All' })
+      });
+      self.state.pcpNameValue = { value: 'all', label: 'All' };
+    });
   }
 
   getValueFromLocalStorage() {

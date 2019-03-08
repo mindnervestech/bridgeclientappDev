@@ -78,6 +78,7 @@ class SummaryReport extends Component {
     this.exportModelToggle = this.exportModelToggle.bind(this);
     this.fetchSummaryReportData = this.fetchSummaryReportData.bind(this);
     this.backToReports = this.backToReports.bind(this);
+    this.getPCPForProviders = this.getPCPForProviders.bind(this);
 
     this.fetchSummaryReportData = debounce(this.fetchSummaryReportData,500);
   }
@@ -107,6 +108,7 @@ class SummaryReport extends Component {
 
       if (localStorage.getItem('providerForReports') != null) {
         self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
+        self.getPCPForProviders(self.state.providerSelectValue.value);
       }
       if (localStorage.getItem('yearForReports') != null) {
         self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
@@ -125,7 +127,24 @@ class SummaryReport extends Component {
     localStorage.setItem('year', JSON.stringify(e));
     self.getSummaryReportData(self.state.summaryGridPageSize, 1, JSON.stringify(self.state.summaryGridSorted),JSON.stringify(self.state.summaryGridFiltered));
   }
-
+  getPCPForProviders(providerName) {
+    this.state.reportProviderArr = [];
+    this.state.reportProviderArr[0] = providerName;
+    const formData = new FormData();
+    formData.append('providerArr', self.state.reportProviderArr);
+    fetch(config.serverUrl + '/getPCPForAllProviders', {
+      method: 'POST',
+      body: formData
+    }).then(function (res1) {
+      return res1.json();
+    }).then(function (response) {
+      self.setState({ pcpReportList: response });
+      self.setState({
+        pcpReportList: self.state.pcpReportList.concat({ value: 'all', label: 'All' })
+      });
+      self.state.admissionsReportPcpNameValue = { value: 'all', label: 'All' };
+    });
+  }
 
 
   fetchSummaryReportData(state, instance) {

@@ -66,7 +66,6 @@ class ReinsuranceReport extends Component {
       
     this.exportModelToggle = this.exportModelToggle.bind(this);
     this.fetchReinsuranceManagementData = this.fetchReinsuranceManagementData.bind(this);
-    this.getValueFromLocalStorage = this.getValueFromLocalStorage.bind(this);
     this.backToReports = this.backToReports.bind(this);
 
     this.fetchReinsuranceManagementData = debounce(this.fetchReinsuranceManagementData,500);
@@ -94,14 +93,10 @@ class ReinsuranceReport extends Component {
         yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
       });
     });
-    self.getValueFromLocalStorage();
- 
-  }
-
-  getValueFromLocalStorage() {
 
     if (localStorage.getItem('providerForReports') != null) {
       self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
+      self.getPCPForProviders(self.state.providerSelectValue.value);
     }
     if (localStorage.getItem('pcpNameForReports') != null) {
       self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));

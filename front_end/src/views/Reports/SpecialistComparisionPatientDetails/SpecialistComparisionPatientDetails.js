@@ -67,19 +67,6 @@ class SpecialistComparisonReportDetails extends Component {
   }
 
   componentDidMount() {
-    fetch(config.serverUrl + '/getAllPlanAndPCP', {
-      method: 'GET'
-    }).then(function (res1) {
-      return res1.json();
-    }).then(function (response) {
-      self.setState({ providerList: response.planList,pcpList:response.pcpList, yearsList:response.yearsList});
-
-      self.setState({
-        providerList: self.state.providerList.concat({ value: 'all', label: 'All' }),
-        pcpList:self.state.pcpList.concat({value:'all', label:'All'}),
-        yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
-      });
-    });
 
       if (localStorage.getItem('provider') != null)
         self.state.providerSelectValue = JSON.parse(localStorage.getItem('provider'));

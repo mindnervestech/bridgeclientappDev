@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactDataGrid   from 'react-data-grid';
+import ReactDataGrid from 'react-data-grid';
 import {
   Badge,
   Row,
@@ -68,6 +68,7 @@ class RowRenderer extends React.Component {
   }
 }
 
+
 class ClaimDetails extends React.Component {
 	constructor(props, context) {
 	  super(props, context);
@@ -107,25 +108,8 @@ class ClaimDetails extends React.Component {
       ageRangeSelectValue:"",
       conditionSelectValue:"",
       specialitySelectValue:"",
-      costRangeSelectValue:"",
-
-      claimDetailsExpandModal: false,
-      claimDetailsExpandLoading: false,
-      claimDetailsExpandPages: 0,
-      claimDetailsExpandData: [],
-      claimDetailsExpandTotalCount: 0,
-      claimDetailsExpandFileQuery: "",
-      claimDetailsSelectedMedicareId:"",
-
-      showClaimId_beneficiariesManagementExpand: true,
-      showClaimDate_beneficiariesManagementExpand: true,
-      showClaimType_beneficiariesManagementExpand: true,
-      showClinicName_beneficiariesManagementExpand: true,
-      showIcdCodes_beneficiariesManagementExpand: true,
-      showHccCodes_beneficiariesManagementExpand: true,
-      showDrgCode_beneficiariesManagementExpand: true,
-      showCost_beneficiariesManagementExpand: true,
-
+      costRangeSelectValue: "",
+      exportModeltoggleViewClaimDetails: false,
       jsonDataForBeneficiariesManagementExpand:"",
 
     };
@@ -134,7 +118,6 @@ class ClaimDetails extends React.Component {
     this.handleToDate = this.handleToDate.bind(this);
     this.fetchData = this.fetchData.bind(this);
     this.generateReport = this.generateReport.bind(this);
-    this.getClaimDetailsExpandData = this.getClaimDetailsExpandData.bind(this);
     this.generateXLSX = this.generateXLSX.bind(this);
     this.toggle = this.toggle.bind(this);
     this.handlePlanSelect = this.handlePlanSelect.bind(this);
@@ -145,9 +128,15 @@ class ClaimDetails extends React.Component {
     this.handleSpecialitySelect = this.handleSpecialitySelect.bind(this);
     this.handleCostRangeSelect = this.handleCostRangeSelect.bind(this);
     this.toggleClaimDetailsExpandModal = this.toggleClaimDetailsExpandModal.bind(this);
-    this.fetchClaimDetailsExpandData = this.fetchClaimDetailsExpandData.bind(this);
+    this.exportModelToggleClaimDetails = this.exportModelToggleClaimDetails.bind(this);
     this.generateReport = debounce(this.generateReport,500);
-    this.getClaimDetailsExpandData = debounce(this.getClaimDetailsExpandData,500);
+  }
+
+  exportModelToggleClaimDetails() {
+    console.log("ashishs");
+    this.setState({
+      exportModeltoggleViewClaimDetails: !this.state.exportModeltoggleViewClaimDetails
+    });
   }
 
   toggle(i) {
@@ -162,91 +151,52 @@ class ClaimDetails extends React.Component {
         if(self.state.showProviderName) {
           document.getElementById("ddItemProviderName").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemProviderName").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemProviderName").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showMedicareId) {
           document.getElementById("ddItemMedicareId").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemMedicareId").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemMedicareId").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showPatientName) {
           document.getElementById("ddItemPatientName").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemPatientName").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemPatientName").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showICDCode) {
           document.getElementById("ddItemIcdCode").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemIcdCode").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemIcdCode").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showHCCCodes) {
           document.getElementById("ddItemHccCode").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemHccCode").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemHccCode").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showTermedMonth) {
           document.getElementById("ddItemTermedMonth").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemTermedMonth").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemTermedMonth").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showEligibleMonth) {
           document.getElementById("ddItemEligibleMonth").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemEligibleMonth").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemEligibleMonth").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showCost) {
           document.getElementById("ddItemCost").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemCost").style.backgroundColor = "#20a8d8";
-        }
-      }
-      if(i == 2) {
-            if(self.state.showClaimId_beneficiariesManagementExpand) {
-                document.getElementById("ddItemClaimId_beneficiariesManagementExpand").style.backgroundColor = "";
-              } else {
-                document.getElementById("ddItemClaimId_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
-              }
-              if(self.state.showClaimDate_beneficiariesManagementExpand) {
-                document.getElementById("ddItemClaimDate_beneficiariesManagementExpand").style.backgroundColor = "";
-              } else {
-                document.getElementById("ddItemClaimDate_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
-              }
-              if(self.state.showClaimType_beneficiariesManagementExpand) {
-                document.getElementById("ddItemClaimType_beneficiariesManagementExpand").style.backgroundColor = "";
-              } else {
-                document.getElementById("ddItemClaimType_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
-              }
-              if(self.state.showClinicName_beneficiariesManagementExpand) {
-                document.getElementById("ddItemClinicName_beneficiariesManagementExpand").style.backgroundColor = "";
-              } else {
-                document.getElementById("ddItemClinicName_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
-              }
-              if(self.state.showIcdCodes_beneficiariesManagementExpand) {
-                document.getElementById("ddItemIcdCodes_beneficiariesManagementExpand").style.backgroundColor = "";
-              } else {
-                document.getElementById("ddItemIcdCodes_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
-              }
-              if(self.state.showHccCodes_beneficiariesManagementExpand) {
-                document.getElementById("ddItemHccCodes_beneficiariesManagementExpand").style.backgroundColor = "";
-              } else {
-                document.getElementById("ddItemHccCodes_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
-              }
-              if(self.state.showDrgCode_beneficiariesManagementExpand) {
-                document.getElementById("ddItemDrgCode_beneficiariesManagementExpand").style.backgroundColor = "";
-              } else {
-                document.getElementById("ddItemDrgCode_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
-              }
-              if(self.state.showCost_beneficiariesManagementExpand) {
-                document.getElementById("ddItemCost_beneficiariesManagementExpand").style.backgroundColor = "";
-              } else {
-                document.getElementById("ddItemCost_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
-              }
+          document.getElementById("ddItemCost").style.backgroundColor = "#d03b3c";
+        } 
           }
     }, 300);
   }
 
   componentDidMount() {
-
+    localStorage.removeItem('claimDetailsSelectedMedicareId');
+    localStorage.removeItem('planSelectValue');
+    localStorage.removeItem('fromDate');
+    
     fetch(config.serverUrl+'/getMaintenanceMode', {
           method: 'GET'
       }).then(function(res1) {
@@ -320,74 +270,13 @@ class ClaimDetails extends React.Component {
         self.state.fetchDataCount++;
    }
 
-   fetchClaimDetailsExpandData(state, instance) {
-    var page = state.page + 1;
-    self.getClaimDetailsExpandData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
-  }
 
 
-  getClaimDetailsExpandData(pageSize,page,sortedArr,filteredArr) {
-    self.setState({ claimDetailsExpandLoading: true });
-    const formData = new FormData();
-    
-      if(self.state.fromDate == "") {
-        formData.append('year', "all");
-      } else {
-        formData.append('year', self.state.fromDate.getFullYear());
-      }
-      
-      formData.append('provider', self.state.planSelectValue);
-      formData.append('medicareId', self.state.claimDetailsSelectedMedicareId);
-      formData.append('pageSize', pageSize);
-      formData.append('page', page);
-      formData.append('sortedColumns', sortedArr);
-      formData.append('filteredColumns', filteredArr);
-
-      fetch(config.serverUrl+'/getBeneficiariesManagementExpandData', {
-          method: 'POST',
-          body: formData 
-        }).then(function(res1) {
-          if (!res1.ok) {
-            if (error.message) {
-              self.setState({errorMessage :error.message});
-            } 
-          }
-          return res1.json();
-        }).then(function(response) {
-          self.setState({claimDetailsExpandData: response.beneficiariesManagementExpandData,claimDetailsExpandPages:response.pages,claimDetailsExpandTotalCount:response.totalCount,claimDetailsExpandFileQuery:response.fileQuery});
-          //console.log(response);
-          self.setState({ claimDetailsExpandLoading: false });
-          self.generateClaimDetailsExpandXLSX();
-      });
-        
-  }
-
-  generateClaimDetailsExpandXLSX() {
-    const formData = new FormData();
-    
-    formData.append('fileQuery', self.state.claimDetailsExpandFileQuery);
-    formData.append('showClaimId_beneficiariesManagementExpand', self.state.showClaimId_beneficiariesManagementExpand);
-    formData.append('showClaimDate_beneficiariesManagementExpand', self.state.showClaimDate_beneficiariesManagementExpand);
-    formData.append('showClaimType_beneficiariesManagementExpand', self.state.showClaimType_beneficiariesManagementExpand);
-    formData.append('showClinicName_beneficiariesManagementExpand', self.state.showClinicName_beneficiariesManagementExpand);
-    formData.append('showIcdCodes_beneficiariesManagementExpand', self.state.showIcdCodes_beneficiariesManagementExpand);
-    formData.append('showHccCodes_beneficiariesManagementExpand', self.state.showHccCodes_beneficiariesManagementExpand);
-    formData.append('showDrgCode_beneficiariesManagementExpand', self.state.showDrgCode_beneficiariesManagementExpand);
-    formData.append('showCost_beneficiariesManagementExpand', self.state.showCost_beneficiariesManagementExpand);
-    
-      var object = {};
-      formData.forEach(function(value, key){
-          object[key] = value;
-      });
-      
-      self.setState({jsonDataForBeneficiariesManagementExpand: btoa(JSON.stringify(object))});
-      
-   }
-
-
-   getClaimDetailsDataRow(rowInfo) {
-      self.state.claimDetailsSelectedMedicareId = rowInfo.row.medicareValue;
-      this.toggleClaimDetailsExpandModal();
+  getClaimDetailsDataRow(rowInfo) {
+    console.log("clicked");
+    localStorage.setItem('claimDetailsSelectedMedicareId', rowInfo.row.medicareValue);
+    localStorage.setItem('fromDate', self.state.fromDate.getFullYear());
+    window.location.href = "#/claimDetailsDrillDownReport";
    }
 
    toggleClaimDetailsExpandModal() {
@@ -437,42 +326,42 @@ class ClaimDetails extends React.Component {
       if(self.state.showProviderName) {
           document.getElementById("ddItemProviderName").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemProviderName").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemProviderName").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showMedicareId) {
           document.getElementById("ddItemMedicareId").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemMedicareId").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemMedicareId").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showPatientName) {
           document.getElementById("ddItemPatientName").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemPatientName").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemPatientName").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showICDCode) {
           document.getElementById("ddItemIcdCode").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemIcdCode").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemIcdCode").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showHCCCodes) {
           document.getElementById("ddItemHccCode").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemHccCode").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemHccCode").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showTermedMonth) {
           document.getElementById("ddItemTermedMonth").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemTermedMonth").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemTermedMonth").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showEligibleMonth) {
           document.getElementById("ddItemEligibleMonth").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemEligibleMonth").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemEligibleMonth").style.backgroundColor = "#d03b3c";
         }
         if(self.state.showCost) {
           document.getElementById("ddItemCost").style.backgroundColor = "";
         } else {
-          document.getElementById("ddItemCost").style.backgroundColor = "#20a8d8";
+          document.getElementById("ddItemCost").style.backgroundColor = "#d03b3c";
         }
 
       self.generateXLSX();
@@ -515,42 +404,42 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
               if(self.state.showClaimId_beneficiariesManagementExpand) {
                 document.getElementById("ddItemClaimId_beneficiariesManagementExpand").style.backgroundColor = "";
               } else {
-                document.getElementById("ddItemClaimId_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
+                document.getElementById("ddItemClaimId_beneficiariesManagementExpand").style.backgroundColor = "#d03b3c";
               }
               if(self.state.showClaimDate_beneficiariesManagementExpand) {
                 document.getElementById("ddItemClaimDate_beneficiariesManagementExpand").style.backgroundColor = "";
               } else {
-                document.getElementById("ddItemClaimDate_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
+                document.getElementById("ddItemClaimDate_beneficiariesManagementExpand").style.backgroundColor = "#d03b3c";
               }
               if(self.state.showClaimType_beneficiariesManagementExpand) {
                 document.getElementById("ddItemClaimType_beneficiariesManagementExpand").style.backgroundColor = "";
               } else {
-                document.getElementById("ddItemClaimType_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
+                document.getElementById("ddItemClaimType_beneficiariesManagementExpand").style.backgroundColor = "#d03b3c";
               }
               if(self.state.showClinicName_beneficiariesManagementExpand) {
                 document.getElementById("ddItemClinicName_beneficiariesManagementExpand").style.backgroundColor = "";
               } else {
-                document.getElementById("ddItemClinicName_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
+                document.getElementById("ddItemClinicName_beneficiariesManagementExpand").style.backgroundColor = "#d03b3c";
               }
               if(self.state.showIcdCodes_beneficiariesManagementExpand) {
                 document.getElementById("ddItemIcdCodes_beneficiariesManagementExpand").style.backgroundColor = "";
               } else {
-                document.getElementById("ddItemIcdCodes_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
+                document.getElementById("ddItemIcdCodes_beneficiariesManagementExpand").style.backgroundColor = "#d03b3c";
               }
               if(self.state.showHccCodes_beneficiariesManagementExpand) {
                 document.getElementById("ddItemHccCodes_beneficiariesManagementExpand").style.backgroundColor = "";
               } else {
-                document.getElementById("ddItemHccCodes_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
+                document.getElementById("ddItemHccCodes_beneficiariesManagementExpand").style.backgroundColor = "#d03b3c";
               }
               if(self.state.showDrgCode_beneficiariesManagementExpand) {
                 document.getElementById("ddItemDrgCode_beneficiariesManagementExpand").style.backgroundColor = "";
               } else {
-                document.getElementById("ddItemDrgCode_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
+                document.getElementById("ddItemDrgCode_beneficiariesManagementExpand").style.backgroundColor = "#d03b3c";
               }
               if(self.state.showCost_beneficiariesManagementExpand) {
                 document.getElementById("ddItemCost_beneficiariesManagementExpand").style.backgroundColor = "";
               } else {
-                document.getElementById("ddItemCost_beneficiariesManagementExpand").style.backgroundColor = "#20a8d8";
+                document.getElementById("ddItemCost_beneficiariesManagementExpand").style.backgroundColor = "#d03b3c";
               }
               
               self.generateClaimDetailsExpandXLSX();
@@ -601,7 +490,6 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
           return res1.json();
         }).then(function(response)   {
 
-        //console.log(response);
         printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-Claims Search", documentTitle:"Print-Claims Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
       
       }).catch((error) => {
@@ -609,51 +497,7 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
       });
    }
 
-   printTableData_beneficiariesManagementExpand() {
 
-      var propertiesArr = [];
-
-      if(self.state.showClaimId_beneficiariesManagementExpand)
-        propertiesArr.push("Claim Id");
-      if(self.state.showClaimDate_beneficiariesManagementExpand)
-        propertiesArr.push("Claim Date");
-      if(self.state.showClaimType_beneficiariesManagementExpand)
-        propertiesArr.push("Claim Type");
-      if(self.state.showClinicName_beneficiariesManagementExpand)
-        propertiesArr.push("Clinic Name");
-      
-      if(self.state.showIcdCodes_beneficiariesManagementExpand)
-        propertiesArr.push("ICD Codes");
-      if(self.state.showHccCodes_beneficiariesManagementExpand)
-        propertiesArr.push("HCC Codes");
-      if(self.state.showDrgCode_beneficiariesManagementExpand)
-        propertiesArr.push("DRG Code");
-      
-      if(self.state.showCost_beneficiariesManagementExpand)
-        propertiesArr.push("Cost");
-      
-      const formData = new FormData();
-      formData.append('fileQuery', self.state.claimDetailsExpandFileQuery);
-
-      fetch(config.serverUrl+'/getBeneficiariesManagementExpandDataForPrint', {
-          method: 'POST',
-          body: formData
-      }).then(function(res1) {
-          if (!res1.ok) {
-            if (error.message) {
-              self.setState({errorMessage :error.message});
-            } 
-          }
-          return res1.json();
-        }).then(function(response)   {
-
-        //console.log(response);
-        printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print- Beneficiaries Management Details", documentTitle:"Print- Beneficiaries Management Details", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
-      
-      }).catch((error) => {
-        console.log(error);
-      });
-   }
 
   generateXLSX() {
     const formData = new FormData();
@@ -720,13 +564,7 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
       }
       formData.append('claimType', self.state.claimTypeArr);
       formData.append('zipCode', document.getElementById("zipCode").value);
-      /*formData.append('hcpcsCode', document.getElementById("hcpcsCode").value);*/
 
-      /*if(self.state.conditionSelectValue != undefined) {
-        formData.append('condition', self.state.conditionSelectValue);
-      } else {
-        formData.append('condition', "");
-      }*/
 
       if(self.state.specialitySelectValue != undefined) {
         formData.append('speciality', self.state.specialitySelectValue);
@@ -734,12 +572,7 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
         formData.append('speciality', "");
       }
 
-      /*if(document.getElementById("icd9Code").checked) {
-        formData.append('diagnosisCodeType', document.getElementById("icd9Code").value);
-      }
-      if(document.getElementById("icd10Code").checked) {
-        formData.append('diagnosisCodeType', document.getElementById("icd10Code").value);
-      }*/
+
 
       if(self.state.costRangeSelectValue != undefined) {
         formData.append('costRange', self.state.costRangeSelectValue);
@@ -748,7 +581,7 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
       }
       formData.append('hccCode', document.getElementById("hccCode").value);
       formData.append('hicn', document.getElementById("hicn").value);
-      //formData.append('statusCodeType', self.state.statusCodeTypeArr);
+
       formData.append('pageSize', pageSize);
       formData.append('page', page);
       formData.append('sortedColumns', sortedArr);
@@ -774,7 +607,8 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
   }
 
     handlePlanSelect(e) {
-      this.setState({planSelectValue: e.value});
+      this.setState({ planSelectValue: e.value });
+      localStorage.setItem('planSelectValue',e.value);
     }
     handleLocationSelect(e) {
       this.setState({locationSelectValue: e.value});
@@ -815,7 +649,7 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
                     ];
                                     
     return (
-      <div className="animated fadeIn">
+      <React.Fragment className="animated fadeIn">
       <h2 className="commonFontStyle">Claim Details</h2>
         <FormGroup row style={{marginBottom:"0.1rem"}}>
           <Col md="5">
@@ -823,29 +657,8 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
           <Col xs="12" md="3" >
             <FormGroup>
               <Col md="12">
-                {/*<Input type="select" style={{cursor:"pointer",backgroundColor:"#f4f4f4"}} className="commonFontFamily" name="plans" id="planSelect" onChange={this.handlePlanSelect}>
-                  <option>Select Plans</option>
-                  {
-                    this.state.planList.map(function(plan, i) {
-                    return <option key={i} className="selectItemCustom">{plan}</option>
-                    })
-                  }
-                </Input>*/}
 
-              {/* <Dropdown isOpen={this.state.dropdownOpen[1]} toggle={() => {
-                  this.toggle(1);
-                }}>
-                  <DropdownToggle caret style={{backgroundColor:"#f4f4f4"}}>
-                    Select Plans
-                  </DropdownToggle>
-                  <DropdownMenu>
-                  {
-                    this.state.planList.map(function(plan, i) {
-                    return <DropdownItem>{plan}</DropdownItem>
-                   })
-                  } 
-                  </DropdownMenu>
-                </Dropdown>*/}
+
 
                 <Select
                   id="planSelect"
@@ -861,14 +674,7 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
           <Col xs="12" md="4">
             <FormGroup >
               <Col md="12">
-                {/*<Input type="select" style={{cursor:"pointer",backgroundColor:"#f4f4f4"}} className="commonFontFamily" name="location" id="locationSelect" onChange={this.handleLocationSelect}>
-                  <option>Select Location</option>
-                  {
-                    this.state.locationList.map(function(file, i) {
-                      return <option key={i}>{file}</option>
-                    })
-                  }
-                </Input>*/}
+
                  <Select
                   id="locationSelect"
                   placeholder="Select Location"
@@ -892,18 +698,7 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
                   
                   <Col xs="6">
                     <FormGroup >
-                      {/*<InputGroup>
-                                <DatePicker placeholderText="From Date" 
-                                  className="commonFontFamily textBoxBgColor"
-                                  selected={this.state.fromDate} 
-                                  onChange={this.handleFromDate} 
-                                />
-                                <InputGroupAddon addonType="append">
-                                  <InputGroupText>
-                                    <img src="/img/calendar.png" style={{height:19,width:19}}/>
-                                  </InputGroupText>
-                                </InputGroupAddon>                              
-                      </InputGroup>*/}
+  
                       <b><Label className="commonFontStyle">From Date &nbsp;</Label></b>
                       <DatePicker
                           className="datePickerCss"
@@ -915,18 +710,7 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
                     </Col>
                     <Col xs="6">
                     <FormGroup>
-                    {/*<InputGroup>
-                        <DatePicker placeholderText="To Date" 
-                                className="commonFontFamily textBoxBgColor" 
-                                selected={this.state.toDate} 
-                                onChange={this.handleToDate} 
-                                />
-                                <InputGroupAddon addonType="append">
-                                  <InputGroupText>
-                                    <img src="/img/calendar.png" style={{height:19,width:19}}/>
-                                  </InputGroupText>
-                                </InputGroupAddon>
-                      </InputGroup>*/}
+
                         <b><Label className="commonFontStyle">To Date &nbsp;</Label></b>
                         <DatePicker
                           className="datePickerCss"
@@ -959,14 +743,7 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
                 <Col xs="12" md="6" >
                   <FormGroup >
                     <Col md="12">
-                      {/*<Input type="select" style={{backgroundColor:"#f4f4f4"}} className="commonFontFamily" name="provider" id="providerSelect" onChange={this.handleProviderSelect}>
-                        <option>Select Provider</option>
-                        {
-                          this.state.providerList.map(function(provider, i) {
-                          return <option key={i}>{provider}</option>
-                          })
-                        }
-                      </Input>*/}
+
                       <Select
                         id="providerSelect"
                         placeholder="Select Provider"
@@ -980,13 +757,7 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
                 <Col xs="12" md="6">
                   <FormGroup >
                     <Col md="12">
-                      {/*<Input type="select" style={{backgroundColor:"#f4f4f4"}} className="commonFontFamily" name="ageRange" id="ageRangeSelect" onChange={this.handleAgeRangeSelect}>
-                        <option>Select Age Range</option>
-                        <option>0-64</option>
-                        <option>65-74</option>
-                        <option>75-84</option>
-                        <option>>85</option>
-                      </Input>*/}
+
                       <Select
                         id="ageRangeSelect"
                         placeholder="Select Age Range"
@@ -1022,22 +793,7 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
                     <FormGroup >
                       <Col md="12">
                         <Input type="text" style={{backgroundColor:"#FAFAFA",borderColor:"#CCCCCC"}} className="commonFontFamily commonBgColor" placeholder="ZipCode" name="zipCode" id="zipCode"/> <br/>
-                        {/*<Input type="text" style={{backgroundColor:"#FAFAFA",borderColor:"#CCCCCC"}} className="commonFontFamily" placeholder="HCPCS Code" name="hcpcsCode" id="hcpcsCode"/> <br/>*/}
-                        {/*<Input type="select" style={{backgroundColor:"#f4f4f4"}} className="commonFontFamily" name="conditionSelect" id="conditionSelect" onChange={this.handleConditionSelect}>
-                        <option>Select Condition</option>
-                        {
-                          this.state.conditionList.map(function(age, i) {
-                            return <option key={i}>{age}</option>
-                          })
-                        }
-                      </Input>*/}
-                      {/*<Select
-                        id="conditionSelect"
-                        placeholder="Select Condition"
-                        className="commonFontFamily"
-                        options={this.state.conditionList}
-                        onChange={this.handleConditionSelect}
-                      />*/}
+
                       </Col>
                     </FormGroup>
                   </Col>
@@ -1046,14 +802,7 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
                 <Col xs="12" md="6">
                     <FormGroup >
                       <Col md="12">
-                        {/*<Input type="select" style={{backgroundColor:"#f4f4f4"}} className="commonFontFamily" name="specialitySelect" id="specialitySelect" onChange={this.handleSpecialitySelect}>
-                        <option>Select Speciality</option>
-                        {
-                          this.state.specialityList.map(function(spec, i) {
-                            return <option key={i}>{spec}</option>
-                          })
-                        }
-                      </Input>*/}
+
                       <Select
                         id="specialitySelect"
                         placeholder="Select Speciality"
@@ -1064,34 +813,11 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
                       </Col>
                     </FormGroup>
                   </Col>
-                   {/* <Col xs="12" md="2" style={{marginLeft:17}}>
-                    <b><Label className="commonFontStyle">Diagnosis Code Type</Label></b>
-                  </Col>
-                  <Col xs="12" md="3" >
-                    <Col md="12">
-                          <FormGroup check inline>
-                            <Input className="form-check-input" type="radio" id="icd9Code" name="icdCode" value="icd9"/>
-                            <b><Label className="form-check-label commonFontStyle" check htmlFor="inline-radio1">ICD9 Code</Label></b>
-                          </FormGroup>
-                          <FormGroup check inline>
-                            <Input className="form-check-input" type="radio" id="icd10Code" name="icdCode" value="icd10"/>
-                            <b><Label className="form-check-label commonFontStyle" check htmlFor="inline-radio2">ICD10 Code</Label></b>
-                          </FormGroup>
-                        </Col>
-                    </Col>*/}
               </FormGroup>
               <FormGroup row style={{marginBottom:"0.1rem"}}>
                 <Col xs="12" md="6">
                     <FormGroup style={{marginBottom:"0.1rem"}}>
                       <Col md="12">
-                        {/*<Input type="select" style={{backgroundColor:"#f4f4f4"}} className="commonFontFamily" name="costRangeSelect" id="costRangeSelect" onChange={this.handleCostRangeSelect}>
-                        <option>Select Cost Range</option>
-                        <option value="0-99">$0-$99</option>
-                        <option value="100-999">$100-$999</option>
-                        <option value="1000-4999">$1,000-$4,999</option>
-                        <option value="5000-9999">$5,000-$9,999</option>
-                        <option value=">10000">>$10,000</option>
-                      </Input>*/}
                         <Select
                           id="costRangeSelect"
                           placeholder="Select Cost Range"
@@ -1118,15 +844,6 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
                       </Col>
                     </FormGroup>
                   </Col>
-                  {/*<Col xs="12" md="2" style={{marginLeft:17}}>
-                    <b><Label className="commonFontStyle">Status Code Type</Label></b>
-                </Col>
-                <Col xs="12" md="3" >
-                  <FormGroup check className="checkbox">
-                      <Input className="form-check-input" type="checkbox" id="instClaims" name="instClaims" value="option1" onChange={(e) => self.handleChange(e)}/>
-                      <Label check className="form-check-label commonFontStyle" htmlFor="checkbox1">INST CLAIMS</Label><br/>
-                  </FormGroup>
-                </Col>*/}
               </FormGroup>
               <FormGroup row style={{marginBottom:"0.1rem"}}>
               <Col xs="12" md="4">
@@ -1135,43 +852,30 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
                 <Button color="primary" className="commonFontFamily btnFontSize" style={{fontSize:16}} onClick={e => self.generateReport(10,1,"[]","[]")} block>Generate Reports</Button>
               </Col>  
               </FormGroup>
-            </CardBody>
-          
+            </CardBody>  
         </Card>
 
-        <Card>
-          <CardHeader style={{backgroundColor:"white",padding:"0.40rem 1.25rem"}}>
-          
-            <strong className="cardHeaderTextStyles">Data Grid</strong>
-            <div style={{float:"right"}}>
-                        <FormGroup check inline>
-                            <i class="icon-printer icons font-2xl d-block" title="Print" onClick={e => self.printTableData()} style={{cursor:"pointer",color:"#20a8d8"}}></i>
-                            {/*<a>
-                            <img src="/img/printer.png" title="Print" onClick={e => self.printTableData()} style={{cursor:"pointer"}} />
-                            &nbsp;
-                            </a>*/}
-                          </FormGroup>
-                          <FormGroup check inline>
-                            <a href={config.serverUrl+'/renderXLSX/'+self.state.jsonData} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="icon-doc icons font-2xl d-block" title="Export" style={{color:"#20a8d8"}}></i>
-                                {/*<img src="/img/excel.png" title="Export"/>*/}
-                            </a>
-                            &nbsp;
-                          </FormGroup>
-                          <FormGroup check inline>
-                            <a href={config.serverUrl+'/renderPDF/'+self.state.jsonData} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="fa fa-file-pdf-o font-2xl" title="PDF" style={{color:"#20a8d8"}}></i>
-                              {/*<img src="/img/pdf.png" title="PDF"/>*/}
-                            </a>
-                          </FormGroup>
-                          <FormGroup check inline>
-                            <Dropdown isOpen={this.state.dropdownOpen[0]} toggle={() => {
+    
+        <Row className="header">
+        <Col md="10">
+          <FormGroup check inline>
+            
+            <h3>Data Grid</h3>
+          </FormGroup>
+          <FormGroup check inline>
+            <img id="uploadButton" onClick={this.exportModelToggleClaimDetails} src="/img/upload-header-button.png" />
+          </FormGroup>
+          </Col>
+            <Col md="2">
+            <FormGroup check inline style={{ float: "right" }}>
+            <Dropdown isOpen={this.state.dropdownOpen[0]} toggle={() => {
                                 this.toggle(0);
                               }}>
-                                <DropdownToggle style={{backgroundColor:"white",borderColor:"white",padding:"0rem 0rem"}}>
-                                  <i class="icon-grid icons font-2xl d-block" title="More" style={{cursor:"pointer",color:"#20a8d8"}}></i>
-                                  {/*<img src="/img/grid.png" title="More" style={{cursor:"pointer"}}/>*/}
+                              <DropdownToggle style={{backgroundColor:"#f7f3f0",borderColor:"#f7f3f0",padding:"0rem 0rem"}}>
+                                  <i class="icon-grid icons font-2xl d-block" title="More" style={{cursor:"pointer",color:"rgba(208, 82, 89, 0.95)",marginTop:"11px" }}></i>
+                                  
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                  {/*<DropdownItem onClick={e => self.showHideColumn("planName")}>Plan Name</DropdownItem>*/}
                                   <DropdownItem toggle={false} id="ddItemProviderName" className="commonFontFamily" onClick={e => self.showHideColumn("providerName")}>Provider Name</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemMedicareId" className="commonFontFamily" onClick={e => self.showHideColumn("medicareId")}>Medicare ID</DropdownItem>
                                   <DropdownItem toggle={false} id="ddItemPatientName" className="commonFontFamily" onClick={e => self.showHideColumn("patientName")}>Patient Name</DropdownItem>
@@ -1183,122 +887,126 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
                                 </DropdownMenu>
                               </Dropdown>
                           </FormGroup>
-                    </div>
-          </CardHeader>
-          
-            <CardBody>
-            <Row>
-            
-            
-                          
-                    </Row>            
-        <ReactTable
-          manual
-          data={this.state.reportData}
-          loading={this.state.loading}
-          pages={this.state.pages} // Display the total number of pages
-          filterable
-          defaultFilterMethod={(filter, row) =>
-            String(row[filter.id]) === filter.value}
-          columns={[
-            {
-              Header: "",
-              columns: [
-                {
-                  Header: "Plan Name",
-                  accessor: "planName",
-                  show:this.state.showPlanName,
-                  headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                  filterMethod: (filter, row) =>
-                    row[filter.id].startsWith(filter.value)
-                },
-                {
-                  Header: "Provider Name",
-                  accessor: "providerName",
-                  show:this.state.showProviderName,
-                  headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                  filterMethod: (filter, row) =>
-                    row[filter.id].startsWith(filter.value)
-                },
-                {
-                  Header: "Medicare ID",
-                  accessor: "medicareId",
-                  show:this.state.showMedicareId,
-                  headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                  filterMethod: (filter, row) =>
-                    row[filter.id].startsWith(filter.value)
-                },
-                {
-                  Header: "Medicare Value",
-                  accessor: "medicareValue",
-                  show:false,
-                  headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                  filterMethod: (filter, row) =>
-                    row[filter.id].startsWith(filter.value)
-                },
-                {
-                  Header: "Patient Name",
-                  accessor: "patientName",
-                  show:this.state.showPatientName,
-                  headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                  filterMethod: (filter, row) =>
-                    row[filter.id].startsWith(filter.value)
-                },
-                {
-                  Header: "ICD9/10 Code",
-                  accessor: "icdCode",
-                  show:this.state.showICDCode,
-                  headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                  filterMethod: (filter, row) =>
-                    row[filter.id].startsWith(filter.value)
-                },
-                {
-                  Header: "HCC Codes",
-                  accessor: "hccCode",
-                  show:this.state.showHCCCodes,
-                  headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                  filterMethod: (filter, row) =>
-                    row[filter.id].startsWith(filter.value)
-                },
-                {
-                  Header: "Termed Month",
-                  accessor: "termedMonth",
-                  show:this.state.showTermedMonth,
-                  headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                  filterMethod: (filter, row) =>
-                    row[filter.id].startsWith(filter.value)
-                },
-                {
-                  Header: "Eligible Month",
-                  accessor: "eligibleMonth",
-                  show:this.state.showEligibleMonth,
-                  headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                  filterMethod: (filter, row) =>
-                    row[filter.id].startsWith(filter.value)
-                },
-                {
-                  Header: "Cost",
-                  accessor: "cost",
-                  show:this.state.showCost,
-                  headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                  filterMethod: (filter, row) =>
-                    row[filter.id].startsWith(filter.value)
-                },
-              ]
-            }
-          ]}
-          defaultPageSize={10}
-          onFetchData={this.fetchData}
-          className="-striped -highlight"
-          style={{fontFamily: "serif"}}
-          pageText={'Total Entries '+this.state.totalCount+', Page'}
-          getTrProps={(state, rowInfo, column) => {
-                                  return {
-                                    style: {
-                                      textAlign:"center"
-                                    }
+           </Col>
+        </Row> 
+        <Col xs="12" md="12" > 
+                            <ReactTable
+                              manual
+                              data={this.state.reportData}
+                              loading={this.state.loading}
+                              pages={this.state.pages} 
+                              filterable
+                              defaultFilterMethod={(filter, row) =>
+                                String(row[filter.id]) === filter.value}
+                              columns={[
+                                {
+                                  Header: "",
+                                  columns: [
+                                    {
+                                      Header: "Plan Name",
+                                      accessor: "planName",
+                                      show:this.state.showPlanName,
+                                      headerStyle: {fontWeight: "bold",color: "#ffffff", marginTop: "5px"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Provider Name",
+                                      accessor: "providerName",
+                                      show:this.state.showProviderName,
+                                      headerStyle: {fontWeight: "bold",color: "#ffffff", marginTop: "5px"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Medicare ID",
+                                      accessor: "medicareId",
+                                      show:this.state.showMedicareId,
+                                      headerStyle: {fontWeight: "bold",color: "#ffffff", marginTop: "5px"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Medicare Value",
+                                      accessor: "medicareValue",
+                                      show:false,
+                                      headerStyle: {fontWeight: "bold",color: "#ffffff", marginTop: "5px"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Patient Name",
+                                      accessor: "patientName",
+                                      show:this.state.showPatientName,
+                                      headerStyle: {fontWeight: "bold",color: "#ffffff", marginTop: "5px"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "ICD9/10 Code",
+                                      accessor: "icdCode",
+                                      show:this.state.showICDCode,
+                                      headerStyle: {fontWeight: "bold",color: "#ffffff", marginTop: "5px"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "HCC Codes",
+                                      accessor: "hccCode",
+                                      show:this.state.showHCCCodes,
+                                      headerStyle: {fontWeight: "bold",color: "#ffffff", marginTop: "5px"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Termed Month",
+                                      accessor: "termedMonth",
+                                      show:this.state.showTermedMonth,
+                                      headerStyle: {fontWeight: "bold",color: "#ffffff", marginTop: "5px"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Eligible Month",
+                                      accessor: "eligibleMonth",
+                                      show:this.state.showEligibleMonth,
+                                      headerStyle: {fontWeight: "bold",color: "#ffffff", marginTop: "5px"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                    {
+                                      Header: "Cost",
+                                      accessor: "cost",
+                                      show:this.state.showCost,
+                                      headerStyle: {fontWeight: "bold",color: "#ffffff", marginTop: "5px"},
+                                      filterMethod: (filter, row) =>
+                                        row[filter.id].startsWith(filter.value)
+                                    },
+                                  ]
+                                }
+                              ]}
+                              defaultPageSize={10}
+                              onFetchData={this.fetchData}
+                              className="-striped -highlight"
+                              style={{fontFamily: "serif"}}
+                              pageText={'Total Entries '+this.state.totalCount+', Page'}
+                              getTrProps={(state, rowInfo, column) => {
+                                return {
+                                  style: {
+                                    textAlign: "center",
+                                    backgroundColor: "white"
                                   }
-                                }}
+                                };
+                              }}
+                      
+                                  getTheadProps={(state, rowInfo, column) => {
+                                return {
+                                  style: {
+                                    backgroundColor: "#333333",
+                                    height: "40px"
+                                  }
+                                };
+                              }}
                                 getTdProps={(state, rowInfo, column) => {
                                   return {
                                     onClick: (e) => {
@@ -1314,162 +1022,42 @@ showHideColumn_beneficiariesManagementExpand(columnName) {
                                   }
                                 }}
         />
+        </Col>
 
-        {/**************Beneficiaries Management Report Expand Modal*****************/}
-                <Modal isOpen={this.state.claimDetailsExpandModal} toggle={this.toggleClaimDetailsExpandModal}
-                       className={'modal-lg ' + this.props.className} style={{maxWidth:1200}}>
-                  <ModalHeader toggle={this.toggleClaimDetailsExpandModal}>
-                  <Row>  
-                      <Col className="duplicateClaimsHeader">
-                        <b>Claim Details</b>
-                      </Col>
-                  </Row>
-                  </ModalHeader>
-                  <ModalBody>
-                  <Row>
-                  <Col md="10">
-                  </Col>
-                  <Col md="2">
-                  
-                        <FormGroup check inline>
-                            <i class="icon-printer icons font-2xl d-block" title="Print" onClick={e => self.printTableData_beneficiariesManagementExpand()} style={{cursor:"pointer",color:"#20a8d8"}}></i>
-                            
-                          </FormGroup>
-                          <FormGroup check inline>
-                            <a href={config.serverUrl+'/renderBeneficiariesManagementExpandXLSX/'+self.state.jsonDataForBeneficiariesManagementExpand} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="icon-doc icons font-2xl d-block" title="Export" style={{color:"#20a8d8"}}></i>
-                                
-                            </a>
-                            &nbsp;
-                          </FormGroup>
-                          <FormGroup check inline>
-                            <a href={config.serverUrl+'/renderBeneficiariesManagementExpandPDF/'+self.state.jsonDataForBeneficiariesManagementExpand} target="_blank" style={{color:"inherit",textDecoration:"none"}}><i class="fa fa-file-pdf-o font-2xl" title="PDF" style={{color:"#20a8d8"}}></i>
-                              
-                            </a>
-                          </FormGroup>
-                          <FormGroup check inline>
-                            <Dropdown isOpen={this.state.dropdownOpen[2]} toggle={() => {
-                                this.toggle(2);
-                              }}>
-                                <DropdownToggle style={{backgroundColor:"white",borderColor:"white",padding:"0rem 0rem",marginTop:-9}}>
-                                  <i class="icon-grid icons font-2xl d-block" title="More" style={{cursor:"pointer",color:"#20a8d8"}}></i>
-                                  
-                                </DropdownToggle>
-                                <DropdownMenu style={{maxHeight:300,overflowY:"auto"}}>
-                                  <DropdownItem toggle={false} id="ddItemClaimId_beneficiariesManagementExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementExpand("claimId")}>Claim Id</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemClaimDate_beneficiariesManagementExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementExpand("claimDate")}>Claim Date</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemClaimType_beneficiariesManagementExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementExpand("claimType")}>Claim Type</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemClinicName_beneficiariesManagementExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementExpand("clinicName")}>Clinic Name</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemIcdCodes_beneficiariesManagementExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementExpand("icdCodes")}>ICD 9/10 Code(s)</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemHccCodes_beneficiariesManagementExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementExpand("hccCodes")}>HCC Code(s)</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemDrgCode_beneficiariesManagementExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementExpand("drgCode")}>DRUG Code</DropdownItem>
-                                  <DropdownItem toggle={false} id="ddItemCost_beneficiariesManagementExpand" className="commonFontFamily" onClick={e => self.showHideColumn_beneficiariesManagementExpand("cost")}>Cost</DropdownItem>
-                                  
-                                </DropdownMenu>
-                              </Dropdown>
-                          </FormGroup>
-                    
-                    </Col>
-                    </Row>
-                    <ReactTable
-                              manual
-                              data={this.state.claimDetailsExpandData}
-                              loading={this.state.claimDetailsExpandLoading}
-                              pages={this.state.claimDetailsExpandPages} // Display the total number of pages
-                              filterable
-                              defaultFilterMethod={(filter, row) =>
-                                String(row[filter.id]) === filter.value}
-                              columns={[
-                                {
-                                  Header: "",
-                                  columns: [
-                                    {
-                                      Header: "Claim Id",
-                                      accessor: "claimId",
-                                      show: this.state.showClaimId_beneficiariesManagementExpand,
-                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                                      filterMethod: (filter, row) =>
-                                        row[filter.id].startsWith(filter.value)
-                                    },
-                                    {
-                                      Header: "Claim Date",
-                                      accessor: "claimDate",
-                                      show: this.state.showClaimDate_beneficiariesManagementExpand,
-                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                                      filterMethod: (filter, row) =>
-                                        row[filter.id].startsWith(filter.value)
-                                    },
-                                    {
-                                      Header: "Claim Type",
-                                      accessor: "claimType",
-                                      show: this.state.showClaimType_beneficiariesManagementExpand,
-                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                                      filterMethod: (filter, row) =>
-                                        row[filter.id].startsWith(filter.value)
-                                    },
-                                    {
-                                      Header: "Clinic Name",
-                                      accessor: "clinicName",
-                                      show: this.state.showClinicName_beneficiariesManagementExpand,
-                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                                      filterMethod: (filter, row) =>
-                                        row[filter.id].startsWith(filter.value)
-                                    },
-                                    {
-                                      Header: "ICD Codes",
-                                      accessor: "icdCodes",
-                                      show: this.state.showIcdCodes_beneficiariesManagementExpand,
-                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                                      filterMethod: (filter, row) =>
-                                        row[filter.id].startsWith(filter.value)
-                                    },
-                                    {
-                                      Header: "HCC Codes",
-                                      accessor: "hccCodes",
-                                      show: this.state.showHccCodes_beneficiariesManagementExpand,
-                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                                      filterMethod: (filter, row) =>
-                                        row[filter.id].startsWith(filter.value)
-                                    },
-                                    {
-                                      Header: "DRUG Code",
-                                      accessor: "drgCode",
-                                      show: this.state.showDrgCode_beneficiariesManagementExpand,
-                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                                      filterMethod: (filter, row) =>
-                                        row[filter.id].startsWith(filter.value)
-                                    },
-                                    {
-                                      Header: "Cost",
-                                      accessor: "cost",
-                                      show: this.state.showCost_beneficiariesManagementExpand,
-                                      headerStyle: {"fontWeight":"bold",color:"#62879A"},
-                                      filterMethod: (filter, row) =>
-                                        row[filter.id].startsWith(filter.value)
-                                    },
-                                  ]
-                                }
-                              ]}
-                              defaultPageSize={10}
-                              onFetchData={this.fetchClaimDetailsExpandData}
-                              className="-striped -highlight commonFontFamily"
-                              pageText={'Total Entries '+this.state.claimDetailsExpandTotalCount+', Page'}
-                              getTrProps={(state, rowInfo, column) => {
-                                  return {
-                                    style: {
-                                      textAlign:"center"
-                                    }
-                                  }
-                                }}
-                                
-                            />
-                  </ModalBody>
-                  
-                </Modal>
+                           {/* ======================Expand Modal=============== */}
 
-            </CardBody>
-          
-        </Card>
-      </div>
+        <Modal isOpen={this.state.exportModeltoggleViewClaimDetails} toggle={this.exportModelToggleClaimDetails}
+        className={'modal-lg ' + this.props.className + ' exportModalWidth'}>
+      <ModalBody>
+          <Row>
+                <FormGroup>
+                   <p id="exportText">Export To:</p>
+               </FormGroup>
+          </Row>
+          <Row>
+                <FormGroup check inline>
+                    <img id="printButton" src="/img/print-button.png" onClick={e => self.printTableData()} />
+                    <p id="text-align-print">Print</p> 
+                </FormGroup>
+                <FormGroup check inline>
+                    <a href={config.serverUrl+'/renderXLSX/'+self.state.jsonData} target="_blank" >
+                    <img id="xlsButton" src="/img/export-doc.png" />
+                    </a>
+                    <p id="text-align-doc">Doc</p>
+                </FormGroup>
+                <FormGroup check inline>
+                    <a href={config.serverUrl+'/renderPDF/'+self.state.jsonData} target="_blank" >
+                    <img id="pdfButton" src="/img/pdfButton.png" />
+                    </a>
+                    <p id="text-align-pdf">Pdf</p>
+              </FormGroup>
+            </Row>
+          <Row>
+        </Row>
+      </ModalBody>
+    </Modal>
+
+    </React.Fragment>
     );
   }
 }

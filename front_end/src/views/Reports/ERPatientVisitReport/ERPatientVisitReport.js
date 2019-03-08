@@ -62,7 +62,6 @@ class ERPatientVisitReport extends Component {
       
     this.exportModelToggle = this.exportModelToggle.bind(this);
     this.fetchPatientVisitReportData = this.fetchPatientVisitReportData.bind(this);
-    this.getValueFromLocalStorage = this.getValueFromLocalStorage.bind(this);
     this.backToReports = this.backToReports.bind(this);
 
     this.fetchPatientVisitReportData = debounce(this.fetchPatientVisitReportData,500);
@@ -90,14 +89,10 @@ class ERPatientVisitReport extends Component {
         yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
       });
     });
-    self.getValueFromLocalStorage();
- 
-  }
-
-  getValueFromLocalStorage() {
 
     if (localStorage.getItem('providerForReports') != null) {
       self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
+      self.getPCPForProviders(self.state.providerSelectValue.value);
     }
     if (localStorage.getItem('pcpNameForReports') != null) {
       self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));

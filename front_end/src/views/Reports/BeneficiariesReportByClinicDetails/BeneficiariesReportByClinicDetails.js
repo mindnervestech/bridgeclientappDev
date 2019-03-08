@@ -71,27 +71,6 @@ class BeneficiariesReportByClinicDetails extends Component {
 
     componentDidMount() {
 
-      
-        fetch(config.serverUrl + '/getAllPlanAndPCP', {
-            method: 'GET'
-        }).then(function (res1) {
-            return res1.json();
-        }).then(function (response) {
-            self.setState({ providerList: response.planList, pcpList: response.pcpList, yearsList: response.yearsList });
-     
-            for (var i = 0; i < self.state.yearsList.length; i++) {
-                if (self.state.yearsList[i].value >= self.state.currentYear) {
-                    self.state.currentYear = self.state.yearsList[i].value;
-                }
-                if (localStorage.getItem('year') == null)
-                    self.state.yearSelectValue = { value: self.state.currentYear, label: self.state.currentYear };
-            }
-            self.setState({
-                providerList: self.state.providerList.concat({ value: 'all', label: 'All' }),
-                pcpList: self.state.pcpList.concat({ value: 'all', label: 'All' }),
-                yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
-            });
-        }); 
     self.state.beneficiariesManagementSelectedClinicName = localStorage.getItem('beneficiariesManagementSelectedClinicName');
 
     if (localStorage.getItem('provider') != null)

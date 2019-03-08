@@ -73,28 +73,6 @@ class BeneficiariesReportByDoctorDetails extends Component {
     }
 
     componentDidMount() {
-
-      
-        fetch(config.serverUrl + '/getAllPlanAndPCP', {
-            method: 'GET'
-        }).then(function (res1) {
-            return res1.json();
-        }).then(function (response) {
-            self.setState({ providerList: response.planList, pcpList: response.pcpList, yearsList: response.yearsList });
-     
-            for (var i = 0; i < self.state.yearsList.length; i++) {
-                if (self.state.yearsList[i].value >= self.state.currentYear) {
-                    self.state.currentYear = self.state.yearsList[i].value;
-                }
-                if (localStorage.getItem('year') == null)
-                    self.state.yearSelectValue = { value: self.state.currentYear, label: self.state.currentYear };
-            }
-            self.setState({
-                providerList: self.state.providerList.concat({ value: 'all', label: 'All' }),
-                pcpList: self.state.pcpList.concat({ value: 'all', label: 'All' }),
-                yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
-            });
-        });
       
       if (localStorage.getItem('provider') != null)
         self.state.providerSelectValue = JSON.parse(localStorage.getItem('provider'));
@@ -106,9 +84,6 @@ class BeneficiariesReportByDoctorDetails extends Component {
         self.state.beneficiariesManagementSelectedPcpId = localStorage.getItem('beneficiariesManagementSelectedPcpId');
  
     }
-
-
- 
 
   getValueFromLocalStorage() {
     if (localStorage.getItem('provider') != null) {

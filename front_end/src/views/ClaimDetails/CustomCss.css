@@ -59,3 +59,97 @@
     border: 1px solid #c2cfd6;
     background-color: #fafafa;
 }
+
+#uploadButton{
+	margin-top: 5px;
+	cursor: pointer;
+  }
+  .exportModalWidth{
+	margin-top: 250px !important;
+	max-width: 400px !important;
+  }
+  #printButton{
+	width: 60px;
+	margin-left: 45px;
+	margin-bottom: 60px;
+	cursor: pointer;
+  
+  }
+  #xlsButton{
+	width: 50px;
+	margin-bottom: 60px;
+	margin-left: 40px;
+	cursor: pointer;
+  }
+  #pdfButton{
+	width: 50px;
+	margin-bottom: 60px;
+	margin-left: 40px;
+	cursor: pointer;
+  }
+  #exportText{
+	margin-left: 40px;
+	font-size: 20px;
+	font-family: sans-serif;  
+	color: #555555;
+	cursor: pointer;
+  }
+  
+  #text-align-print{
+	position: absolute;
+	margin-top: 10px;
+	margin-left: 60px;
+	cursor: pointer;
+  }
+  #text-align-pdf{
+	position: absolute;
+	margin-left: 60px;
+	margin-top: 10px;
+	cursor: pointer;
+  }
+  #text-align-doc{
+	position: absolute;
+	margin-left: 50px;
+	margin-top: 10px;
+	cursor: pointer;
+  }
+  .reports-page-body{
+	background-color: white;
+  }
+  
+  #selectCardStyle{
+	width: 300px;
+	margin-top: 10px;
+  }
+  
+  .commonFontFamilyColor {
+	color:unset;
+  }
+  
+  .filterCardHeaderStyle2 {
+	  background-color: white !important;
+	  padding: 0.40rem 1.25rem !important;
+	  color:#4c4c4c;
+	  font-size: 15px;
+  }
+  .dropdown-item:hover
+  {
+	background-color: #d03b3cfa !important;
+  }
+  button:focus{
+	outline: 5px auto;
+	outline-color: #f93435 !important;
+  
+  }
+  .dropdown-item:active {
+	color: black !important;
+  }
+  .ReactTable{
+	width: -webkit-fill-available !important;
+  }
+  .tab-content.tabpenal{
+	padding: 0rem !important;
+  }
+  .ReactTable .-loading{
+	background: #0808081f !important;
+ 

@@ -95,6 +95,7 @@ class ReinsuranceCostReport extends Component {
 
     if (localStorage.getItem('providerForReports') != null) {
       self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
+      self.getPCPForProviders(self.state.providerSelectValue.value);
     }
     if (localStorage.getItem('pcpNameForReports') != null) {
       self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));

@@ -45,7 +45,7 @@ import BeneficiariesReportByLocationDetails from '../../views/Reports/Beneficiar
 import BeneficiariesReportByPatientDetails from '../../views/Reports/BeneficiariesReportByPatientDetails/BeneficiariesReportByPatientDetails';
 import BeneficiariesReportByClinicDetails from '../../views/Reports/BeneficiariesReportByClinicDetails/';
 import SpecialistComparisionPatientDetails from '../../views/Reports/SpecialistComparisionPatientDetails/';
-
+import ClaimDetailsDrillDownReport from '../../views/ClaimDetailsDrillDownReport/';
 class Full extends Component {
   componentDidMount() {
     if(localStorage.getItem("user") == null || localStorage.getItem("user") == undefined) {
@@ -72,6 +72,7 @@ class Full extends Component {
                   <Route exact path="/createUser" name="CreateUser" component={CreateUser}/>
                   <Route exact path="/AuthorizationError" name="Authorization" component={Authorization}/>
                   <Route path="/claimDetails" name="ClaimDetails" component={ClaimDetails}/>
+                  <Route path = "/claimDetailsDrillDownReport" name="ClaimDetailsDrillDownReport" component = {ClaimDetailsDrillDownReport} />
                   <Route path="/settings" name="Settings" component={Settings}/>
                   <Route path="/maintenance" name="Maintenance" component={Maintenance}/>
                   <Route path="/admissionreport" name="AdmissionReport" component={AdmissionReport}/>

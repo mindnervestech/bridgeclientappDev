@@ -73,27 +73,6 @@ class AdmissionReportDetails extends Component {
 
   componentDidMount() {
 
-      
-    fetch(config.serverUrl + '/getAllPlanAndPCP', {
-      method: 'GET'
-    }).then(function (res1) {
-      return res1.json();
-    }).then(function (response) {
-      self.setState({ providerList: response.planList,pcpList:response.pcpList, yearsList:response.yearsList});
-     
-      for(var i=0;i<self.state.yearsList.length;i++) {
-        if(self.state.yearsList[i].value >= self.state.currentYear) {
-          self.state.currentYear = self.state.yearsList[i].value;
-        } 
-        if(localStorage.getItem('year')==null)
-        self.state.yearSelectValue = { value: self.state.currentYear, label: self.state.currentYear };
-      }
-      self.setState({
-        providerList: self.state.providerList.concat({ value: 'all', label: 'All' }),
-        pcpList:self.state.pcpList.concat({value:'all', label:'All'}),
-        yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
-      });
-    });
 
     if (localStorage.getItem('provider') != null)
       self.state.providerSelectValue = JSON.parse(localStorage.getItem('provider'));
@@ -112,37 +91,6 @@ fetchAdmissionsReportExpandData(state, instance) {
     self.state.admissionsReportExpandGridSorted = state.sorted;
     self.state.admissionsReportExpandGridFiltered = state.filtered;
     self.getAdmissionsReportExpandData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
-  }
-
-  getAdmissionsReportExpandData(pageSize,page,sortedArr,filteredArr) {
-    self.setState({ admissionsReportExpandLoading: true });
-    const formData = new FormData();
-
-      formData.append('year', self.state.yearSelectValue.value);
-      formData.append('provider', self.state.providerSelectValue.value);
-      formData.append('pageSize', pageSize);
-      formData.append('page', page);
-      formData.append('sortedColumns', sortedArr);
-      formData.append('filteredColumns', filteredArr);
-      formData.append('subscriberIdAdmissionsExpand', self.state.admissionsReportExpandSubscriberId);
-
-      fetch(config.serverUrl+'/getAdmissionsReportExpandData', {
-          method: 'POST',
-          body: formData 
-        }).then(function(res1) {
-          if (!res1.ok) {
-            if (error.message) {
-              self.setState({errorMessage :error.message});
-            } 
-          }
-          return res1.json();
-        }).then(function(response) {
-          self.setState({admissionsReportExpandData: response.admissionsReportExpandData,admissionsReportExpandPages:response.pages,admissionsReportExpandTotalCount:response.totalCount,admissionsReportExpandFileQuery:response.fileQuery});
-          //console.log(response);
-          self.setState({ admissionsReportExpandLoading: false });
-          self.generateAdmissionsReportExpandXLSX();
-      });
-        
   }
  
   exportModelToggle() {
