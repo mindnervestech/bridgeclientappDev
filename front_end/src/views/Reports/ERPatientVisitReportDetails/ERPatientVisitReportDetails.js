@@ -110,7 +110,6 @@ fetchPatientVisitExpandReportData(state, instance) {
           return res1.json();
         }).then(function(response) {
           self.setState({patientVisitExpandReportData: response.patientVisitExpandReportData,patientVisitExpandReportPages:response.pages,patientVisitExpandReportTotalCount:response.totalCount,patientVisitExpandReportFileQuery:response.fileQuery});
-          //console.log(response);
           self.setState({ patientVisitExpandReportLoading: false });
           self.generatePatientVisitExpandReportXLSX();
       });
@@ -163,7 +162,6 @@ fetchPatientVisitExpandReportData(state, instance) {
         return res1.json();
       }).then(function(response)   {
 
-      //console.log(response);
       printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-ER Patient Visit Report Search", documentTitle:"Print-ER Patient Visit Report Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
     
     }).catch((error) => {
@@ -200,7 +198,6 @@ fetchPatientVisitExpandReportData(state, instance) {
   }
 
   toggle(i) {
-    console.log("toggle");
     const newArray = this.state.dropdownOpen.map((element, index) => {
       return (index === i ? !element : false);
     });

@@ -27,7 +27,7 @@ class AdmissionReport extends Component {
 
       yearsList: [],
       ProviderList: [],
-      pcpReportList: [],
+      pcpList: [],
       reportProviderArr: [],
       admissionsReportData: [],
       pcpNameValue: "",
@@ -71,13 +71,14 @@ class AdmissionReport extends Component {
   componentDidMount() {
     {
       localStorage.removeItem('admissionsReportExpandSubscriberId');
+     
     }
     fetch(config.serverUrl + '/getAllPlanAndPCP', {
       method: 'GET'
     }).then(function (res1) {
       return res1.json();
     }).then(function (response) {
-      self.setState({ ProviderList: response.planList,pcpReportList:response.pcpList, yearsList:response.yearsList});
+      self.setState({ ProviderList: response.planList, yearsList:response.yearsList});
      
       for(var i=0;i<self.state.yearsList.length;i++) {
         if(self.state.yearsList[i].value >= self.state.currentYear) {
@@ -89,21 +90,21 @@ class AdmissionReport extends Component {
     
       self.setState({
         ProviderList: self.state.ProviderList.concat({ value: 'all', label: 'All' }),
-        pcpReportList:self.state.pcpReportList.concat({value:'all', label:'All'}),
+        pcpList:self.state.pcpList.concat({value:'all', label:'All'}),
         yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' })
       });
     });
 
-    if (localStorage.getItem('providerForReports') != null) {
-      self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
-      self.getPCPForProviders(self.state.providerSelectValue.value);
+    if(localStorage.getItem('provider') !=null)      {
+      self.state.providerSelectValue = JSON.parse(localStorage.getItem('provider'));
+      self.state.pcpList = JSON.parse(localStorage.getItem('pcpList'));
     }
-    if (localStorage.getItem('pcpNameForReports') != null) {
-      self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));
-    }
-    if (localStorage.getItem('yearForReports') != null) {
-      self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
-    }
+  if(localStorage.getItem('pcpName')!=null){
+    self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpName'));
+  }
+  if(localStorage.getItem('year')!=null){
+    self.state.yearSelectValue = JSON.parse(localStorage.getItem('year'));
+  }
   }
 
   setProviderValue(e) {
@@ -137,11 +138,12 @@ class AdmissionReport extends Component {
     }).then(function (res1) {
       return res1.json();
     }).then(function (response) {
-      self.setState({ pcpReportList: response });
+      self.setState({ pcpList: response });
       self.setState({
-        pcpReportList: self.state.pcpReportList.concat({ value: 'all', label: 'All' })
+        pcpList: self.state.pcpList.concat({ value: 'all', label: 'All' })
       });
       self.state.pcpNameValue = { value: 'all', label: 'All' };
+      localStorage.setItem('pcpList',JSON.stringify(self.state.pcpList));
     });
   }
 
@@ -160,7 +162,6 @@ class AdmissionReport extends Component {
   getAdmissionsReports(pageSize,page,sortedArr,filteredArr) {
     self.setState({ loading: true });
     const formData = new FormData();
-        console.log(this.state.admissionsReportYearSelectValue);
       formData.append('year', self.state.yearSelectValue.value);
       formData.append('provider', self.state.providerSelectValue.value);
       formData.append('pcpName', self.state.pcpNameValue.value);
@@ -260,7 +261,6 @@ class AdmissionReport extends Component {
   }
 
   toggle(i) {
-    console.log("toggle");
     const newArray = this.state.dropdownOpen.map((element, index) => {
       return (index === i ? !element : false);
     });
@@ -442,7 +442,7 @@ class AdmissionReport extends Component {
                             placeholder="Select Doctor"
                             className="Col md='5'"
                             value={this.state.pcpNameValue}
-                            options={this.state.pcpReportList}
+                            options={this.state.pcpList}
                             onChange={this.setPcpName}
                           />  
               </CardBody>

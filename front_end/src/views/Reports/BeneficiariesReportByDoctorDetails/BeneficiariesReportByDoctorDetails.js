@@ -127,7 +127,6 @@ getBeneficiariesManagementByDoctorExpandData(pageSize,page,sortedArr,filteredArr
       return res1.json();
     }).then(function(response) {
       self.setState({beneficiariesManagementByDoctorExpandData: response.beneficiariesManagementByDoctorExpandData,beneficiariesManagementByDoctorExpandPages:response.pages,beneficiariesManagementByDoctorExpandTotalCount:response.totalCount,beneficiariesManagementByDoctorExpandFileQuery:response.fileQuery});
-      //console.log(response);
       self.setState({ beneficiariesManagementByDoctorExpandLoading: false });
       self.generateBeneficiariesManagementByDoctorExpandXLSX();
   });
@@ -212,10 +211,9 @@ getBeneficiariesManagementByDoctorExpandData(pageSize,page,sortedArr,filteredArr
  }
 
   backToReports() {
-    window.location.href = "#beneficiariesReportByPatient";
+    window.location.href = "#beneficiariesReport";
   }
   toggle(i) {
-    console.log("toggle");
     const newArray = this.state.dropdownOpen.map((element, index) => {
       return (index === i ? !element : false);
     });

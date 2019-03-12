@@ -197,7 +197,7 @@ fetchBeneficiariesManagementByClinicExpandData(state,instance)
    }
 
   backToReports() {
-    window.location.href = "#beneficiariesReportByPatient";
+    window.location.href = "#beneficiariesReport";
   }
 
   toggle(i) {

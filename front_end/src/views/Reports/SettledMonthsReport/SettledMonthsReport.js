@@ -83,7 +83,7 @@ class SettledMonthsReport extends Component {
     }).then(function (res1) {
       return res1.json();
     }).then(function (response) {
-      self.setState({ providerList: response.planList,pcpList:response.pcpList, yearsList:response.yearsList});
+      self.setState({ providerList: response.planList, yearsList:response.yearsList});
      
       for(var i=0;i<self.state.yearsList.length;i++) {
         if(self.state.yearsList[i].value >= self.state.currentYear) {
@@ -99,16 +99,15 @@ class SettledMonthsReport extends Component {
       });
     });
 
-    if (localStorage.getItem('providerForReports') != null) {
-      self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
-      self.getPCPForProviders(self.state.providerSelectValue.value);
+    if(localStorage.getItem('provider') !=null)      {
+      self.state.providerSelectValue = JSON.parse(localStorage.getItem('provider'));
+      self.state.pcpList = JSON.parse(localStorage.getItem('pcpList'));
     }
-    if (localStorage.getItem('pcpNameForReports') != null) {
-      self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));
-    }
-    if (localStorage.getItem('yearForReports') != null){
-      self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
-
+  if(localStorage.getItem('pcpName')!=null){
+    self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpName'));
+  }
+  if(localStorage.getItem('year')!=null){
+    self.state.yearSelectValue = JSON.parse(localStorage.getItem('year'));
   }
 }  
 
@@ -144,11 +143,12 @@ class SettledMonthsReport extends Component {
     }).then(function (res1) {
       return res1.json();
     }).then(function (response) {
-      self.setState({ pcpReportList: response });
+      self.setState({ pcpList: response });
       self.setState({
-        pcpReportList: self.state.pcpReportList.concat({ value: 'all', label: 'All' })
+        pcpList: self.state.pcpList.concat({ value: 'all', label: 'All' })
       });
-      self.state.admissionsReportPcpNameValue = { value: 'all', label: 'All' };
+      self.state.pcpNameValue = { value: 'all', label: 'All' };
+      localStorage.setItem('pcpList',JSON.stringify(self.state.pcpList));
     });
   }
 
@@ -277,7 +277,6 @@ getSettledMonthsReportExpandDataRow(rowInfo) {
     window.location.href = "#reports";
   }
   toggle(i) {
-    console.log("toggle");
     const newArray = this.state.dropdownOpen.map((element, index) => {
       return (index === i ? !element : false);
     });

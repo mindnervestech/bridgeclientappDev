@@ -111,7 +111,6 @@ fetchPmpmByPracticeExpandData(state, instance) {
           return res1.json();
         }).then(function(response) {
           self.setState({pmpmByPracticeExpandData: response.pmpmByPracticeExpandData,pmpmByPracticeExpandPages:response.pages,pmpmByPracticeExpandTotalCount:response.totalCount,pmpmByPracticeExpandFileQuery:response.fileQuery});
-          //console.log(response);
           self.setState({ pmpmByPracticeExpandLoading: false });
           self.generatePmpmByPracticeExpandXLSX();
       });
@@ -187,7 +186,6 @@ fetchPmpmByPracticeExpandData(state, instance) {
   }
 
   toggle(i) {
-    console.log("toggle");
     const newArray = this.state.dropdownOpen.map((element, index) => {
       return (index === i ? !element : false);
     });

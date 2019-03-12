@@ -138,7 +138,7 @@ class BeneficiariesReportByPatient extends Component {
     }).then(function (res1) {
       return res1.json();
     }).then(function (response) {
-      self.setState({ providerList: response.planList, pcpList: response.pcpList, yearsList: response.yearsList });
+      self.setState({ providerList: response.planList, yearsList: response.yearsList });
  
       self.setState({
         providerList: self.state.providerList.concat({ value: 'all', label: 'All' }),
@@ -147,17 +147,16 @@ class BeneficiariesReportByPatient extends Component {
       });
     });
 
-    if (localStorage.getItem('providerForReports') != null) {
-      self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
-      self.getPCPForProviders(self.state.providerSelectValue.value);
+    if(localStorage.getItem('provider') !=null)      {
+      self.state.providerSelectValue = JSON.parse(localStorage.getItem('provider'));
+      self.state.pcpList = JSON.parse(localStorage.getItem('pcpList'));
     }
-    if (localStorage.getItem('pcpNameForReports') != null) {
-      self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));
-    }
-    if (localStorage.getItem('yearForReports') != null) {
-      self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
-  
-    }
+  if(localStorage.getItem('pcpName')!=null){
+    self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpName'));
+  }
+  if(localStorage.getItem('year')!=null){
+    self.state.yearSelectValue = JSON.parse(localStorage.getItem('year'));
+  }
   }
 
     setProviderValue(e) {
@@ -248,11 +247,12 @@ class BeneficiariesReportByPatient extends Component {
     }).then(function (res1) {
       return res1.json();
     }).then(function (response) {
-      self.setState({ pcpReportList: response });
+      self.setState({ pcpList: response });
       self.setState({
-        pcpReportList: self.state.pcpReportList.concat({ value: 'all', label: 'All' })
+        pcpList: self.state.pcpList.concat({ value: 'all', label: 'All' })
       });
-      self.state.admissionsReportPcpNameValue = { value: 'all', label: 'All' };
+      self.state.pcpNameValue = { value: 'all', label: 'All' };
+      localStorage.setItem('pcpList',JSON.stringify(self.state.pcpList));
     });
   }
 
@@ -376,7 +376,6 @@ class BeneficiariesReportByPatient extends Component {
           return res1.json();
         }).then(function(response) {
           self.setState({beneficiariesManagementByLocationData: response.beneficiariesManagementByLocationData,beneficiariesManagementByLocationPages:response.pages,beneficiariesManagementByLocationTotalCount:response.totalCount,beneficiariesManagementByLocationFileQuery:response.fileQuery});
-          //console.log(response);
           self.setState({ beneficiariesManagementByLocationLoading: false });
           self.generateBeneficiariesManagementByLocationXLSX();
       });
@@ -407,9 +406,8 @@ class BeneficiariesReportByPatient extends Component {
           return res1.json();
         }).then(function(response) {
           self.setState({beneficiariesManagementByClinicData: response.beneficiariesManagementByClinicData,beneficiariesManagementByClinicPages:response.pages,beneficiariesManagementByClinicTotalCount:response.totalCount,beneficiariesManagementByClinicFileQuery:response.fileQuery});
-          //console.log(response);
           self.setState({ beneficiariesManagementByClinicLoading: false });
-          self.generateBeneficiariesManagementByClinicXLSX();
+          esManagementByClinicXLSX();
       });
         
   }
@@ -672,7 +670,6 @@ generateBeneficiariesManagementByDoctorXLSX() {
   }
   getBeneficiariesManagementByLocationDataRow(rowInfo)
   {
-    console.log('working');
     localStorage.setItem('beneficiariesManagementSelectedPcpLocation',rowInfo.row.pcpLocation);
     window.location.href = "#/beneficiariesReportByLocationDetails";
   }
@@ -686,7 +683,6 @@ generateBeneficiariesManagementByDoctorXLSX() {
   }
 
   toggle(i) {
-    console.log(i);
     const newArray = this.state.dropdownOpen.map((element, index) => {
       return (index === i ? !element : false);
     });

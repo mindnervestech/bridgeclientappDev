@@ -76,12 +76,16 @@ class DuplicateClaimsDetails extends Component {
 
   componentDidMount() {
 
-    if (localStorage.getItem('provider') != null)
+    if(localStorage.getItem('provider') !=null)      {
       self.state.providerSelectValue = JSON.parse(localStorage.getItem('provider'));
-    if (localStorage.getItem('pcpName') != null)
-      self.state.pcpNameValue =JSON.parse(localStorage.getItem('pcpName'));
-    if (localStorage.getItem('year') != null)
-      self.state.yearSelectValue =JSON.parse(localStorage.getItem('year'));
+      self.state.pcpList = JSON.parse(localStorage.getItem('pcpList'));
+    }
+  if(localStorage.getItem('pcpName')!=null){
+    self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpName'));
+  }
+  if(localStorage.getItem('year')!=null){
+    self.state.yearSelectValue = JSON.parse(localStorage.getItem('year'));
+  }
 
     self.getDuplicateClaimReportsRowData();
   }
@@ -218,7 +222,6 @@ class DuplicateClaimsDetails extends Component {
     window.location.href = "#duplicateClaimsReport";
   }
   toggle(i) {
-    console.log("toggle");
     const newArray = this.state.dropdownOpen.map((element, index) => {
       return (index === i ? !element : false);
     });

@@ -37,9 +37,6 @@ import ERPatientVisitReportDetails from '../../views/Reports/ERPatientVisitRepor
 import SettledMonthsDetails from '../../views/Reports/SetteledMonthsDetails/';
 import PMPMByPrecticeDetails from '../../views/Reports/PMPMByPrecticeDetails/PMPMByPrecticeDetails'
 import BeneficiariesReportByPatient from '../../views/Reports/BeneficiariesReportByPatient/'; 
-import BeneficiariesReportByLocation from '../../views/Reports/BeneficiariesReportByLocation/';
-import BeneficiariesReportByDoctor from '../../views/Reports/BeneficiariesReportByDoctor/';
-import BeneficiariesReportByClinic from '../../views/Reports/BeneficiariesReportByClinic/';
 import BeneficiariesReportByDoctorDetails from '../../views/Reports/BeneficiariesReportByDoctorDetails/';
 import BeneficiariesReportByLocationDetails from '../../views/Reports/BeneficiariesReportByLocationDetails/BeneficiariesReportByLocationDetails';
 import BeneficiariesReportByPatientDetails from '../../views/Reports/BeneficiariesReportByPatientDetails/BeneficiariesReportByPatientDetails';
@@ -91,10 +88,7 @@ class Full extends Component {
                   <Route path="/erPatientVisitReportDetails" name="ERPatientVisitReportDetails" component={ERPatientVisitReportDetails} />
                   <Route path="/settledMonthsDetails" name="SettledMonthsDetails" component={SettledMonthsDetails} />
                   <Route path="/pmpmByPrecticeDetails" name="PMPMByPrecticeDetails" component={PMPMByPrecticeDetails} />
-                  <Route path="/beneficiariesReportByPatient" name="BeneficiariesReportByPatient" component={BeneficiariesReportByPatient} />
-                  <Route path="/beneficiariesReportByLocation" name="BeneficiariesReportByLocation" component={BeneficiariesReportByLocation} />
-                  <Route path="/beneficiariesReportByDoctor" name="BeneficiariesReportByDoctor" component={BeneficiariesReportByDoctor} />
-                  <Route path="/beneficiariesReportByClinic" name="BeneficiariesReportByClinic" component={BeneficiariesReportByClinic} />
+                  <Route path="/beneficiariesReport" name="BeneficiariesReportByPatient" component={BeneficiariesReportByPatient} />
                   <Route path="/BeneficiariesReportByClinicDetails" name="BeneficiariesReportByClinicDetails" component={BeneficiariesReportByClinicDetails} />
                   <Route path="/beneficiariesReportByDoctorDetails" name="BeneficiariesReportByDoctorDetails" component={BeneficiariesReportByDoctorDetails} />
                   <Route path="/beneficiariesReportByLocationDetails" name="BeneficiariesReportByLocationDetails" component={BeneficiariesReportByLocationDetails} />

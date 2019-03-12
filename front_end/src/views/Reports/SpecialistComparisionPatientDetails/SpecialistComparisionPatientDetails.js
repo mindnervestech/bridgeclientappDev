@@ -167,8 +167,7 @@ fetchSpecialistComparisonPatientExpandReportData(state, instance) {
         }
         return res1.json();
       }).then(function(response)   {
-  
-      //console.log(response);
+
       printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-Specialist Comparison Patient Report Search", documentTitle:"Print-Specialist Comparison Practice Report Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
     
     }).catch((error) => {
@@ -199,7 +198,6 @@ fetchSpecialistComparisonPatientExpandReportData(state, instance) {
     window.location.href = "#specialistComparisionPrecticeDetails";
   }
   toggle(i) {
-    console.log("toggle");
     const newArray = this.state.dropdownOpen.map((element, index) => {
       return (index === i ? !element : false);
     });

@@ -109,7 +109,6 @@ getBeneficiariesManagementExpandData(pageSize,page,sortedArr,filteredArr) {
           return res1.json();
         }).then(function(response) {
           self.setState({beneficiariesManagementExpandData: response.beneficiariesManagementExpandData,beneficiariesManagementExpandPages:response.pages,beneficiariesManagementExpandTotalCount:response.totalCount,beneficiariesManagementExpandFileQuery:response.fileQuery});
-          //console.log(response);
           self.setState({ beneficiariesManagementExpandLoading: false });
           self.generateBeneficiariesManagementExpandXLSX();
       });
@@ -161,10 +160,7 @@ getBeneficiariesManagementExpandData(pageSize,page,sortedArr,filteredArr) {
         }
         return res1.json();
       }).then(function(response)   {
-
-      //console.log(response);
       printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print- Beneficiaries Management Details", documentTitle:"Print- Beneficiaries Management Details", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
-    
     }).catch((error) => {
       console.log(error);
     });
@@ -193,10 +189,9 @@ getBeneficiariesManagementExpandData(pageSize,page,sortedArr,filteredArr) {
    }
 
   backToReports() {
-    window.location.href = "#beneficiariesReportByPatient";
+    window.location.href = "#beneficiariesReport";
   }
   toggle(i) {
-    console.log("toggle");
     const newArray = this.state.dropdownOpen.map((element, index) => {
       return (index === i ? !element : false);
     });

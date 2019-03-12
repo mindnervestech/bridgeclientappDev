@@ -20,7 +20,7 @@ import {
   ModalFooter
 } from 'reactstrap';
 import config from '../Config/ServerUrl';
-//import './CreatedUsersStyles.css';
+import './settingStyle.css';
 
 
 class Settings extends Component {
@@ -180,8 +180,8 @@ class Settings extends Component {
               <Col xs="12" md="4">
                 </Col>
                 <Col xs="12" md="3" >
-                  <b><Label className="commonFontStyle">Maintenance &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Label></b>
-                     <Label className="switch switch-lg switch-text switch-pill switch-primary">
+                  <b><Label className="commonTextStyle">Maintenance &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</Label></b>
+                     <Label className="switch switch-lg switch-text switch-pill switch-danger">
                         <Input type="checkbox" className="switch-input" id="maintenanceSwitch" onChange={(e) => self.handleChange(e)} />
                         <span className="switch-label" data-on="On" data-off="Off"></span>
                         <span className="switch-handle"></span>
@@ -207,25 +207,25 @@ class Settings extends Component {
             <br/><br/>
             <FormGroup row>
               <Col md="3">
-                <b><Label className="commonFontStyle">Reinsurance Report Threshold</Label></b>
+                <b><Label className="commonTextStyle">Reinsurance Report Threshold</Label></b>
               </Col>
               <Col md="3">
                 <Input type="text" style={{backgroundColor:"#FAFAFA",borderColor:"#CCCCCC"}} className="commonFontFamily commonBgColor" name="reinsuranceReportThreshold" id="reinsuranceReportThreshold"/> <br/>         
               </Col>
               <Col md="1">
-                <Button color="primary" className="commonFontFamily" onClick={(e) => self.setReinsuranceThreshold(e)} block>Save</Button>
+                <Button color="primary" className="smallButtonsStyle" onClick={(e) => self.setReinsuranceThreshold(e)} block>Save</Button>
               </Col>
             </FormGroup>
 
             <FormGroup row>
               <Col md="3">
-                <b><Label className="commonFontStyle">Reinsurance Cost Report Threshold</Label></b>
+                <b><Label className="commonTextStyle">Reinsurance Cost Report Threshold</Label></b>
               </Col>
               <Col md="3">
                 <Input type="text" style={{backgroundColor:"#FAFAFA",borderColor:"#CCCCCC"}} className="commonFontFamily commonBgColor" name="reinsuranceCostReportThreshold" id="reinsuranceCostReportThreshold"/> <br/>         
               </Col>
               <Col md="1">
-                <Button color="primary" className="commonFontFamily" onClick={(e) => self.setReinsuranceCostThreshold(e)} block>Save</Button>
+                <Button color="primary" className="smallButtonsStyle" onClick={(e) => self.setReinsuranceCostThreshold(e)} block>Save</Button>
               </Col>
             </FormGroup>
 

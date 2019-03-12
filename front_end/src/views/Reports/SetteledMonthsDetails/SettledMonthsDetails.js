@@ -104,7 +104,7 @@ fetchSettledMonthsExpandData(state, instance) {
           return res1.json();
         }).then(function(response) {
           self.setState({settledMonthsExpandData: response.settledMonthsExpandData,settledMonthsExpandPages:response.pages,settledMonthsExpandTotalCount:response.totalCount,settledMonthsExpandFileQuery:response.fileQuery});
-          //console.log(response);
+          
           self.setState({ settledMonthsExpandLoading: false });
           self.generateSettledMonthsExpandXLSX();
       });

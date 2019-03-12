@@ -92,6 +92,35 @@ fetchAdmissionsReportExpandData(state, instance) {
     self.state.admissionsReportExpandGridFiltered = state.filtered;
     self.getAdmissionsReportExpandData(state.pageSize,page,JSON.stringify(state.sorted),JSON.stringify(state.filtered));
   }
+  getAdmissionsReportExpandData(pageSize,page,sortedArr,filteredArr) {
+    self.setState({ admissionsReportExpandLoading: true });
+    const formData = new FormData();
+
+      formData.append('year', self.state.yearSelectValue.value);
+      formData.append('provider', self.state.providerSelectValue.value);
+      formData.append('pageSize', pageSize);
+      formData.append('page', page);
+      formData.append('sortedColumns', sortedArr);
+      formData.append('filteredColumns', filteredArr);
+      formData.append('subscriberIdAdmissionsExpand', self.state.admissionsReportExpandSubscriberId);
+
+      fetch(config.serverUrl+'/getAdmissionsReportExpandData', {
+          method: 'POST',
+          body: formData 
+        }).then(function(res1) {
+          if (!res1.ok) {
+            if (error.message) {
+              self.setState({errorMessage :error.message});
+            } 
+          }
+          return res1.json();
+        }).then(function(response) {
+          self.setState({admissionsReportExpandData: response.admissionsReportExpandData,admissionsReportExpandPages:response.pages,admissionsReportExpandTotalCount:response.totalCount,admissionsReportExpandFileQuery:response.fileQuery});
+          self.setState({ admissionsReportExpandLoading: false });
+          self.generateAdmissionsReportExpandXLSX();
+      });
+        
+  }
  
   exportModelToggle() {
     this.setState({
@@ -139,8 +168,7 @@ fetchAdmissionsReportExpandData(state, instance) {
         return res1.json();
       }).then(function(response)   {
 
-      //console.log(response);
-      printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-Admissions Report Search", documentTitle:"Print-Admissions Report Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
+        printJS({printable: response, properties: propertiesArr, type: 'json', header:"Print-Admissions Report Search", documentTitle:"Print-Admissions Report Search", gridStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;text-align: center;", gridHeaderStyle:"border-collapse:collapse;border-bottom: 1px solid #DCDCDC;border-top: 1px solid #DCDCDC;"});
     
     }).catch((error) => {
       console.log(error);
@@ -176,7 +204,6 @@ fetchAdmissionsReportExpandData(state, instance) {
   }
   
   toggle(i) {
-    console.log("toggle");
     const newArray = this.state.dropdownOpen.map((element, index) => {
       return (index === i ? !element : false);
     });

@@ -36,7 +36,6 @@ class Reports extends Component {
         self.state.providerSelectValue = { value: 'all', label: 'All' };
         self.state.pcpNameValue = { value: 'all', label: 'All' };
         self.state.yearSelectValue = { value: 'all', label: 'All' };
-        this.getValueFromLocalStorage = this.getValueFromLocalStorage.bind(this);
         this.openAddmisionReportToggle = this.openAddmisionReportToggle.bind(this);
         this.openDuplicateClaimsReportToggle = this.openDuplicateClaimsReportToggle.bind(this);
         this.openSpecialistComparisonReportToggle = this.openSpecialistComparisonReportToggle.bind(this);
@@ -77,7 +76,7 @@ class Reports extends Component {
           }).then(function (res1) {
             return res1.json();
           }).then(function (response) {
-            self.setState({ providerList: response.planList,pcpList:response.pcpList, yearsList:response.yearsList});
+            self.setState({ providerList: response.planList, yearsList:response.yearsList});
           for (var i = 0; i < self.state.yearsList.length; i++) {
             if (self.state.yearsList[i].value >= self.state.currentYear) {
               self.state.currentYear = self.state.yearsList[i].value;
@@ -93,24 +92,19 @@ class Reports extends Component {
               self.setValueToLocalStorage();
             }
             self.setState({
-              pcpList:self.state.pcpList.concat({value:'all', label:'All'}),
               yearsList: self.state.yearsList.concat({ value: 'all', label: 'All' }),
               providerList:self.state.providerList.concat({value:'all', label:'All'})
             });
           });
       }
 
-        self.getValueFromLocalStorage();
-      self.setValueToLocalStorage();
-  
-    }
-
-  getValueFromLocalStorage() {
-
+      
     if (localStorage.getItem('providerForReports') != null) {
       self.state.providerSelectValue = JSON.parse(localStorage.getItem('providerForReports'));
       self.getPCPForProviders(self.state.providerSelectValue.value);
     }
+    else
+    self.getPCPForProviders(self.state.providerSelectValue.value);
     if (localStorage.getItem('pcpNameForReports') != null) {
       self.state.pcpNameValue = JSON.parse(localStorage.getItem('pcpNameForReports'));
     }
@@ -118,7 +112,10 @@ class Reports extends Component {
       self.state.yearSelectValue = JSON.parse(localStorage.getItem('yearForReports'));
     }
 
-  }
+      self.setValueToLocalStorage();
+  
+    }
+
 
     setProviderValue(e) {
       self.state.providerSelectValue = e;
@@ -129,6 +126,7 @@ class Reports extends Component {
 
   setValueToLocalStorage() {
     localStorage.setItem('pcpNameForReports', JSON.stringify(self.state.pcpNameValue));
+    localStorage.setItem('pcpList',JSON.stringify(self.state.pcpList));
     localStorage.setItem('yearForReports', JSON.stringify(self.state.yearSelectValue));
     localStorage.setItem('providerForReports', JSON.stringify(self.state.providerSelectValue));
     localStorage.setItem('pcpName', JSON.stringify(self.state.pcpNameValue));
@@ -151,7 +149,6 @@ class Reports extends Component {
   }
   
   getPCPForProviders(providerName) {
-    console.log(self.state.yearSelectValue);
       this.state.reportProviderArr = [];
       this.state.reportProviderArr[0] = providerName;
       const formData = new FormData();
@@ -165,62 +162,49 @@ class Reports extends Component {
         self.setState({ pcpList: response });
         self.setState({
           pcpList: self.state.pcpList.concat({ value: 'all', label: 'All' }),
-          // providerList : self.state.providerList.concat({value: 'all', label: 'All'}),
         });
         self.state.pcpNameValue = { value: 'all', label: 'All' };
+        localStorage.setItem('pcpList',JSON.stringify(self.state.pcpList));
       });
     }
 
     openAddmisionReportToggle() {
-        console.log("open")
         window.location.href = "#/admissionreport"
     }
     openDuplicateClaimsReportToggle() {
-        console.log("open")
         window.location.href = "#/duplicateclaimsreport"
     }
     openReinsuranceCostReportToggle() {
-        console.log("open")
         window.location.href = "#/reinsuranceCostReport"
     }
     openSpecialistComparisonReportToggle() {
-        console.log("open")
         window.location.href = "#/specialistComaparisionReport"
     }
     openERPatientVisitReportToggle() {
-        console.log("open")
         window.location.href = "#/erPatientVisitReport"
     }
     openSummaryReportToggle() {
-        console.log("open")
         window.location.href = "#/summaryReport"
     }
-    openSettledMonthsReportToggle() {
-        console.log("open")
+    openSettledMonthsReportToggle() {        
         window.location.href = "#/settledMonthsReport"
     }
     openPMPMByPrecticeReportToggle() {
-        console.log("open")
         window.location.href = "#/pmpmByPrecticeReport"
     }
     openBeneficiariesReportByPatientToggle() {
-        console.log("open")
-        window.location.href = "#/beneficiariesReportByPatient"
+        window.location.href = "#/beneficiariesReport"
     }
     openBeneficiariesReportByDoctorToggle() {
-      console.log("open")
       window.location.href = "#/beneficiariesReportByDoctor"
     }
-    openBeneficiariesReportByLocationToggle() {
-      console.log("open")
+    openBeneficiariesReportByLocationToggle(){     
       window.location.href = "#/beneficiariesReportByLocation"
     }
     openBeneficiariesReportByClinicToggle() {
-      console.log("open")
       window.location.href = "#/beneficiariesReportByClinic"
     }
         openReinsuranceReportToggle() {
-        console.log("open")
         window.location.href = "#/reinsuranceReport"
     }
     

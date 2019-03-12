@@ -77,7 +77,6 @@ class BeneficiariesReportByLocationDetails extends Component {
     self.state.pcpNameValue =JSON.parse(localStorage.getItem('pcpName'));
   if (localStorage.getItem('year') != null)
     self.state.yearSelectValue =JSON.parse(localStorage.getItem('year'));
-  
   }
 
 
@@ -114,7 +113,6 @@ getBeneficiariesManagementByLocationExpandData(pageSize,page,sortedArr,filteredA
         return res1.json();
       }).then(function(response) {
         self.setState({beneficiariesManagementByLocationExpandData: response.beneficiariesManagementByLocationExpandData,beneficiariesManagementByLocationExpandPages:response.pages,beneficiariesManagementByLocationExpandTotalCount:response.totalCount,beneficiariesManagementByLocationExpandFileQuery:response.fileQuery});
-        //console.log(response);
         self.setState({ beneficiariesManagementByLocationExpandLoading: false });
         self.generateBeneficiariesManagementByLocationExpandXLSX();
     });
@@ -199,10 +197,9 @@ getBeneficiariesManagementByLocationExpandData(pageSize,page,sortedArr,filteredA
        }
 
   backToReports() {
-    window.location.href = "#beneficiariesReportByPatient";
+    window.location.href = "#beneficiariesReport";
   }
   toggle(i) {
-    console.log("toggle");
     const newArray = this.state.dropdownOpen.map((element, index) => {
       return (index === i ? !element : false);
     });
