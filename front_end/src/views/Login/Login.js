@@ -15,9 +15,12 @@ class Login extends Component {
       changePasswordToggleView:false,
       otpValidationToggleView:false,
       changePasswordSuccessToggleView:false,
+      firstLoginPasswordChangeToggleView:false,
+
       email:'',
       errorMessageEmail:'',
       otpValidationError:'',
+      Invalidcredentials:'Invalid credentials',
 
     };
     self = this;
@@ -27,6 +30,8 @@ class Login extends Component {
     this.otpValidationToggle = this.otpValidationToggle.bind(this);
     this.sendOPTCodeToMailID = this.sendOPTCodeToMailID.bind(this);
     this.changePasswordSuccessToggle = this.changePasswordSuccessToggle.bind(this);
+    this.firstLoginPasswordChangeToggle = this.firstLoginPasswordChangeToggle.bind(this);
+
   } 
 
   goToRegister() {
@@ -54,12 +59,16 @@ class Login extends Component {
       }
       return res1.json();
     }).then(function(response)   {
-
+      self.setState({Invalidcredentials:'Invalid credentials'});
         if(response.id == -1) {
           document.getElementById("invalid").style.display = "block";
           document.getElementById("invalid").style.color = "red";
 
-        } else {
+        } 
+        else if(!response.isActive){
+          self.firstLoginPasswordChangeToggle();
+        }
+        else {
           localStorage.setItem('X-AUTH-TOKEN', response.token);
           localStorage.setItem('user', JSON.stringify(response));
           var isPermissionMgmt = 0;
@@ -111,7 +120,48 @@ class Login extends Component {
       changePasswordSuccessToggleView : !this.state.changePasswordSuccessToggleView
     })
   }
-  
+  firstLoginPasswordChangeToggle(){
+    self.setState({
+      firstLoginPasswordChangeToggleView : !this.state.firstLoginPasswordChangeToggleView
+    })
+  }
+
+
+
+  changePasswordFirstTime(){
+    if(document.getElementById('newPassword').value == document.getElementById('Re-enterNewPasword').value){
+      const formData = new FormData();
+      formData.append('email', document.getElementById("email").value);
+      formData.append('newPassword', document.getElementById('newPassword').value);
+      fetch(config.serverUrl+'/changePasswordFirstTime', {
+        method: 'POST',
+        body: formData 
+      }).then(function(res1) {
+      if (!res1.ok) {
+      }
+      return res1.json();
+    }).then(function(response)   {
+        if(response) {
+          self.setState({
+            firstLoginPasswordChangeToggleView:false,
+          });
+          self.changePasswordSuccessToggle();
+        }
+        else{          
+        document.getElementById("invalid").style.display = "block";
+        document.getElementById("invalid").style.color = "red";
+        self.state.Invalidcredentials = 'Password not changed, Please try after some time.';
+        self.setState({
+          firstLoginPasswordChangeToggleView:false,
+        });
+        }
+      });
+    }
+    else{
+      document.getElementById("passwordMatchError").style.color = "red";
+      document.getElementById("passwordMatchError").innerHTML = "Password not matched";
+    }
+  }
   sendOPTCodeToMailID(){
     self.state.email = document.getElementById("forgotPasswordEmailId").value;
     const formData = new FormData();
@@ -134,7 +184,6 @@ class Login extends Component {
         self.state.errorMessageEmail = "Email Address is not registered";
        document.getElementById("errorEmailNotFound").style.color = "red";
       document.getElementById("errorEmailNotFound").innerHTML = self.state.errorMessageEmail;
-      
       }
   
     });
@@ -169,7 +218,7 @@ class Login extends Component {
 
   
   changePassword(){
-    if(document.getElementById('newPassword').value == document.getElementById('reEnterNewPasword').value){
+    if(document.getElementById('newPassword').value == document.getElementById('Re-enterNewPasword').value){
     const formData = new FormData();
     formData.append('email',self.state.email);
     formData.append('newPassword', document.getElementById('newPassword').value);
@@ -186,7 +235,14 @@ class Login extends Component {
           changePasswordToggleView:false,
         });
         self.changePasswordSuccessToggle();
-  
+      }
+      else{
+        document.getElementById("invalid").style.display = "block";
+        document.getElementById("invalid").style.color = "red";
+        self.state.Invalidcredentials = 'Password not changed, Please try after some time.';
+        self.setState({
+          changePasswordToggleView:false,
+        });
       }
     });
   }
@@ -224,7 +280,7 @@ class Login extends Component {
                       </InputGroupAddon>
                       <Input type="password" id="password" placeholder="Password"/>
                     </InputGroup>
-                    <p id="invalid">Invalid credentials</p>
+                    <p id="invalid">{self.state.Invalidcredentials}</p>
                     <Row>
                       <Col xs="6">
                         <Button type="submit" color="primary" className="px-4">Login</Button>
@@ -297,7 +353,7 @@ class Login extends Component {
             <Input type="text" name="newPassword" id="newPassword" placeholder="Enter New Password"/>
         </Row>
           <Row style={{marginLeft:'auto', marginRight:'auto', marginTop:'20px'}}>
-            <Input type="text" name="reEnterNewPasword" id="reEnterNewPasword" placeholder="ReEnter New Password"/>
+            <Input type="text" name="Re-enterNewPasword" id="Re-enterNewPasword" placeholder="Re-enter New Password"/>
             <div id="passwordMatchError"></div>
         </Row>
         <Row>
@@ -329,6 +385,32 @@ class Login extends Component {
           </Row>
 
      
+      </ModalBody>
+    </Modal>
+
+        {/* -----------------------------First Time Login Password Change---------------------------------- */}
+     
+
+        <Modal isOpen={this.state.firstLoginPasswordChangeToggleView} toggle={this.firstLoginPasswordChangeToggle}
+        className={'modal-lg ' + this.props.className + ' exportModalWidth'} style={{width: '400px', height:'200px'}}>
+        <ModalHeader style={{    background: '#333333' , color: '#ffffff', height: '40px'}}>
+          <p style={{marginTop:'-10px'}}>Enter New Password ?</p>
+        </ModalHeader>
+      <ModalBody>
+      <p style={{marginTop:'-10px', color:'#008a00'}}>For Account security reasons you have to change your password on your first login.</p>
+        <Row style={{marginLeft:'auto', marginRight:'auto'}}>
+            <Input type="text" name="newPassword" id="newPassword" placeholder="Enter New Password"/>
+        </Row>
+          <Row style={{marginLeft:'auto', marginRight:'auto', marginTop:'20px'}}>
+            <Input type="text" name="Re-enterNewPasword" id="Re-enterNewPasword" placeholder="Re-enter New Password"/>
+            <div id="passwordMatchError"></div>
+        </Row>
+        <Row>
+          <Col md="4"></Col>
+          <Col md="4">
+          <Button style={{width:'-webkit-fill-available', height:'35px', marginTop:'20px',background: '#c01818', color: '#ffffff'}} onClick={this.changePasswordFirstTime } value="submit" name="submit">Submit</Button>
+          </Col>
+        </Row>
       </ModalBody>
     </Modal>
 
