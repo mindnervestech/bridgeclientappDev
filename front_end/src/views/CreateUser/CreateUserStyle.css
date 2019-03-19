@@ -5,3 +5,29 @@
 .commonFontColor {
 	color:#62879A;
 }
+
+.userSaveButtonStyle {
+	background-color: #d03b3c !important;
+    border-color: #d03b3c !important;
+    color: white !important;
+}
+
+.roleSelectStyle {
+	width: 437px;
+    font-family: serif;
+    z-index: 1000;
+}
+.formValidationStyle{
+        color: red;
+    position: absolute;
+    margin-left: 90%;
+    margin-top: -10%;
+    width: max-content;
+}
+.editUserValidationErrorStyle{
+    color: red;
+    position: absolute;
+    margin-left: 90%;
+    margin-top: -10%;
+    width: max-content;
+}

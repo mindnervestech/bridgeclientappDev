@@ -3,8 +3,9 @@ import React, {Component} from 'react';
 class SidebarMinimizer extends Component {
 
   componentDidMount() {
-    this.sidebarMinimize()
-    this.brandMinimize()
+    document.body.classList.toggle('sidebar-minimized');
+    document.body.classList.toggle('brand-minimized');
+    
   }
 
   sidebarMinimize() {

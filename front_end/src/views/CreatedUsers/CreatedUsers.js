@@ -57,7 +57,7 @@ class CreatedUsers extends Component {
   }
 
   componentDidMount() {
-    //console.log("on page load....");
+
 
     fetch(config.serverUrl+'/getMaintenanceMode', {
           method: 'GET'
@@ -109,8 +109,7 @@ class CreatedUsers extends Component {
         }
         return res1.json();
       }).then(function(response)   {
-        //console.log("success...");
-        //console.log(response);
+
         self.setState({usersList: response});
       });
     }
@@ -124,30 +123,30 @@ class CreatedUsers extends Component {
         <Row>
           <Col>
             <Card>
-              <CardHeader style={{backgroundColor:"white",padding:"0.40rem 1.25rem"}} className="cardHeaderTextStyles">
+              <CardHeader style={{backgroundColor:"white",padding:"0.40rem 1.25rem"}} className="userCardHeaderTextStyles">
                 <i class="icon-user icons"></i> Users
                 {
                   self.state.isCreate == true ? 
-                  <a href="#/createUser" color="primary" class="btn btn-primary btn-sm" style={{float:"right",marginTop:"1px"}}><b>+ Create User</b></a> : null
+                  <a href="#/createUser" color="primary" class="btn btn-primary btn-sm smallButtonsStyle" style={{float:"right",marginTop:"1px"}}><b>+ Create User</b></a> : null
                 }
               </CardHeader>
               <CardBody>
 
               <Modal isOpen={this.state.primary} toggle={this.togglePrimary}
-                       className={'modal-primary ' + this.props.className+' tableRowsStyle'}>
-                  <ModalHeader toggle={this.togglePrimary}>Delete User</ModalHeader>
+                       className={this.props.className+' tableRowsStyle'}>
+                  <ModalHeader className="userModalHeaderStyle" toggle={this.togglePrimary}>Delete User</ModalHeader>
                   <ModalBody>
                     Are you sure you want to delete user?
                   </ModalBody>
                   <ModalFooter>
-                    <Button color="primary" onClick={this.deleteUser}>Yes</Button>{' '}
+                    <Button color="primary" className="smallButtonsStyle" onClick={this.deleteUser}>Yes</Button>{' '}
                     <Button color="secondary" onClick={this.togglePrimary}>No</Button>
                   </ModalFooter>
                 </Modal>
 
                 <Table hover bordered striped responsive>
                   <thead>
-                  <tr className="tableHeaderStyle">
+                  <tr className="userTableHeaderStyle">
                     <th>Username</th>
                     <th>Email</th>
                     <th>Phone</th>
