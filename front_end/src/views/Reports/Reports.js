@@ -52,7 +52,25 @@ class Reports extends Component {
     };
 
   componentDidMount() {
-      
+
+
+    fetch(config.serverUrl + '/getMaintenanceMode', {
+      method: 'GET'
+    }).then(function (res1) {
+      if (!res1.ok) {
+        if (error.message) {
+          self.setState({ errorMessage: error.message });
+        }
+      }
+      return res1.json();
+    }).then(function (response) {
+
+      if (response.maintenanceMode == "true") {
+        window.location.href = "#/maintenance";
+      }
+
+    });
+
     localStorage.removeItem('year');
     localStorage.removeItem('pcpName');
     localStorage.removeItem('provider');

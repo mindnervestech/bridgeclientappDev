@@ -49,7 +49,6 @@ class Maintenance extends Component {
   
 
   componentDidMount() {
-    //console.log("on page load....");
     if(localStorage.getItem("user") != null) {
       var check = 0;
         JSON.parse(localStorage.getItem("user")).permissions.forEach(function(permission) {
@@ -83,8 +82,6 @@ class Maintenance extends Component {
         }
         return res1.json();
       }).then(function(response)   {
-        //console.log("success...");
-        //console.log(response);
         self.setState({usersList: response});
       });
     }
@@ -99,7 +96,7 @@ class Maintenance extends Component {
                 <Col xs="12" md="2">
                 </Col>
                 <Col xs="12" md="9" >
-                  <h4><b><Label>Sorry, website is under maintenance please login after some time!</Label></b></h4>    
+                <h4><b><Label style={{width: "100%",textAlign:"center",color:"#cc0f0ff7"}}>Sorry, website is under maintenance please login after some time!</Label></b></h4>    
                 </Col>
               </FormGroup>
             </CardBody>

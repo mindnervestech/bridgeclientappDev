@@ -749,6 +749,9 @@ class Dashboard extends React.Component {
 
       activeTab: '1',
     };
+    
+      document.body.classList.remove('brand-minimized');
+      document.body.classList.remove('sidebar-minimized');
 
       this.toggleLarge = this.toggleLarge.bind(this);
       this.toggleDuplicateClaimsExpandModal = this.toggleDuplicateClaimsExpandModal.bind(this);

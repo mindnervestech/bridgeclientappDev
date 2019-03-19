@@ -226,7 +226,7 @@ class ClaimDetailsDrillDownReport extends Component {
     window.location.href = "#claimDetails";
   }
   toggle(i) {
-    console.log("toggle");
+
     const newArray = this.state.dropdownOpen.map((element, index) => {
       return (index === i ? !element : false);
     });

@@ -350,10 +350,10 @@ class Login extends Component {
         </ModalHeader>
       <ModalBody>
         <Row style={{marginLeft:'auto', marginRight:'auto'}}>
-            <Input type="text" name="newPassword" id="newPassword" placeholder="Enter New Password"/>
+            <Input type="password" name="newPassword" id="newPassword" placeholder="Enter New Password"/>
         </Row>
           <Row style={{marginLeft:'auto', marginRight:'auto', marginTop:'20px'}}>
-            <Input type="text" name="Re-enterNewPasword" id="Re-enterNewPasword" placeholder="Re-enter New Password"/>
+            <Input type="password" name="Re-enterNewPasword" id="Re-enterNewPasword" placeholder="Re-enter New Password"/>
             <div id="passwordMatchError"></div>
         </Row>
         <Row>

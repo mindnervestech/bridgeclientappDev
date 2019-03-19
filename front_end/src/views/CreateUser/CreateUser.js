@@ -33,54 +33,55 @@ class CreateUser extends Component {
   }
 
   componentDidMount() {
-    //console.log("on load...");
 
-    fetch(config.serverUrl+'/getMaintenanceMode', {
-          method: 'GET'
-      }).then(function(res1) {
-        if (!res1.ok) {
-          if (error.message) {
-            self.setState({errorMessage :error.message});
-          } 
-        }
-        return res1.json();
-      }).then(function(response)   {
-        
-        if(response.maintenanceMode == "true") {
-          window.location.href = "#/maintenance";
-        } 
-        
-      });
-    
-    var check = 0;
-    if(localStorage.getItem("user") != null) {
-      document.getElementById("successMsg").style.display = "none";
-      JSON.parse(localStorage.getItem("user")).permissions.forEach(function(permission) {
-        if(permission.name == "Create" && permission.module == "User Management") {
+    if (localStorage.getItem("user") != null) {
+      var check = 0;
+      JSON.parse(localStorage.getItem("user")).permissions.forEach(function (permission) {
+
+        if (permission.module == "Reports") {
           check = 1;
         }
       })
-    }
-      if(check == 0) {
+
+      if (check == 0) {
         window.location.href = "#/AuthorizationError";
       }
-      /*fetch(config.serverUrl+'/getUserRoles', {
-        method: 'GET'
-    }).then(function(res1) {
+    }
+
+    fetch(config.serverUrl + '/getMaintenanceMode', {
+      method: 'GET'
+    }).then(function (res1) {
       if (!res1.ok) {
         if (error.message) {
-          self.setState({errorMessage :error.message});
-        } 
+          self.setState({ errorMessage: error.message });
+        }
       }
       return res1.json();
-    }).then(function(response)   {
-      console.log(response);
-      self.setState({rolesList: response});
-    });*/
-    if(localStorage.getItem("user") != null) {
-      fetch(config.serverUrl+'/getAllGroups', {
-          method: 'GET'
-      }).then(function(res1) {
+    }).then(function (response) {
+
+      if (response.maintenanceMode == "true") {
+        window.location.href = "#/maintenance";
+      }
+
+    });
+
+    /*fetch(config.serverUrl+'/getUserRoles', {
+      method: 'GET'
+  }).then(function(res1) {
+    if (!res1.ok) {
+      if (error.message) {
+        self.setState({errorMessage :error.message});
+      } 
+    }
+    return res1.json();
+  }).then(function(response)   {
+    console.log(response);
+    self.setState({rolesList: response});
+  });*/
+    if (localStorage.getItem("user") != null) {
+      fetch(config.serverUrl + '/getAllGroups', {
+        method: 'GET'
+      }).then(function (res1) {
         if (!res1.ok) {
           if (error.message) {
             self.setState({errorMessage :error.message});

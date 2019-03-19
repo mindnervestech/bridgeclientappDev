@@ -32,8 +32,19 @@ class HeaderDropdown extends Component {
     return (
       <Dropdown nav isOpen={this.state.dropdownOpen} toggle={this.toggle}>
         <DropdownToggle nav>
-          {/*<img src={'img/avatars/6.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com"/>*/}
-          <i class="icon-logout icons font-2xl d-block" title="Logout" onClick={this.logOut}></i>
+          <Nav>
+            <NavItem className="d-md-down-none">
+              <NavLink style={{ marginLeft: "4px"}}>
+              <img src={'img/profile-pic.png'} className="img-avatar"/>
+              <b style={{textTransform:"capitalize",fontFamily:"serif",color:"#4c4c4c"}}>{localStorage.getItem("user")!=null ? JSON.parse(localStorage.getItem("user")).firstName : ""}&nbsp;{localStorage.getItem("user")!=null ? JSON.parse(localStorage.getItem("user")).lastName : ""}</b>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-sort-down"></i>
+            </NavLink>
+          </NavItem>
+          <NavItem className="d-md-down-none">
+            <NavLink>
+            </NavLink>
+          </NavItem>
+        </Nav>
+          {/*<i class="icon-logout icons font-2xl d-block" title="Logout" onClick={this.logOut}></i>*/}
           {/*<a onClick={this.logOut}>Logout</a>*/}
         </DropdownToggle>
         <DropdownMenu right>

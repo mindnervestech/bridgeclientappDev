@@ -6,6 +6,7 @@ import {
   NavbarBrand,
   NavLink,
 } from 'reactstrap';
+import './HeaderStyle.css';
 import HeaderDropdown from './HeaderDropdown';
 
 class Header extends Component {
@@ -35,19 +36,14 @@ class Header extends Component {
       <header className="app-header navbar">
          <NavbarToggler className="d-lg-none" onClick={this.mobileSidebarToggle}>
           <span className="navbar-toggler-icon"></span>
-          </NavbarToggler>
-        <NavbarBrand href="#"></NavbarBrand>
-          <NavbarToggler className="d-md-down-none mr-auto" onClick={this.sidebarToggle}>
-            <span className="navbar-toggler-icon"></span>
-          </NavbarToggler>
-          <Nav className="ml-auto" navbar>
-            <NavItem className="d-md-down-none">
-            <NavLink><b style={{textTransform:"capitalize",fontFamily:"serif"}}>{localStorage.getItem("user")!=null ? JSON.parse(localStorage.getItem("user")).firstName : ""}&nbsp;{localStorage.getItem("user")!=null ? JSON.parse(localStorage.getItem("user")).lastName : ""}</b></NavLink>
-          </NavItem>
-          <NavItem className="d-md-down-none">
-            <NavLink></NavLink>
-          </NavItem>
-          <HeaderDropdown/>
+        </NavbarToggler>
+        {/*<NavbarBrand href="#"></NavbarBrand>*/}
+        <NavbarToggler className="d-md-down-none" onClick={this.sidebarToggle}>
+          <span className="navbar-toggler-icon"></span>
+        </NavbarToggler>
+        <img src={'/img/aegisLogo.png'} className="headerLogoStyle" />
+        <Nav className="ml-auto headerAvtarStyle" navbar >
+          <HeaderDropdown />
         </Nav>
         {
           /*<NavbarToggler className="d-md-down-none" onClick={this.asideToggle}>
